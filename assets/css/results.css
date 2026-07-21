@@ -1,0 +1,98 @@
+/* =========================================================
+   RESULTS PAGE
+   Depends on: dashboard-layout.css (design tokens + app shell)
+   ========================================================= */
+
+/* ---------- Filter bar ---------- */
+.results-filterbar{
+  display:flex;
+  flex-wrap:wrap;
+  align-items:flex-end;
+  gap:1.25rem;
+  padding:1.1rem 1.25rem;
+}
+
+.results-filter-group{
+  display:flex;
+  flex-direction:column;
+  min-width:190px;
+}
+
+.results-filter-group .form-select{
+  min-width:190px;
+}
+
+.results-filter-summary{
+  display:flex;
+  flex-direction:column;
+  margin-left:auto;
+  padding:.4rem 1.1rem;
+  border-left:1px solid var(--line-200);
+}
+
+.results-filter-summary-label{
+  font-size:.78rem;
+  font-weight:600;
+  color:var(--ink-400);
+  text-transform:uppercase;
+  letter-spacing:.04em;
+}
+
+.results-filter-summary-value{
+  font-family:var(--font-display);
+  font-weight:700;
+  font-size:1.6rem;
+  color:var(--brand-700);
+  line-height:1.2;
+}
+
+@media (max-width:575.98px){
+  .results-filterbar{
+    flex-direction:column;
+    align-items:stretch;
+  }
+  .results-filter-summary{
+    margin-left:0;
+    border-left:none;
+    border-top:1px solid var(--line-200);
+    padding:.75rem 0 0;
+  }
+}
+
+/* ---------- Table header extras ---------- */
+.results-count-badge{
+  font-size:.8rem;
+  font-weight:600;
+  color:var(--ink-400);
+}
+
+/* ---------- Grade badges ---------- */
+.badge-grade{
+  font-size:.8rem;
+  font-weight:700;
+  padding:.4em .7em;
+  border-radius:8px;
+}
+
+.badge-grade--a{ background:var(--success-100); color:var(--success); }
+.badge-grade--b{ background:var(--info-100); color:var(--info); }
+.badge-grade--c{ background:var(--gold-100); color:var(--gold-500); }
+.badge-grade--d{ background:var(--warn-100); color:var(--warn); }
+.badge-grade--e,
+.badge-grade--f{ background:var(--danger-100); color:var(--danger); }
+
+/* ---------- Empty state ---------- */
+.results-empty{
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  gap:.5rem;
+  padding:3rem 1.5rem;
+  color:var(--ink-400);
+  text-align:center;
+}
+
+.results-empty i{
+  font-size:2rem;
+  color:var(--line-200);
+}

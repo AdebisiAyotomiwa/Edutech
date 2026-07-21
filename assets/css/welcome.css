@@ -1,0 +1,288 @@
+/* =========================================================
+   WELCOME PAGE — top navbar + open hero (no card wrapper)
+   Reuses tokens from shared.css (brand-*, btn-brand, etc.)
+   ========================================================= */
+
+html,body{ height:100%; }
+body{ margin:0; }
+
+/* ---------- Top navbar ---------- */
+.app-navbar{
+  background:#fff;
+  border-bottom:1px solid var(--line-200);
+  position:sticky;
+  top:0;
+  z-index:20;
+}
+
+.app-navbar-inner{
+  max-width:1180px;
+  margin:0 auto;
+  padding:.9rem 2rem;
+  display:flex;
+  align-items:center;
+  gap:2.5rem;
+}
+
+.app-navbar .brand-lockup{
+  display:inline-flex;
+  align-items:center;
+  gap:.6rem;
+  text-decoration:none;
+  margin-right:auto;
+}
+.app-navbar .brand-mark{
+  width:36px; height:36px;
+  border-radius:9px;
+  background:var(--brand-900);
+  color:var(--gold-500);
+  display:flex; align-items:center; justify-content:center;
+  font-size:1.05rem;
+  flex-shrink:0;
+}
+.app-navbar .brand-name{
+  font-family:var(--font-display);
+  font-weight:600;
+  font-size:1.2rem;
+  line-height:1;
+  color:var(--ink-900);
+}
+
+.app-nav-links{
+  display:flex;
+  align-items:center;
+  gap:1.75rem;
+  margin-right:auto;
+}
+.app-nav-links .nav-link{
+  padding:.4rem 0;
+  font-size:.92rem;
+  font-weight:500;
+  color:var(--ink-700);
+  border-bottom:2px solid transparent;
+  text-decoration:none;
+}
+.app-nav-links .nav-link:hover{
+  color:var(--brand-900);
+}
+/* Only ever applied by JS when a page actually represents that section.
+   Nothing on this page sets it — see welcome.js. */
+.app-nav-links .nav-link.active{
+  color:var(--brand-900);
+  font-weight:600;
+  border-bottom-color:var(--gold-500);
+}
+
+.app-navbar-right{
+  display:flex;
+  align-items:center;
+  gap:1rem;
+}
+
+/* ---------- Profile avatar / dropdown ---------- */
+.profile-avatar-btn{
+  width:40px; height:40px;
+  border-radius:50%;
+  border:none;
+  padding:0;
+  background:var(--brand-100);
+  display:flex; align-items:center; justify-content:center;
+  overflow:hidden;
+  cursor:pointer;
+}
+.profile-avatar-btn:focus-visible{
+  outline:3px solid var(--gold-500);
+  outline-offset:2px;
+}
+.profile-avatar-img{
+  width:100%; height:100%;
+  object-fit:cover;
+}
+.profile-avatar-initials{
+  font-family:var(--font-display);
+  font-weight:600;
+  font-size:.85rem;
+  color:var(--brand-900);
+}
+
+/* ---------- Mobile nav toggle button ---------- */
+.nav-toggle-btn{
+  display:none;
+  width:38px; height:38px;
+  align-items:center;
+  justify-content:center;
+  border:1px solid var(--line-200);
+  border-radius:9px;
+  background:#fff;
+  color:var(--ink-900);
+  font-size:1.2rem;
+  cursor:pointer;
+}
+.nav-toggle-btn:hover{ background:var(--paper-100); }
+.nav-toggle-btn:focus-visible{
+  outline:3px solid var(--gold-500);
+  outline-offset:2px;
+}
+
+/* ---------- Mobile nav panel (slide-in from right) ---------- */
+.mobile-nav-scrim{
+  position:fixed;
+  inset:0;
+  background:rgba(11,61,46,.35);
+  opacity:0;
+  pointer-events:none;
+  transition:opacity .2s ease;
+  z-index:30;
+}
+.mobile-nav-scrim.is-open{
+  opacity:1;
+  pointer-events:auto;
+}
+
+.mobile-nav-panel{
+  position:fixed;
+  top:0; right:0;
+  height:100%;
+  width:min(78vw, 320px);
+  background:#fff;
+  z-index:31;
+  display:flex;
+  flex-direction:column;
+  padding:1.25rem;
+  transform:translateX(100%);
+  transition:transform .25s ease;
+  box-shadow:-8px 0 28px rgba(18,33,28,.18);
+}
+.mobile-nav-panel.is-open{
+  transform:translateX(0);
+}
+
+.mobile-nav-header{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  margin-bottom:1.5rem;
+}
+.mobile-nav-header .brand-name{
+  font-family:var(--font-display);
+  font-weight:600;
+  font-size:1rem;
+  color:var(--ink-900);
+}
+
+.mobile-nav-link{
+  display:flex;
+  align-items:center;
+  gap:.75rem;
+  padding:.85rem .75rem;
+  border-radius:10px;
+  font-weight:500;
+  font-size:.98rem;
+  color:var(--ink-700);
+  text-decoration:none;
+}
+.mobile-nav-link i{ font-size:1.1rem; color:var(--ink-400); }
+.mobile-nav-link:hover{ background:var(--paper-100); color:var(--brand-900); }
+.mobile-nav-link.active{
+  background:var(--brand-100);
+  color:var(--brand-900);
+  font-weight:600;
+}
+.mobile-nav-link.active i{ color:var(--brand-700); }
+
+/* ---------- Welcome hero (full-bleed photo background + scrim) ---------- */
+.welcome-hero{
+  position:relative;
+  min-height:calc(100vh - 65px); /* 65px ≈ navbar height at desktop padding */
+  display:flex;
+  align-items:center;
+  overflow:hidden;
+
+  background-image:url("/assets/images/image/welcome2_img.jpg");
+  background-size:cover;
+  background-position:center;
+}
+
+/* Same technique as .auth-visual-overlay on the login page: a brand-toned
+   gradient so the photo reads as a backdrop, not something the headline
+   has to compete with. Slightly heavier here since this image is busier
+   (lots of small light-colored text on the spines) than the login photo. */
+.welcome-hero-overlay{
+  position:absolute;
+  inset:0;
+  z-index:0;
+  background-image:
+    linear-gradient(90deg, rgba(11,61,46,.93) 0%, rgba(11,61,46,.88) 38%, rgba(11,61,46,.55) 68%, rgba(11,61,46,.35) 100%),
+    radial-gradient(circle at 85% 20%, rgba(199,154,59,.16) 0, transparent 45%);
+  pointer-events:none;
+}
+
+.welcome-hero-inner{
+  position:relative;
+  z-index:1;
+  max-width:1180px;
+  margin:0 auto;
+  padding:4rem 2rem;
+  width:100%;
+}
+
+.welcome-copy{ max-width:520px; }
+
+.welcome-copy h1{
+  font-family:var(--font-display);
+  font-size:2.3rem;
+  font-weight:600;
+  color:#fff;
+  margin-bottom:.7rem;
+  line-height:1.2;
+  text-shadow:0 1px 14px rgba(0,0,0,.22);
+}
+.welcome-copy .wave{ display:inline-block; }
+.welcome-copy p{
+  font-family:var(--font-body);
+  color:rgba(255,255,255,.85);
+  font-size:1.02rem;
+  margin-bottom:1.75rem;
+  max-width:420px;
+}
+
+/* On the dark photo background, the solid brand-green button loses
+   contrast against the brand-green scrim — swap to a gold fill here
+   so it reads instead of blending into the backdrop. */
+.welcome-hero .btn-brand{
+  background:var(--gold-500);
+  border-color:var(--gold-500);
+  color:var(--brand-900);
+}
+.welcome-hero .btn-brand:hover{
+  background:#b5872f;
+  border-color:#b5872f;
+  color:var(--brand-900);
+}
+.welcome-illustration:empty::before{
+  content:"\F3F6";
+  font-family:"bootstrap-icons";
+  font-size:2.5rem;
+  color:var(--ink-400);
+}
+
+/* ---------- Responsive ---------- */
+@media (max-width:900px){
+  .app-nav-links{ display:none; }
+  .nav-toggle-btn{ display:flex; }
+
+  /* narrower crop shows less of the shelf horizontally, so the gradient
+     needs to darken more of the frame for text to stay readable */
+  .welcome-hero-overlay{
+    background-image:
+      linear-gradient(180deg, rgba(11,61,46,.55) 0%, rgba(11,61,46,.88) 55%, rgba(11,61,46,.93) 100%),
+      radial-gradient(circle at 85% 15%, rgba(199,154,59,.16) 0, transparent 45%);
+  }
+}
+
+@media (max-width:480px){
+  .app-navbar-inner{ padding:.8rem 1.25rem; gap:1rem; }
+  .welcome-hero{ min-height:calc(100vh - 58px); } /* navbar is slightly shorter at this padding */
+  .welcome-hero-inner{ padding:2.5rem 1.25rem; }
+  .welcome-copy h1{ font-size:1.7rem; }
+}

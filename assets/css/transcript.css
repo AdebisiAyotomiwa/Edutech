@@ -1,0 +1,153 @@
+/* =========================================================
+   TRANSCRIPT PAGE
+   Reuses .results-filterbar, .results-empty, .badge-grade
+   patterns already defined in results.css — add those there
+   if not already present. This file adds transcript-only
+   pieces: search field sizing, print button, and the entire
+   print-only layout.
+   ========================================================= */
+
+.transcript-search-group{
+  flex:1 1 220px;
+  min-width:200px;
+}
+
+.transcript-print-btn{
+  display:inline-flex;
+  align-items:center;
+  gap:.5rem;
+  white-space:nowrap;
+  margin-left:auto;
+}
+
+/* =========================================================
+   PRINT AREA
+   Hidden on screen entirely. Shown only inside @media print,
+   and everything else in the app is hidden during print so
+   only this block is rendered on the page/PDF.
+   ========================================================= */
+#printArea{
+  display:none;
+}
+
+.print-header{
+  display:flex;
+  align-items:flex-start;
+  justify-content:space-between;
+  border-bottom:3px solid var(--brand-900);
+  padding-bottom:1rem;
+  margin-bottom:1.5rem;
+}
+
+.print-brand{
+  display:flex;
+  align-items:center;
+  gap:.6rem;
+}
+.print-brand-mark{
+  width:40px; height:40px;
+  border-radius:9px;
+  background:var(--brand-900);
+  color:var(--gold-500);
+  display:flex; align-items:center; justify-content:center;
+  font-size:1.2rem;
+  flex-shrink:0;
+}
+.print-brand-name{
+  font-family:var(--font-display);
+  font-weight:700;
+  font-size:1.35rem;
+  color:var(--brand-900);
+}
+
+.print-doc-title{
+  text-align:right;
+}
+.print-doc-title h2{
+  font-family:var(--font-display);
+  font-size:1.1rem;
+  font-weight:600;
+  color:var(--ink-900);
+  margin:0 0 .2rem;
+}
+.print-doc-title p{
+  font-size:.8rem;
+  color:var(--ink-700);
+  margin:0;
+}
+
+.print-student-info{
+  display:grid;
+  grid-template-columns:repeat(3, 1fr);
+  gap:.9rem 1.5rem;
+  margin-bottom:1.5rem;
+  padding-bottom:1.25rem;
+  border-bottom:1px solid var(--line-200);
+}
+.print-student-info > div{
+  display:flex;
+  flex-direction:column;
+  gap:.15rem;
+}
+.print-label{
+  font-size:.72rem;
+  text-transform:uppercase;
+  letter-spacing:.04em;
+  color:var(--ink-400);
+  font-weight:600;
+}
+.print-value{
+  font-size:.95rem;
+  font-weight:600;
+  color:var(--ink-900);
+}
+
+.print-table{
+  width:100%;
+  border-collapse:collapse;
+  font-size:.85rem;
+}
+.print-table th,
+.print-table td{
+  border:1px solid var(--line-200);
+  padding:.5rem .6rem;
+  text-align:left;
+}
+.print-table th{
+  background:var(--paper-100);
+  font-weight:600;
+  color:var(--ink-900);
+}
+
+.print-footer{
+  margin-top:1.5rem;
+  font-size:.75rem;
+  color:var(--ink-400);
+  text-align:center;
+}
+
+/* =========================================================
+   PRINT MEDIA QUERY
+   ========================================================= */
+@media print{
+  body *{
+    visibility:hidden;
+  }
+
+  #printArea, #printArea *{
+    visibility:visible;
+  }
+
+  #printArea{
+    display:block;
+    position:absolute;
+    left:0;
+    top:0;
+    width:100%;
+    padding:0;
+  }
+
+  @page{
+    margin:18mm 15mm;
+  }
+}

@@ -1,0 +1,158 @@
+/* =========================================================
+   STUDENT RESULT PORTAL — SHARED DESIGN TOKENS & COMPONENTS
+   Use this file on every page for a consistent system.
+   ========================================================= */
+
+:root{
+  /* ---- Color: academic green + warm gold ---- */
+  --brand-900:#0B3D2E;   /* deep ivy green   - primary */
+  --brand-700:#145C43;   /* mid green        - hover/active */
+  --brand-500:#1F7A5C;   /* accessible green - links/icons */
+  --brand-100:#E4F0EA;   /* pale green tint  - backgrounds/badges */
+  --gold-500:#C79A3B;    /* muted gold       - accent/highlight */
+  --gold-100:#F7EDD6;    /* pale gold tint */
+
+  --ink-900:#12211C;     /* near-black text */
+  --ink-700:#41544C;     /* secondary text */
+  --ink-400:#809890;     /* muted/placeholder text */
+  --paper-0:#FFFFFF;
+  --paper-50:#F6F8F6;    /* app background */
+  --paper-100:#EEF3EF;
+  --line-200:#DCE6E0;    /* borders */
+
+  --danger:#B3402E;
+  --danger-100:#FBE8E4;
+  --warn:#A6741A;
+  --warn-100:#FBF1DD;
+  --info:#2B6CB0;
+  --info-100:#E5EFFA;
+  --success:#1F7A5C;
+  --success-100:#E4F0EA;
+
+  /* ---- Type ---- */
+  --font-display:'Poppins', system-ui, -apple-system, sans-serif;
+  --font-body:'Inter', system-ui, -apple-system, sans-serif;
+
+  /* ---- Shape / elevation ---- */
+  --radius-sm:8px;
+  --radius-md:14px;
+  --radius-lg:22px;
+  --shadow-card:0 1px 2px rgba(18,33,28,.04), 0 8px 24px rgba(18,33,28,.06);
+  --shadow-pop:0 12px 32px rgba(11,61,46,.16);
+}
+
+body{
+  font-family:var(--font-body);
+  color:var(--ink-900);
+  background:var(--paper-50);
+}
+
+h1,h2,h3,h4,.font-display{
+  font-family:var(--font-display);
+  letter-spacing:-.01em;
+}
+
+a{ color:var(--brand-700); }
+a:hover{ color:var(--brand-900); }
+
+/* =========================================================
+   BUTTONS
+   ========================================================= */
+.btn{ font-weight:600; border-radius:10px; padding:.62rem 1.1rem; }
+
+.btn-brand{
+  background:var(--brand-900);
+  border:1px solid var(--brand-900);
+  color:#fff;
+  display:inline-flex; align-items:center; justify-content:center; gap:.5rem;
+}
+.btn-brand:hover{ background:var(--brand-700); border-color:var(--brand-700); color:#fff; }
+.btn-brand:focus-visible, .btn:focus-visible{
+  outline:3px solid var(--gold-500); outline-offset:2px;
+}
+.btn-brand:disabled{ opacity:.65; }
+
+.btn-secondary-outline{
+  background:#fff; border:1px solid var(--line-200); color:var(--brand-900);
+}
+.btn-secondary-outline:hover{ background:var(--paper-100); color:var(--brand-900); }
+
+.btn-danger-soft{
+  background:var(--danger-100); border:1px solid transparent; color:var(--danger);
+}
+.btn-danger-soft:hover{ background:#f5d6cf; color:var(--danger); }
+
+/* =========================================================
+   ALERTS / TOASTS
+   ========================================================= */
+.alert-success{ background:var(--success-100); color:var(--success); border:1px solid transparent;}
+.alert-info{ background:var(--info-100); color:var(--info); border:1px solid transparent;}
+.alert-warning{ background:var(--warn-100); color:var(--warn); border:1px solid transparent;}
+.alert-danger{ background:var(--danger-100); color:var(--danger); border:1px solid transparent;}
+
+/* =========================================================
+   CARDS
+   ========================================================= */
+.card-surface{
+  background:#fff;
+  border:1px solid var(--line-200);
+  border-radius:var(--radius-md);
+  box-shadow:var(--shadow-card);
+}
+
+/* =========================================================
+   NAVBAR / SIDEBAR (for later pages)
+   ========================================================= */
+.app-sidebar{
+  background:var(--brand-900);
+  color:#fff;
+  min-height:100vh;
+}
+.app-sidebar .nav-link{
+  color:rgba(255,255,255,.75);
+  border-radius:10px;
+  font-weight:500;
+}
+.app-sidebar .nav-link.active,
+.app-sidebar .nav-link:hover{
+  background:rgba(255,255,255,.1);
+  color:#fff;
+}
+
+/* =========================================================
+   FORMS
+   ========================================================= */
+.form-label{ font-weight:600; font-size:.92rem; color:var(--ink-900); }
+
+.form-control, .form-select{
+  border:1px solid var(--line-200);
+  border-radius:10px;
+  padding:.62rem .9rem;
+  font-size:.95rem;
+}
+.form-control:focus, .form-select:focus{
+  border-color:var(--brand-500);
+  box-shadow:0 0 0 3px var(--brand-100);
+}
+
+.input-group-custom .input-group-text{
+  background:#fff;
+  border:1px solid var(--line-200);
+  border-right:none;
+  color:var(--ink-400);
+}
+.input-group-custom .form-control{
+  border-left:none;
+}
+.input-group-custom .form-control:focus{
+  border-color:var(--brand-500);
+}
+.input-group-custom:focus-within .input-group-text{
+  border-color:var(--brand-500);
+}
+
+/* =========================================================
+   PAGINATION
+   ========================================================= */
+.pagination .page-link{ color:var(--brand-700); border-color:var(--line-200); }
+.pagination .page-item.active .page-link{ background:var(--brand-900); border-color:var(--brand-900); }

@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Login · Student Result Portal</title>
+
+<!-- Bootstrap 5 -->
+<link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.3/css/bootstrap.min.css" rel="stylesheet">
+<!-- Bootstrap Icons -->
+<link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+<!-- Fonts -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+<link rel="stylesheet" href="/assets/css/login.css">
+<link rel="stylesheet" href="/assets/css/shared.css">
+</head>
+<body>
+
+<div class="auth-shell">
+
+  <!-- ===== Left: Form Panel ===== -->
+  <div class="auth-panel">
+    <div class="auth-panel-inner">
+
+      <a href="#" class="brand-lockup">
+        <span class="brand-mark"><i class="bi bi-mortarboard-fill"></i></span>
+        <span class="brand-name">Edutech</span>
+      </a>
+
+      <p class="brand-tagline">Student Result Portal</p>
+
+      <div class="auth-copy">
+        <h1>Welcome back</h1>
+        <p>Sign in to view your results, transcripts and academic standing.</p>
+      </div>
+
+      <form id="loginForm" class="auth-form" novalidate>
+
+        <div class="mb-3">
+          <label for="identifierInput" class="form-label">Email or matric number</label>
+          <div class="input-group input-group-custom">
+            <span class="input-group-text"><i class="bi bi-person"></i></span>
+            <input type="text" class="form-control" id="identifierInput" placeholder="e.g. john.doe@school.edu or CSC/001"
+                   autocomplete="username" required>
+          </div>
+          <div class="invalid-feedback">Enter your email or matric number.</div>
+        </div>
+
+        <div class="mb-2">
+          <label for="passwordInput" class="form-label">Password</label>
+          <div class="input-group input-group-custom">
+            <span class="input-group-text"><i class="bi bi-lock"></i></span>
+            <input type="password" class="form-control" id="passwordInput" placeholder="Enter your password"
+                   autocomplete="current-password" required minlength="6">
+            <button class="btn btn-toggle-pass" type="button" id="togglePassword" aria-label="Show password">
+              <i class="bi bi-eye"></i>
+            </button>
+          </div>
+          <div class="invalid-feedback">Password must be at least 6 characters.</div>
+        </div>
+
+        <div class="d-flex justify-content-between align-items-center auth-row">
+          <div class="form-check">
+            <input class="form-check-input" type="checkbox" id="rememberMe" checked>
+            <label class="form-check-label" for="rememberMe">Remember me</label>
+          </div>
+          <a href="#" class="link-forgot">Forgot password?</a>
+        </div>
+
+        <div id="loginAlert" class="alert alert-danger d-none py-2 px-3 mt-3 mb-0" role="alert"></div>
+
+        <button type="submit" class="btn btn-brand w-100 mt-4" id="loginBtn">
+          <span class="btn-label">Login</span>
+          <span class="spinner-border spinner-border-sm d-none" id="loginSpinner" role="status" aria-hidden="true"></span>
+        </button>
+
+        <p class="auth-footnote">
+         Trouble signing in? <a href="#">Contact support</a>
+        </p>
+
+      </form>
+    </div>
+
+    <div class="auth-legal">&copy; 2026 Edutech. All rights reserved.</div>
+  </div>
+
+  <!-- ===== Right: Image Panel ===== -->
+  <div class="auth-visual">
+
+    <img src="/assets/images/image/student_portal1.jpg" alt="Students reviewing their results together on campus" class="auth-visual-img">
+
+    <div class="auth-visual-overlay"></div>
+
+    <div class="auth-visual-content">
+      <div class="auth-quote-mark">&ldquo;</div>
+      <p class="auth-visual-quote">Every result tells a story of progress.</p>
+      <p class="auth-visual-sub">Track your CGPA, courses and transcripts &mdash; all in one place.</p>
+    </div>
+  </div>
+
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.3/js/bootstrap.bundle.min.js"></script>
+<script type="module" src="/assets/js/login.js"></script>
+</body>
+</html>
