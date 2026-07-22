@@ -1,36 +1,31 @@
 import { requireAuth, getCurrentStudent, logout } from "./auth.js";
-
-import { getResults, getCourses, getDepartmentById } from "./api.js";
-
+import { getResults, getCourses, getDepartmentById, getRegistrations, getAcademicCalendar } from "./api.js";
 import { calculateGPA, getStudentDisplayName, scoreToGrade } from "./utils.js";
 
-/* ==========================================================
+/* ========================================================
    Protect Dashboard
-========================================================== */
-
+======================================================== */
 requireAuth();
 
-/* ==========================================================
-   Global Variables
-========================================================== */
-
+/* ========================================================
+   Global State
+======================================================== */
 let student = null;
-let results = [];
-let courses = [];
 let department = null;
 let resultsWithCourses = [];
-let gpaTrend = [];
+let allCourses = [];
+let allRegistrations = [];
+let academicCalendar = null;
 
-/* ==========================================================
+/* ========================================================
    DOM Elements
-========================================================== */
-
-const dashboardBody = document.getElementById("dashboardBody");
+======================================================== */
+const dashboardLoading = document.getElementById("dashboardLoading");
+const dashboardContent = document.getElementById("dashboardContent");
 const greetingName = document.getElementById("greetingName");
 
 const sidebarUserName = document.getElementById("sidebarUserName");
 const sidebarUserMeta = document.getElementById("sidebarUserMeta");
-
 const sidebarAvatarImg = document.getElementById("sidebarAvatarImg");
 const sidebarAvatarInitials = document.getElementById("sidebarAvatarInitials");
 
@@ -40,10 +35,9 @@ const appSidebarScrim = document.getElementById("appSidebarScrim");
 
 const logoutBtn = document.getElementById("logoutBtn");
 
-/* ==========================================================
-   Start App
-========================================================== */
-
+/* ========================================================
+   Start
+======================================================== */
 document.addEventListener("DOMContentLoaded", initDashboard);
 
 async function initDashboard() {
@@ -51,458 +45,243 @@ async function initDashboard() {
     student = getCurrentStudent();
 
     if (!student) {
-      window.location.href = "/pages/login.html";
+      window.location.href = "/assets/pages/login.html";
       return;
     }
 
     initialiseSidebar();
-
     initialiseLogout();
 
     await loadStudentData();
 
-    renderDashboard();
+    dashboardLoading.classList.add("d-none");
+    dashboardContent.classList.remove("d-none");
+
+    renderStatCards();
+    renderAcademicSummary();
+    renderChart();
   } catch (error) {
     console.error(error);
-
-    dashboardBody.innerHTML = `
-      <div class="alert alert-danger">
-          Failed to load dashboard.
-      </div>
+    dashboardLoading.innerHTML = `
+      <div class="alert alert-danger mb-0">Failed to load dashboard.</div>
     `;
   }
 }
 
-/* ==========================================================
-   Load Student Data
-========================================================== */
-
+/* ========================================================
+   Load Data
+======================================================== */
 async function loadStudentData() {
-  results = await getResults({
-    
-    studentId: student.id,
-  });
-    
-  courses = await getCourses();
+  const [results, courses, dept, registrations, calendar] = await Promise.all([
+    getResults({ studentId: student.id }),
+    getCourses(),
+    getDepartmentById(student.departmentId),
+    getRegistrations({ studentId: student.id }),
+    getAcademicCalendar(),
+  ]);
 
-  
-
-  department = await getDepartmentById(student.departmentId);
+  allCourses = courses;
+  department = dept;
+  allRegistrations = registrations;
+  academicCalendar = calendar;
 
   resultsWithCourses = results.map((result) => {
-    const course = courses.find((c) => c.id === result.courseId);
-   
-    
+    const course = allCourses.find((c) => Number(c.id) === Number(result.courseId));
 
     if (!course) {
-      console.warn("Course not found:", result.courseId);
-
-      return {
-        ...result,
-
-        courseCode: "N/A",
-
-        courseTitle: "Unknown Course",
-
-        creditUnit: 0,
-      };
+      console.warn("Course not found for result:", result);
+      return { ...result, courseCode: "N/A", courseTitle: "Unknown Course", creditUnit: 0 };
     }
 
     return {
       ...result,
-
       courseCode: course.courseCode,
-
       courseTitle: course.courseTitle,
-
       creditUnit: course.creditUnit,
     };
   });
 }
 
-/* ==========================================================
+/* ========================================================
    Sidebar
-========================================================== */
-
+======================================================== */
 function initialiseSidebar() {
   greetingName.textContent = getStudentDisplayName(student);
-
   sidebarUserName.textContent = `${student.firstName} ${student.lastName}`;
-
   sidebarUserMeta.textContent = student.matricNumber;
+
+  const initials = student.firstName.charAt(0) + student.lastName.charAt(0);
 
   if (student.profileImage && student.profileImage.trim() !== "") {
     sidebarAvatarImg.src = student.profileImage;
-
     sidebarAvatarImg.onerror = () => {
       sidebarAvatarImg.classList.add("d-none");
       sidebarAvatarInitials.style.display = "flex";
-      sidebarAvatarInitials.textContent =
-        student.firstName.charAt(0) + student.lastName.charAt(0);
+      sidebarAvatarInitials.textContent = initials;
     };
-
     sidebarAvatarImg.classList.remove("d-none");
-
     sidebarAvatarInitials.style.display = "none";
   } else {
     sidebarAvatarInitials.style.display = "flex";
-
-    sidebarAvatarInitials.textContent =
-      student.firstName.charAt(0) + student.lastName.charAt(0);
+    sidebarAvatarInitials.textContent = initials;
   }
 
-  // else {
-
-  //     sidebarAvatarInitials.textContent =
-  //         student.firstName.charAt(0) +
-  //         student.lastName.charAt(0);
-
-  // }
-
   sidebarToggleBtn.addEventListener("click", () => {
-    appSidebar.classList.toggle("show");
-
-    appSidebarScrim.classList.toggle("show");
+    const isOpen = appSidebar.classList.toggle("is-open");
+    appSidebarScrim.classList.toggle("is-open");
+    sidebarToggleBtn.setAttribute("aria-expanded", isOpen);
   });
 
   appSidebarScrim.addEventListener("click", () => {
-    appSidebar.classList.remove("show");
-
-    appSidebarScrim.classList.remove("show");
+    appSidebar.classList.remove("is-open");
+    appSidebarScrim.classList.remove("is-open");
+    sidebarToggleBtn.setAttribute("aria-expanded", "false");
   });
 }
-
-/* ==========================================================
-   Logout
-========================================================== */
 
 function initialiseLogout() {
-  logoutBtn.addEventListener("click", () => {
+  const logoutModalEl = document.getElementById("logoutConfirmModal");
+  const logoutModal = new bootstrap.Modal(logoutModalEl);
+  const confirmLogoutBtn = document.getElementById("confirmLogoutBtn");
+
+  logoutBtn.addEventListener("click", () => logoutModal.show());
+
+  confirmLogoutBtn.addEventListener("click", () => {
     logout();
-
-    window.location.href = "/pages/login.html";
+    window.location.href = "/assets/pages/login.html";
   });
 }
 
-/* ==========================================================
-   Render Dashboard
-========================================================== */
+/* ========================================================
+   Stat Cards
+======================================================== */
+function renderStatCards() {
+  const cgpa = resultsWithCourses.length ? calculateGPA(resultsWithCourses) : "0.00";
 
-function renderDashboard() {
-  const totalCourses = resultsWithCourses.length;
+  const totalCreditsPassed = getCreditsEarned();
+  const currentSemesterCourseCount = getCurrentSemesterRegistrations().length;
+  const outstandingCount = getOutstandingCourses().length;
 
-  const totalCredits = resultsWithCourses.reduce(
-    (sum, result) => sum + result.creditUnit,
-    0,
+  document.getElementById("statCgpa").textContent = cgpa;
+  document.getElementById("statCredits").textContent = totalCreditsPassed;
+  document.getElementById("statCourses").textContent = currentSemesterCourseCount;
+  document.getElementById("statOutstanding").textContent = outstandingCount;
+}
+
+/**
+ * Credits Earned = sum of creditUnit for every result the student has
+ * PASSED (grade E or above). A failed course's units don't count toward
+ * what's been "earned," even though the score still affects CGPA.
+ */
+function getCreditsEarned() {
+  return resultsWithCourses
+    .filter((r) => scoreToGrade(r.score).grade !== "F")
+    .reduce((sum, r) => sum + r.creditUnit, 0);
+}
+
+/**
+ * Current Semester Courses = every registration matching the academic
+ * calendar's current session/semester. Includes carry-over registrations
+ * alongside regular ones — both are genuinely "courses this semester."
+ */
+function getCurrentSemesterRegistrations() {
+  return allRegistrations.filter(
+    (r) =>
+      r.session === academicCalendar.currentSession &&
+      Number(r.semester) === Number(academicCalendar.currentSemester)
   );
-
-  const cgpa = calculateGPA(resultsWithCourses);
-
-  dashboardBody.innerHTML = `
-
-        <div class="row g-4 mb-4">
-
-            <div class="col-md-4">
-                <div class="card shadow-sm h-100">
-
-                    <div class="card-body">
-
-                        <h6 class="text-muted">
-                            Current CGPA
-                        </h6>
-
-                        <h2 class="fw-bold text-primary">
-                            ${cgpa}
-                        </h2>
-
-                    </div>
-
-                </div>
-            </div>
-
-            <div class="col-md-4">
-
-                <div class="card shadow-sm h-100">
-
-                    <div class="card-body">
-
-                        <h6 class="text-muted">
-                            Total Courses
-                        </h6>
-
-                        <h2 class="fw-bold">
-                            ${totalCourses}
-                        </h2>
-
-                    </div>
-
-                </div>
-
-            </div>
-
-            <div class="col-md-4">
-
-                <div class="card shadow-sm h-100">
-
-                    <div class="card-body">
-
-                        <h6 class="text-muted">
-                            Total Credit Units
-                        </h6>
-
-                        <h2 class="fw-bold">
-                            ${totalCredits}
-                        </h2>
-
-                    </div>
-
-                </div>
-
-            </div>
-
-        </div>
-
-        <div class="row g-4">
-
-            <div class="col-lg-8">
-
-                <div class="card shadow-sm">
-
-                    <div class="card-header fw-semibold">
-                        Recent Results
-                    </div>
-
-                    <div class="card-body p-0">
-
-                        <div class="table-responsive">
-
-                            <table class="table table-hover align-middle mb-0">
-
-                                <thead>
-
-                                    <tr>
-
-                                        <th>Course</th>
-
-                                        <th>Title</th>
-
-                                        <th>Score</th>
-
-                                        <th>Grade</th>
-
-                                    </tr>
-
-                                </thead>
-
-                                <tbody id="recentResultsTable">
-
-                                </tbody>
-
-                            </table>
-
-                        </div>
-
-                    </div>
-
-                </div>
-
-            </div>
-
-            <div class="col-lg-4">
-
-                <div class="card shadow-sm">
-
-                    <div class="card-header fw-semibold">
-
-                        Academic Summary
-
-                    </div>
-
-                    <div class="card-body">
-
-                        <p>
-
-                            <strong>Name:</strong><br>
-
-                            ${student.firstName} ${student.lastName}
-
-                        </p>
-
-                        <p>
-
-                            <strong>Matric No:</strong><br>
-
-                            ${student.matricNumber}
-
-                        </p>
-
-                        <p>
-
-                            <strong>Department:</strong><br>
-
-                            ${department.name}
-
-                        </p>
-
-                        <p>
-
-                            <strong>Programme:</strong><br>
-
-                            ${student.programme}
-
-                        </p>
-
-                        <p>
-
-                            <strong>Current Level:</strong><br>
-
-                            ${student.level} Level
-
-                        </p>
-
-                    </div>
-
-                </div>
-
-            </div>
-
-        </div>
-
-        <div class="card shadow-sm mt-4">
-
-            <div class="card-header fw-semibold">
-
-                GPA Trend
-
-            </div>
-
-            <div class="card-body">
-
-                <canvas id="gpaChart"></canvas>
-
-            </div>
-
-        </div>
-
-    `;
-
-  renderRecentResults();
-
-//   renderChart();
-if (typeof Chart !== "undefined") {
-    renderChart();
-}
 }
 
-/* ==========================================================
-   Recent Results Table
-========================================================== */
+/**
+ * Outstanding = distinct courses the student has ever failed that do NOT
+ * have a later passing result for that same course. A fail with a
+ * subsequent pass (a resolved carry-over) is no longer outstanding.
+ */
+function getOutstandingCourses() {
+  const fails = resultsWithCourses.filter((r) => scoreToGrade(r.score).grade === "F");
 
-function renderRecentResults() {
-  const table = document.getElementById("recentResultsTable");
-
-  table.innerHTML = "";
-
-  const latest = [...resultsWithCourses].reverse().slice(0, 6);
-
-  latest.forEach((result) => {
-    const grade = scoreToGrade(result.score);
-
-    table.innerHTML += `
-
-            <tr>
-
-                <td>${result.courseCode}</td>
-
-                <td>${result.courseTitle}</td>
-
-                <td>${result.score}</td>
-
-                <td>
-
-                    <span class="badge bg-primary">
-
-                        ${grade.grade}
-
-                    </span>
-
-                </td>
-
-            </tr>
-
-        `;
+  return fails.filter((fail) => {
+    const laterPass = resultsWithCourses.some(
+      (r) =>
+        r.courseId === fail.courseId &&
+        scoreToGrade(r.score).grade !== "F" &&
+        isLater(r.session, r.semester, fail.session, fail.semester)
+    );
+    return !laterPass;
   });
 }
 
-/* ==========================================================
-   GPA Trend Chart
-========================================================== */
+/**
+ * Session strings are formatted "YYYY/YYYY", so string comparison
+ * sorts them correctly in chronological order.
+ */
+function isLater(sessionA, semesterA, sessionB, semesterB) {
+  if (sessionA !== sessionB) return sessionA > sessionB;
+  return Number(semesterA) > Number(semesterB);
+}
 
+/* ========================================================
+   Academic Summary
+======================================================== */
+function renderAcademicSummary() {
+  const summary = document.getElementById("academicSummary");
+
+  summary.innerHTML = `
+    <p><strong>Name:</strong><br>${student.firstName} ${student.lastName}</p>
+    <p><strong>Matric No:</strong><br>${student.matricNumber}</p>
+    <p><strong>Department:</strong><br>${department?.name ?? "N/A"}</p>
+    <p><strong>Programme:</strong><br>${student.programme}</p>
+    <p class="mb-0"><strong>Current Level:</strong><br>${student.level} Level</p>
+  `;
+}
+
+/* ========================================================
+   GPA Trend Chart
+======================================================== */
 function renderChart() {
   const canvas = document.getElementById("gpaChart");
+  if (!canvas || typeof Chart === "undefined") return;
 
-  if (!canvas) return;
-
-  // Destroy previous chart if it exists
   if (window.gpaChart instanceof Chart) {
     window.gpaChart.destroy();
   }
 
-  // Group results by session and semester
   const grouped = {};
-
   resultsWithCourses.forEach((result) => {
-    const key = `${result.session} - Semester ${result.semester}`;
-
-    if (!grouped[key]) {
-      grouped[key] = [];
-    }
-
+    const key = `${result.session} - Sem ${result.semester}`;
+    if (!grouped[key]) grouped[key] = [];
     grouped[key].push(result);
   });
 
   const labels = [];
   const values = [];
-
   Object.entries(grouped).forEach(([label, records]) => {
     labels.push(label);
-
     values.push(Number(calculateGPA(records)));
   });
 
   window.gpaChart = new Chart(canvas, {
     type: "line",
-
     data: {
       labels,
-
       datasets: [
         {
           label: "GPA",
-
           data: values,
-
+          borderColor: "#1f9d55",
+          backgroundColor: "#1f9d55",
           borderWidth: 3,
-
           tension: 0.35,
-
           fill: false,
+          pointRadius: 4,
         },
       ],
     },
-
     options: {
       responsive: true,
-
       maintainAspectRatio: false,
-
-      scales: {
-        y: {
-          beginAtZero: true,
-
-          max: 5,
-        },
-      },
+      plugins: { legend: { display: false } },
+      scales: { y: { beginAtZero: true, max: 5 } },
     },
   });
 }

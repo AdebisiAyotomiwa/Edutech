@@ -148,3 +148,33 @@ export function updateStudent(id, data) {
     body: JSON.stringify(data),
   });
 }
+
+/* =========================================================
+   ACADEMIC CALENDAR
+   ========================================================= */
+
+/**
+ * Returns the single academic calendar record:
+ * { currentSession: "2024/2025", currentSemester: 2 }
+ */
+export function getAcademicCalendar() {
+  return request("/academicCalendar");
+}
+
+/* =========================================================
+   REGISTRATIONS
+   ========================================================= */
+
+export function getRegistrations(filters = {}) {
+  const params = new URLSearchParams();
+
+  Object.entries(filters).forEach(([key, value]) => {
+    if (value !== undefined && value !== null) {
+      params.append(key, value);
+    }
+  });
+
+  const query = params.toString();
+
+  return request(`/registrations${query ? `?${query}` : ""}`);
+}

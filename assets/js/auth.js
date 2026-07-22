@@ -16,10 +16,6 @@ import {
    ✓ Read current student
    ✓ Protect pages
 
-   Not responsible for:
-   ✗ DOM manipulation
-   ✗ API requests (delegates to api.js)
-   ✗ Rendering UI
    ========================================================= */
 
 const STORAGE_KEY = "currentStudent";

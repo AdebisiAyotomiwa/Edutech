@@ -22,13 +22,14 @@
       rel="stylesheet"
     />
 
-    <link rel="stylesheet" href="/assets/css/dashboard-layout.css" />
+    <!-- <link rel="stylesheet" href="/assets/css/dashboard-layout.css" /> -->
     <link rel="stylesheet" href="/assets/css/dashboard.css" />
+    <link rel="stylesheet" href="/assets/css/shared.css">
   </head>
   <body class="app-shell">
     <!-- ===== Sidebar ===== -->
     <aside class="app-sidebar" id="appSidebar">
-      <a href="/pages/dashboard.html" class="brand-lockup">
+      <a href="/assets/pages/welcome.html" class="brand-lockup">
         <span class="brand-mark"><i class="bi bi-mortarboard-fill"></i></span>
         <span class="brand-name">Edutech</span>
       </a>
@@ -49,21 +50,21 @@
           <i class="bi bi-bar-chart-fill"></i> Results
         </a>
         <a
-          href="/pages/courses.html"
+          href="/assets/pages/courses.html"
           class="app-sidebar-link"
           data-page="courses"
         >
           <i class="bi bi-bookmark-fill"></i> Courses
         </a>
         <a
-          href="/pages/transcript.html"
+          href="/assets/pages/transcript.html"
           class="app-sidebar-link"
           data-page="transcript"
         >
           <i class="bi bi-file-earmark-text-fill"></i> Transcript
         </a>
         <a
-          href="/pages/profile.html"
+          href="/assets/pages/profile.html"
           class="app-sidebar-link"
           data-page="profile"
         >
@@ -133,7 +134,7 @@
               </div>
               <div class="col-6 col-lg-3">
                 <div class="stat-card stat-card--amber">
-                  <span class="stat-card-label">Courses Registered</span>
+                  <span class="stat-card-label">Current Semester Courses</span>
                   <span class="stat-card-value" id="statCourses">--</span>
                 </div>
               </div>
@@ -167,26 +168,6 @@
               </div>
             </div>
 
-            <!-- Recent Results -->
-            <div class="card shadow-sm mt-4">
-              <div class="card-header fw-semibold">Recent Results</div>
-              <div class="card-body p-0">
-                <div class="table-responsive">
-                  <table class="table table-hover align-middle mb-0">
-                    <thead>
-                      <tr>
-                        <th>Course</th>
-                        <th>Title</th>
-                        <th>Score</th>
-                        <th>Grade</th>
-                      </tr>
-                    </thead>
-                    <tbody id="recentResultsTable"></tbody>
-                  </table>
-                </div>
-              </div>
-            </div>
-          </div>
         </div>
       </div>
     </div>
@@ -228,6 +209,6 @@
     <!-- Chart.js -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.3/js/bootstrap.bundle.min.js"></script>
-    <script type="module" src="/assets/js/dashboard1.js"></script>
+    <script type="module" src="/assets/js/dashboard.js"></script>
   </body>
 </html>

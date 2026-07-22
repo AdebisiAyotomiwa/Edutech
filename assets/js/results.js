@@ -1,5 +1,5 @@
 import { requireAuth, getCurrentStudent, logout } from "./auth.js";
-import { getResults, getCourses } from "./api.js";
+import { getResults, getCourses, getDepartmentById } from "./api.js";
 import { calculateGPA, scoreToGrade } from "./utils.js";
 
 /* ========================================================
@@ -11,6 +11,7 @@ requireAuth();
    Global State
 ======================================================== */
 let student = null;
+let department = null;
 let resultsWithCourses = [];
 let allCourses = [];
 
@@ -39,12 +40,14 @@ const logoutBtn = document.getElementById("logoutBtn");
 const sessionFilter = document.getElementById("sessionFilter");
 const semesterFilter = document.getElementById("semesterFilter");
 
-const gpaSummaryLabel = document.getElementById("gpaSummaryLabel");
 const semesterGpaValue = document.getElementById("semesterGpaValue");
+const cgpaValue = document.getElementById("cgpaValue");
 
 const resultsTable = document.getElementById("resultsTable");
 const resultsCountBadge = document.getElementById("resultsCountBadge");
 const resultsEmpty = document.getElementById("resultsEmpty");
+
+const printResultsBtn = document.getElementById("printResultsBtn");
 
 /* ========================================================
    Start
@@ -56,7 +59,7 @@ async function initResultsPage() {
     student = getCurrentStudent();
 
     if (!student) {
-      window.location.href = "/pages/login.html";
+      window.location.href = "/assets/pages/login.html";
       return;
     }
 
@@ -69,6 +72,7 @@ async function initResultsPage() {
     resultsContent.classList.remove("d-none");
 
     populateFilters();
+    selectLatestSemester();
     initialiseFilterListeners();
     renderResults();
   } catch (error) {
@@ -83,26 +87,21 @@ async function initResultsPage() {
    Load Data
 ======================================================== */
 async function loadStudentData() {
-  const [results, courses] = await Promise.all([
+  const [results, courses, dept] = await Promise.all([
     getResults({ studentId: student.id }),
     getCourses(),
+    getDepartmentById(student.departmentId),
   ]);
 
   allCourses = courses;
+  department = dept;
 
   resultsWithCourses = results.map((result) => {
-    const course = allCourses.find(
-      (c) => Number(c.id) === Number(result.courseId),
-    );
+    const course = allCourses.find((c) => Number(c.id) === Number(result.courseId));
 
     if (!course) {
       console.warn("Course not found for result:", result);
-      return {
-        ...result,
-        courseCode: "N/A",
-        courseTitle: "Unknown Course",
-        creditUnit: 0,
-      };
+      return { ...result, courseCode: "N/A", courseTitle: "Unknown Course", creditUnit: 0 };
     }
 
     return {
@@ -112,10 +111,16 @@ async function loadStudentData() {
       creditUnit: course.creditUnit,
     };
   });
+
+  // Chronological order — needed so "latest" is reliably the last entry
+  resultsWithCourses.sort((a, b) => {
+    if (a.session !== b.session) return a.session.localeCompare(b.session);
+    return a.semester - b.semester;
+  });
 }
 
 /* ========================================================
-   Sidebar (same pattern as dashboard.js)
+   Sidebar / Logout
 ======================================================== */
 function initialiseSidebar() {
   sidebarUserName.textContent = `${student.firstName} ${student.lastName}`;
@@ -155,9 +160,7 @@ function initialiseLogout() {
   const logoutModal = new bootstrap.Modal(logoutModalEl);
   const confirmLogoutBtn = document.getElementById("confirmLogoutBtn");
 
-  logoutBtn.addEventListener("click", () => {
-    logoutModal.show();
-  });
+  logoutBtn.addEventListener("click", () => logoutModal.show());
 
   confirmLogoutBtn.addEventListener("click", () => {
     logout();
@@ -166,47 +169,80 @@ function initialiseLogout() {
 }
 
 /* ========================================================
-   Filters — options derived entirely from resultsWithCourses
+   Filters — session/semester only, no "All" options.
+   The student always views exactly one semester at a time.
 ======================================================== */
 function populateFilters() {
-  // Sessions: unique, sorted ascending (works for "YYYY/YYYY" strings)
   const sessions = [...new Set(resultsWithCourses.map((r) => r.session))].sort();
 
-  sessionFilter.innerHTML = `<option value="all">All Sessions</option>`;
+  sessionFilter.innerHTML = "";
   sessions.forEach((session) => {
     sessionFilter.innerHTML += `<option value="${session}">${session}</option>`;
   });
 
-  // Semesters: unique values actually present in the data
-  const semesters = [...new Set(resultsWithCourses.map((r) => r.semester))].sort(
-    (a, b) => a - b,
-  );
+  // Semester options depend on which session is selected — populated
+  // dynamically in updateSemesterOptions(), called after session changes.
+  updateSemesterOptions();
+}
 
-  semesterFilter.innerHTML = `<option value="all">All Semesters</option>`;
+function updateSemesterOptions() {
+  const sessionValue = sessionFilter.value;
+
+  const semesters = [
+    ...new Set(
+      resultsWithCourses
+        .filter((r) => r.session === sessionValue)
+        .map((r) => r.semester)
+    ),
+  ].sort((a, b) => a - b);
+
+  const previousValue = semesterFilter.value;
+
+  semesterFilter.innerHTML = "";
   semesters.forEach((semester) => {
     const label = SEMESTER_LABELS[semester] ?? `Semester ${semester}`;
     semesterFilter.innerHTML += `<option value="${semester}">${label}</option>`;
   });
+
+  // Preserve the previously selected semester if it still exists for
+  // the newly selected session; otherwise default to the first available.
+  if (semesters.includes(Number(previousValue))) {
+    semesterFilter.value = previousValue;
+  }
+}
+
+/**
+ * Defaults the filters to the most recently completed semester —
+ * the last entry in resultsWithCourses, since it's sorted chronologically.
+ */
+function selectLatestSemester() {
+  if (resultsWithCourses.length === 0) return;
+
+  const latest = resultsWithCourses[resultsWithCourses.length - 1];
+  sessionFilter.value = latest.session;
+  updateSemesterOptions();
+  semesterFilter.value = String(latest.semester);
 }
 
 function initialiseFilterListeners() {
-  sessionFilter.addEventListener("change", renderResults);
+  sessionFilter.addEventListener("change", () => {
+    updateSemesterOptions();
+    renderResults();
+  });
   semesterFilter.addEventListener("change", renderResults);
+  printResultsBtn.addEventListener("click", handlePrint);
 }
 
 /* ========================================================
-   Render — table rows, count, GPA — all computed on the fly
+   Render
 ======================================================== */
 function getFilteredResults() {
   const sessionValue = sessionFilter.value;
   const semesterValue = semesterFilter.value;
 
-  return resultsWithCourses.filter((r) => {
-    const matchesSession = sessionValue === "all" || r.session === sessionValue;
-    const matchesSemester =
-      semesterValue === "all" || String(r.semester) === semesterValue;
-    return matchesSession && matchesSemester;
-  });
+  return resultsWithCourses.filter(
+    (r) => r.session === sessionValue && String(r.semester) === semesterValue
+  );
 }
 
 function renderResults() {
@@ -214,7 +250,9 @@ function renderResults() {
 
   renderTable(filtered);
   renderCountBadge(filtered);
-  renderGpaSummary(filtered);
+
+  semesterGpaValue.textContent = filtered.length ? calculateGPA(filtered) : "0.00";
+  cgpaValue.textContent = resultsWithCourses.length ? calculateGPA(resultsWithCourses) : "0.00";
 }
 
 function renderTable(filtered) {
@@ -229,7 +267,6 @@ function renderTable(filtered) {
 
   filtered.forEach((result) => {
     const grade = scoreToGrade(result.score);
-
     resultsTable.innerHTML += `
       <tr>
         <td>${result.courseCode}</td>
@@ -247,11 +284,46 @@ function renderCountBadge(filtered) {
   resultsCountBadge.textContent = `${count} course${count === 1 ? "" : "s"}`;
 }
 
-function renderGpaSummary(filtered) {
-  const sessionValue = sessionFilter.value;
-  const semesterValue = semesterFilter.value;
-  const isFullyFiltered = sessionValue !== "all" && semesterValue !== "all";
+/* ========================================================
+   Print — prints exactly whatever is currently filtered
+======================================================== */
+function handlePrint() {
+  const filtered = getFilteredResults();
+  preparePrintArea(filtered);
+  window.print();
+}
 
-  gpaSummaryLabel.textContent = isFullyFiltered ? "Semester GPA" : "Overall GPA (CGPA)";
-  semesterGpaValue.textContent = filtered.length ? calculateGPA(filtered) : "0.00";
+function preparePrintArea(filtered) {
+  document.getElementById("printStudentName").textContent =
+    `${student.firstName} ${student.lastName}${student.otherName ? " " + student.otherName : ""}`;
+  document.getElementById("printMatric").textContent = student.matricNumber;
+  document.getElementById("printDepartment").textContent = department?.name ?? "N/A";
+  document.getElementById("printProgramme").textContent = student.programme;
+  document.getElementById("printSession").textContent = sessionFilter.value;
+  document.getElementById("printSemester").textContent =
+    SEMESTER_LABELS[semesterFilter.value] ?? `Semester ${semesterFilter.value}`;
+
+  document.getElementById("printGeneratedDate").textContent =
+    `Generated on ${new Date().toLocaleDateString("en-GB", { day: "numeric", month: "long", year: "numeric" })}`;
+
+  document.getElementById("printSemesterGpa").textContent =
+    filtered.length ? calculateGPA(filtered) : "0.00";
+  document.getElementById("printCgpa").textContent =
+    resultsWithCourses.length ? calculateGPA(resultsWithCourses) : "0.00";
+
+  const printTable = document.getElementById("printResultsTable");
+  printTable.innerHTML = "";
+
+  filtered.forEach((result) => {
+    const grade = scoreToGrade(result.score);
+    printTable.innerHTML += `
+      <tr>
+        <td>${result.courseCode}</td>
+        <td>${result.courseTitle}</td>
+        <td>${result.creditUnit}</td>
+        <td>${result.score}</td>
+        <td>${grade.grade}</td>
+      </tr>
+    `;
+  });
 }

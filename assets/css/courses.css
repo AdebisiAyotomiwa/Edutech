@@ -1,0 +1,67 @@
+/* =========================================================
+   COURSES PAGE
+   ========================================================= */
+
+.courses-tabs{
+  display:flex;
+  gap:.5rem;
+  list-style:none;
+  margin:0 0 1.25rem;
+  padding:0;
+  border-bottom:1px solid var(--line-200);
+}
+
+.courses-tab{
+  display:flex;
+  align-items:center;
+  gap:.5rem;
+  padding:.75rem 1.1rem;
+  border:none;
+  background:none;
+  font-family:var(--font-display);
+  font-weight:600;
+  font-size:.92rem;
+  color:var(--ink-700);
+  cursor:pointer;
+  border-bottom:2px solid transparent;
+  margin-bottom:-1px;
+}
+.courses-tab:hover{
+  color:var(--brand-900);
+}
+.courses-tab.active{
+  color:var(--brand-900);
+  border-bottom-color:var(--brand-900);
+}
+
+.courses-tab-badge{
+  background:var(--paper-100);
+  color:var(--ink-700);
+  font-size:.72rem;
+  font-weight:700;
+  padding:.15em .55em;
+  border-radius:999px;
+}
+.courses-tab.active .courses-tab-badge{
+  background:var(--brand-100);
+  color:var(--brand-900);
+}
+
+.courses-panel{
+  margin-bottom:1.5rem;
+}
+
+
+/* ---------- Carry-over tag ---------- */
+.carryover-tag{
+  display:inline-block;
+  font-size:.7rem;
+  font-weight:700;
+  color:var(--danger);
+  background:var(--danger-100);
+  padding:.1em .5em;
+  border-radius:5px;
+  margin-left:.4rem;
+  vertical-align:middle;
+}
+

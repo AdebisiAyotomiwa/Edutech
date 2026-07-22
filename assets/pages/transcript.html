@@ -10,8 +10,9 @@
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
 
-    <link rel="stylesheet" href="/assets/css/dashboard-layout.css" />
+    <!-- <link rel="stylesheet" href="/assets/css/dashboard-layout.css" /> -->
     <link rel="stylesheet" href="/assets/css/transcript.css" />
+    <link rel="stylesheet" href="/assets/css/shared.css">
   </head>
   <body class="app-shell">
     <!-- ===== Sidebar ===== -->
@@ -72,29 +73,14 @@
           <div class="dashboard-state" id="transcriptLoading">Loading your transcript…</div>
 
           <div id="transcriptContent" class="d-none">
-            <!-- Toolbar: search + filters + print -->
+            <!-- Toolbar: search + CGPA + print -->
             <div class="results-filterbar card-surface">
               <div class="results-filter-group transcript-search-group">
                 <label for="courseSearch" class="form-label mb-1">Search</label>
                 <div class="input-group input-group-custom">
                   <span class="input-group-text"><i class="bi bi-search"></i></span>
-                  <input
-                    type="text"
-                    class="form-control"
-                    id="courseSearch"
-                    placeholder="Search by course"
-                  />
+                  <input type="text" class="form-control" id="courseSearch" placeholder="Search by course" />
                 </div>
-              </div>
-
-              <div class="results-filter-group">
-                <label for="sessionFilter" class="form-label mb-1">Session</label>
-                <select class="form-select" id="sessionFilter"></select>
-              </div>
-
-              <div class="results-filter-group">
-                <label for="semesterFilter" class="form-label mb-1">Semester</label>
-                <select class="form-select" id="semesterFilter"></select>
               </div>
 
               <div class="results-filter-summary">
@@ -107,29 +93,14 @@
               </button>
             </div>
 
-            <!-- On-screen table -->
+            <!-- On-screen grouped results -->
             <div class="card shadow-sm mt-3">
               <div class="card-header fw-semibold d-flex align-items-center justify-content-between">
-                <span>All Results</span>
+                <span>Academic Record</span>
                 <span class="results-count-badge" id="resultsCountBadge"></span>
               </div>
               <div class="card-body p-0">
-                <div class="table-responsive">
-                  <table class="table table-hover align-middle mb-0">
-                    <thead>
-                      <tr>
-                        <th>Session</th>
-                        <th>Semester</th>
-                        <th>Course</th>
-                        <th>Title</th>
-                        <th>Credit Unit</th>
-                        <th>Score</th>
-                        <th>Grade</th>
-                      </tr>
-                    </thead>
-                    <tbody id="resultsTable"></tbody>
-                  </table>
-                </div>
+                <div id="transcriptGroups"></div>
 
                 <div class="results-empty d-none" id="resultsEmpty">
                   <i class="bi bi-inbox"></i>
@@ -143,11 +114,8 @@
     </div>
 
     <!-- ===========================================================
-         PRINT-ONLY AREA
-         Hidden on screen (see transcript.css), shown only when
-         printing. Always contains the FULL result set — not
-         affected by on-screen search/filters — per requirement
-         that the printed transcript covers all courses done so far.
+         PRINT-ONLY AREA — always the FULL record, grouped by
+         semester with running GPA, regardless of on-screen search.
     =========================================================== -->
     <div id="printArea">
       <div class="print-header">
@@ -183,25 +151,12 @@
           <span class="print-value" id="printLevel"></span>
         </div>
         <div>
-          <span class="print-label">CGPA</span>
+          <span class="print-label">Final CGPA</span>
           <span class="print-value" id="printCgpa"></span>
         </div>
       </div>
 
-      <table class="print-table">
-        <thead>
-          <tr>
-            <th>Session</th>
-            <th>Semester</th>
-            <th>Course</th>
-            <th>Title</th>
-            <th>Credit Unit</th>
-            <th>Score</th>
-            <th>Grade</th>
-          </tr>
-        </thead>
-        <tbody id="printResultsTable"></tbody>
-      </table>
+      <div id="printGroups"></div>
 
       <div class="print-footer">
         <p>This transcript is system-generated and reflects all results recorded as of the print date above.</p>
@@ -210,15 +165,13 @@
 
     <div class="modal fade" id="logoutConfirmModal" tabindex="-1" aria-hidden="true">
       <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content">
-          <div class="modal-body text-center py-4">
-            <i class="bi bi-box-arrow-right fs-1 text-danger mb-3 d-block"></i>
-            <h5 class="fw-semibold mb-2">Log out?</h5>
-            <p class="text-muted mb-4">Are you sure you want to log out of your account?</p>
-            <div class="d-flex gap-2 justify-content-center">
-              <button type="button" class="btn btn-secondary-outline" data-bs-dismiss="modal">Cancel</button>
-              <button type="button" class="btn btn-danger-soft" id="confirmLogoutBtn">Yes, log out</button>
-            </div>
+        <div class="modal-body text-center py-4">
+          <i class="bi bi-box-arrow-right fs-1 text-danger mb-3 d-block"></i>
+          <h5 class="fw-semibold mb-2">Log out?</h5>
+          <p class="text-muted mb-4">Are you sure you want to log out of your account?</p>
+          <div class="d-flex gap-2 justify-content-center">
+            <button type="button" class="btn btn-secondary-outline" data-bs-dismiss="modal">Cancel</button>
+            <button type="button" class="btn btn-danger-soft" id="confirmLogoutBtn">Yes, log out</button>
           </div>
         </div>
       </div>

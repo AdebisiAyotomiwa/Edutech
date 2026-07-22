@@ -22,8 +22,9 @@
       rel="stylesheet"
     />
 
-    <link rel="stylesheet" href="/assets/css/dashboard-layout.css" />
+    <!-- <link rel="stylesheet" href="/assets/css/dashboard-layout.css" /> -->
     <link rel="stylesheet" href="/assets/css/results.css" />
+    <link rel="stylesheet" href="/assets/css/shared.css">
   </head>
   <body class="app-shell">
     <!-- ===== Sidebar ===== -->
@@ -115,24 +116,41 @@
             <!-- Filter bar — options populated entirely by results.js from resultsWithCourses -->
             <div class="results-filterbar card-surface">
               <div class="results-filter-group">
-                <label for="sessionFilter" class="form-label mb-1">Session</label>
+                <label for="sessionFilter" class="form-label mb-1"
+                  >Session</label
+                >
                 <select class="form-select" id="sessionFilter"></select>
               </div>
 
               <div class="results-filter-group">
-                <label for="semesterFilter" class="form-label mb-1">Semester</label>
+                <label for="semesterFilter" class="form-label mb-1"
+                  >Semester</label
+                >
                 <select class="form-select" id="semesterFilter"></select>
               </div>
 
               <div class="results-filter-summary">
-                <span class="results-filter-summary-label" id="gpaSummaryLabel"></span>
-                <span class="results-filter-summary-value" id="semesterGpaValue"></span>
+                <span class="results-filter-summary-label">Semester GPA</span>
+                <span
+                  class="results-filter-summary-value"
+                  id="semesterGpaValue"
+                ></span>
+              </div>
+
+              <div class="results-filter-summary">
+                <span class="results-filter-summary-label">CGPA</span>
+                <span
+                  class="results-filter-summary-value"
+                  id="cgpaValue"
+                ></span>
               </div>
             </div>
 
             <!-- Results table — rows and count populated entirely by results.js -->
             <div class="card shadow-sm mt-3">
-              <div class="card-header fw-semibold d-flex align-items-center justify-content-between">
+              <div
+                class="card-header fw-semibold d-flex align-items-center justify-content-between"
+              >
                 <span>Course Results</span>
                 <span class="results-count-badge" id="resultsCountBadge"></span>
               </div>
@@ -150,6 +168,15 @@
                     </thead>
                     <tbody id="resultsTable"></tbody>
                   </table>
+                  <div class="results-print-row">
+                    <button
+                      class="btn btn-secondary-outline"
+                      id="printResultsBtn"
+                    >
+                      <i class="bi bi-printer-fill"></i> Print This Semester's
+                      Result
+                    </button>
+                  </div>
                 </div>
 
                 <!-- Empty state, hidden by default; shown by results.js when a filter yields no rows -->
@@ -163,7 +190,80 @@
         </div>
       </div>
     </div>
+    <div id="printArea">
+      <div class="print-header">
+        <div class="print-brand">
+          <span class="print-brand-mark"
+            ><i class="bi bi-mortarboard-fill"></i
+          ></span>
+          <span class="print-brand-name">Edutech</span>
+        </div>
+        <div class="print-doc-title">
+          <h2>Semester Result Slip</h2>
+          <p id="printGeneratedDate"></p>
+        </div>
+      </div>
 
+      <div class="print-student-info">
+        <div>
+          <span class="print-label">Full Name</span>
+          <span class="print-value" id="printStudentName"></span>
+        </div>
+        <div>
+          <span class="print-label">Matric Number</span>
+          <span class="print-value" id="printMatric"></span>
+        </div>
+        <div>
+          <span class="print-label">Department</span>
+          <span class="print-value" id="printDepartment"></span>
+        </div>
+        <div>
+          <span class="print-label">Programme</span>
+          <span class="print-value" id="printProgramme"></span>
+        </div>
+        <div>
+          <span class="print-label">Session</span>
+          <span class="print-value" id="printSession"></span>
+        </div>
+        <div>
+          <span class="print-label">Semester</span>
+          <span class="print-value" id="printSemester"></span>
+        </div>
+      </div>
+
+      <table class="print-table">
+        <thead>
+          <tr>
+            <th>Course Code</th>
+            <th>Course Title</th>
+            <th>Credit Unit</th>
+            <th>Score</th>
+            <th>Grade</th>
+          </tr>
+        </thead>
+        <tbody id="printResultsTable"></tbody>
+      </table>
+
+      <div class="print-summary-row">
+        <div>
+          <span class="print-label">Semester GPA</span>
+          <span class="print-value" id="printSemesterGpa"></span>
+        </div>
+        <div>
+          <span class="print-label">Cumulative GPA (CGPA)</span>
+          <span class="print-value" id="printCgpa"></span>
+        </div>
+      </div>
+
+      <div class="print-footer">
+        <p>
+          This result slip is system-generated and reflects official records as
+          of the print date above.
+        </p>
+      </div>
+    </div>
+
+    <!-- Logout Modal -->
     <div
       class="modal fade"
       id="logoutConfirmModal"

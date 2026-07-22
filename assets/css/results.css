@@ -66,20 +66,7 @@
   color:var(--ink-400);
 }
 
-/* ---------- Grade badges ---------- */
-.badge-grade{
-  font-size:.8rem;
-  font-weight:700;
-  padding:.4em .7em;
-  border-radius:8px;
-}
 
-.badge-grade--a{ background:var(--success-100); color:var(--success); }
-.badge-grade--b{ background:var(--info-100); color:var(--info); }
-.badge-grade--c{ background:var(--gold-100); color:var(--gold-500); }
-.badge-grade--d{ background:var(--warn-100); color:var(--warn); }
-.badge-grade--e,
-.badge-grade--f{ background:var(--danger-100); color:var(--danger); }
 
 /* ---------- Empty state ---------- */
 .results-empty{
@@ -95,4 +82,115 @@
 .results-empty i{
   font-size:2rem;
   color:var(--line-200);
+}
+.results-print-row{
+  padding:1rem 1.25rem 1.25rem;
+  border-top:1px solid var(--line-200);
+  display:flex;
+  justify-content:flex-end;
+}
+.results-print-row .btn{
+  display:inline-flex;
+  align-items:center;
+  gap:.5rem;
+}
+
+.results-filter-summary{
+  display:flex;
+  flex-direction:column;
+  gap:.15rem;
+}
+.results-filter-summary-label{
+  font-size:.78rem;
+  font-weight:600;
+  color:var(--ink-700);
+}
+.results-filter-summary-value{
+  font-family:var(--font-display);
+  font-weight:700;
+  font-size:1.25rem;
+  color:var(--brand-900);
+}
+
+/* =========================================================
+   PRINT AREA — identical pattern to transcript.css, plus a
+   summary row for Semester GPA / CGPA
+   ========================================================= */
+#printArea{ display:none; }
+
+.print-header{
+  display:flex;
+  align-items:flex-start;
+  justify-content:space-between;
+  border-bottom:3px solid var(--brand-900);
+  padding-bottom:1rem;
+  margin-bottom:1.5rem;
+}
+.print-brand{ display:flex; align-items:center; gap:.6rem; }
+.print-brand-mark{
+  width:40px; height:40px;
+  border-radius:9px;
+  background:var(--brand-900);
+  color:var(--gold-500);
+  display:flex; align-items:center; justify-content:center;
+  font-size:1.2rem;
+}
+.print-brand-name{
+  font-family:var(--font-display);
+  font-weight:700;
+  font-size:1.35rem;
+  color:var(--brand-900);
+}
+.print-doc-title{ text-align:right; }
+.print-doc-title h2{
+  font-family:var(--font-display);
+  font-size:1.1rem;
+  font-weight:600;
+  color:var(--ink-900);
+  margin:0 0 .2rem;
+}
+.print-doc-title p{ font-size:.8rem; color:var(--ink-700); margin:0; }
+
+.print-student-info{
+  display:grid;
+  grid-template-columns:repeat(3, 1fr);
+  gap:.9rem 1.5rem;
+  margin-bottom:1.5rem;
+  padding-bottom:1.25rem;
+  border-bottom:1px solid var(--line-200);
+}
+.print-student-info > div{ display:flex; flex-direction:column; gap:.15rem; }
+.print-label{
+  font-size:.72rem;
+  text-transform:uppercase;
+  letter-spacing:.04em;
+  color:var(--ink-400);
+  font-weight:600;
+}
+.print-value{ font-size:.95rem; font-weight:600; color:var(--ink-900); }
+
+.print-table{ width:100%; border-collapse:collapse; font-size:.85rem; }
+.print-table th, .print-table td{
+  border:1px solid var(--line-200);
+  padding:.5rem .6rem;
+  text-align:left;
+}
+.print-table th{ background:var(--paper-100); font-weight:600; color:var(--ink-900); }
+
+.print-summary-row{
+  display:flex;
+  gap:2.5rem;
+  margin-top:1.25rem;
+  padding-top:1rem;
+  border-top:1px solid var(--line-200);
+}
+.print-summary-row .print-value{ font-size:1.1rem; }
+
+.print-footer{ margin-top:1.5rem; font-size:.75rem; color:var(--ink-400); text-align:center; }
+
+@media print{
+  body *{ visibility:hidden; }
+  #printArea, #printArea *{ visibility:visible; }
+  #printArea{ display:block; position:absolute; left:0; top:0; width:100%; padding:0; }
+  @page{ margin:18mm 15mm; }
 }

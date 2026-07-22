@@ -17,7 +17,6 @@ const loginButton = document.querySelector("#loginBtn");
 const loginSpinner = document.querySelector("#loginSpinner");
 const buttonLabel = loginButton.querySelector(".btn-label");
 
-
 /* ========================================================= */
 
 loginForm.addEventListener("submit", handleLogin);
@@ -25,106 +24,82 @@ loginForm.addEventListener("submit", handleLogin);
 /* ========================================================= */
 
 async function handleLogin(event) {
+  event.preventDefault();
 
-    event.preventDefault();
+  hideAlert();
 
-    hideAlert();
+  const identifier = identifierInput.value.trim();
+  const password = passwordInput.value.trim();
 
-    const identifier = identifierInput.value.trim();
-    const password = passwordInput.value.trim();
-
-    /* ------------------------------
+  /* ------------------------------
        Basic Validation
     ------------------------------ */
 
-    if (!identifier || !password) {
+  if (!identifier || !password) {
+    showAlert("Please enter your email/matric number and password.");
 
-        showAlert("Please enter your email/matric number and password.");
+    return;
+  }
 
-        return;
-    }
-
-    /* ------------------------------
+  /* ------------------------------
        Show Loading State
     ------------------------------ */
 
-    setLoading(true);
+  setLoading(true);
 
-    try {
+  try {
+    const result = await login(identifier, password);
 
-        const result = await login(identifier, password);
+    if (!result.success) {
+      showAlert(result.message);
 
-        if (!result.success) {
-
-            showAlert(result.message);
-
-            return;
-        }
-
-        // Login successful
-
-        window.location.href = "welcome.html";
-
+      return;
     }
 
-    catch (error) {
+    // Login successful
 
-        console.error(error);
+    window.location.href = "welcome.html";
+  } catch (error) {
+    console.error(error);
 
-        showAlert("Unable to connect to the server.");
-
-    }
-
-    finally {
-
-        setLoading(false);
-
-    }
-
+    showAlert("Unable to connect to the server.");
+  } finally {
+    setLoading(false);
+  }
 }
 
 /* ========================================================= */
 
 function showAlert(message) {
+  loginAlert.textContent = message;
 
-    loginAlert.textContent = message;
-
-    loginAlert.classList.remove("d-none");
-
+  loginAlert.classList.remove("d-none");
 }
 
 function hideAlert() {
+  loginAlert.textContent = "";
 
-    loginAlert.textContent = "";
-
-    loginAlert.classList.add("d-none");
-
+  loginAlert.classList.add("d-none");
 }
 
 /* ========================================================= */
 
 function setLoading(isLoading) {
+  loginButton.disabled = isLoading;
 
-    loginButton.disabled = isLoading;
+  loginSpinner.classList.toggle("d-none", !isLoading);
 
-    loginSpinner.classList.toggle("d-none", !isLoading);
-
-    buttonLabel.textContent = isLoading
-        ? "Signing in..."
-        : "Login";
-
+  buttonLabel.textContent = isLoading ? "Signing in..." : "Login";
 }
 
 const togglePassword = document.querySelector("#togglePassword");
 const toggleIcon = togglePassword.querySelector("i");
 
 togglePassword.addEventListener("click", () => {
+  const isPassword = passwordInput.type === "password";
 
-    const isPassword = passwordInput.type === "password";
+  passwordInput.type = isPassword ? "text" : "password";
 
-    passwordInput.type = isPassword ? "text" : "password";
-
-    toggleIcon.classList.toggle("bi-eye");
-    toggleIcon.classList.toggle("bi-eye-slash");
-
+  toggleIcon.classList.toggle("bi-eye");
+  toggleIcon.classList.toggle("bi-eye-slash");
 });

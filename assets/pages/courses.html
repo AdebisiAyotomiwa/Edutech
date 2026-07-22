@@ -1,0 +1,167 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Courses · Student Result Portal</title>
+
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.3/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.11.3/font/bootstrap-icons.min.css" rel="stylesheet" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+
+    <!-- <link rel="stylesheet" href="/assets/css/dashboard-layout.css" /> -->
+    <link rel="stylesheet" href="/assets/css/courses.css" />
+    <link rel="stylesheet" href="/assets/css/shared.css">
+  </head>
+  <body class="app-shell">
+    <!-- ===== Sidebar ===== -->
+    <aside class="app-sidebar" id="appSidebar">
+      <a href="/assets/pages/dashboard.html" class="brand-lockup">
+        <span class="brand-mark"><i class="bi bi-mortarboard-fill"></i></span>
+        <span class="brand-name">Edutech</span>
+      </a>
+
+      <nav class="app-sidebar-nav">
+        <a href="/assets/pages/dashboard.html" class="app-sidebar-link" data-page="dashboard">
+          <i class="bi bi-grid-1x2-fill"></i> Dashboard
+        </a>
+        <a href="/assets/pages/results.html" class="app-sidebar-link" data-page="results">
+          <i class="bi bi-bar-chart-fill"></i> Results
+        </a>
+        <a href="/assets/pages/courses.html" class="app-sidebar-link active" data-page="courses">
+          <i class="bi bi-bookmark-fill"></i> Courses
+        </a>
+        <a href="/assets/pages/transcript.html" class="app-sidebar-link" data-page="transcript">
+          <i class="bi bi-file-earmark-text-fill"></i> Transcript
+        </a>
+        <a href="/assets/pages/profile.html" class="app-sidebar-link" data-page="profile">
+          <i class="bi bi-person-fill"></i> Profile
+        </a>
+      </nav>
+
+      <div class="app-sidebar-footer">
+        <div class="app-sidebar-user">
+          <span class="app-sidebar-user-avatar">
+            <img src="" alt="" id="sidebarAvatarImg" class="d-none" />
+            <span id="sidebarAvatarInitials"></span>
+          </span>
+          <div class="app-sidebar-user-info">
+            <div class="app-sidebar-user-name" id="sidebarUserName">&nbsp;</div>
+            <div class="app-sidebar-user-meta" id="sidebarUserMeta">&nbsp;</div>
+          </div>
+        </div>
+        <button class="app-sidebar-logout" id="logoutBtn">
+          <i class="bi bi-box-arrow-right"></i> Logout
+        </button>
+      </div>
+    </aside>
+
+    <div class="app-sidebar-scrim" id="appSidebarScrim"></div>
+
+    <!-- ===== Main column ===== -->
+    <div class="app-main">
+      <header class="app-topbar">
+        <button class="app-sidebar-toggle" id="sidebarToggleBtn" aria-label="Open menu" aria-expanded="false">
+          <i class="bi bi-list"></i>
+        </button>
+        <h1 class="app-topbar-title">Courses</h1>
+      </header>
+
+      <div class="app-content">
+        <div id="coursesBody">
+          <div class="dashboard-state" id="coursesLoading">Loading your courses…</div>
+
+          <div id="coursesContent" class="d-none">
+            <!-- Tabs -->
+            <ul class="nav courses-tabs" id="coursesTabs" role="tablist">
+              <li class="nav-item" role="presentation">
+                <button
+                  class="courses-tab active"
+                  id="registeredTabBtn"
+                  data-tab="registered"
+                  type="button"
+                  role="tab"
+                  aria-selected="true"
+                >
+                  Registered Courses
+                  <span class="courses-tab-badge" id="registeredTabBadge"></span>
+                </button>
+              </li>
+              <li class="nav-item" role="presentation">
+                <button
+                  class="courses-tab"
+                  id="allTabBtn"
+                  data-tab="all"
+                  type="button"
+                  role="tab"
+                  aria-selected="false"
+                >
+                  All Courses
+                  <span class="courses-tab-badge" id="allTabBadge"></span>
+                </button>
+              </li>
+            </ul>
+
+            <!-- Registered Courses panel -->
+            <div class="card shadow-sm courses-panel" id="registeredPanel" role="tabpanel">
+              <div class="card-header fw-semibold">
+                Current Semester — <span id="currentSemesterLabel"></span>
+              </div>
+              <div class="card-body p-0">
+                <div class="table-responsive">
+                  <table class="table table-hover align-middle mb-0">
+                    <thead>
+                      <tr>
+                        <th>Course Code</th>
+                        <th>Course Title</th>
+                        <th>Credit Unit</th>
+                        <th>Status</th>
+                      </tr>
+                    </thead>
+                    <tbody id="registeredTable"></tbody>
+                  </table>
+                </div>
+                <div class="results-empty d-none" id="registeredEmpty">
+                  <i class="bi bi-inbox"></i>
+                  <p class="mb-0">No courses registered this semester.</p>
+                </div>
+              </div>
+            </div>
+
+            <!-- All Courses panel -->
+            <div class="card shadow-sm courses-panel d-none" id="allPanel" role="tabpanel">
+              <div class="card-header fw-semibold">Full Registration History</div>
+              <div class="card-body p-0">
+                <div id="allGroups"></div>
+                <div class="results-empty d-none" id="allEmpty">
+                  <i class="bi bi-inbox"></i>
+                  <p class="mb-0">No registration history found.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="modal fade" id="logoutConfirmModal" tabindex="-1" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+          <div class="modal-body text-center py-4">
+            <i class="bi bi-box-arrow-right fs-1 text-danger mb-3 d-block"></i>
+            <h5 class="fw-semibold mb-2">Log out?</h5>
+            <p class="text-muted mb-4">Are you sure you want to log out of your account?</p>
+            <div class="d-flex gap-2 justify-content-center">
+              <button type="button" class="btn btn-secondary-outline" data-bs-dismiss="modal">Cancel</button>
+              <button type="button" class="btn btn-danger-soft" id="confirmLogoutBtn">Yes, log out</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.3/js/bootstrap.bundle.min.js"></script>
+    <script type="module" src="/assets/js/courses.js"></script>
+  </body>
+</html>

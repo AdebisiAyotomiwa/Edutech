@@ -28,11 +28,6 @@ const profileAvatarInitials = document.querySelector("#profileAvatarInitials");
 
 const logoutBtn = document.querySelector("#logoutBtn");
 
-const navToggleBtn = document.querySelector("#navToggleBtn");
-const navCloseBtn = document.querySelector("#navCloseBtn");
-
-const mobileNavPanel = document.querySelector("#mobileNavPanel");
-const mobileNavScrim = document.querySelector("#mobileNavScrim");
 
 /* =========================================================
    Populate page
@@ -81,22 +76,27 @@ logoutBtn.addEventListener("click", () => {
    Mobile Navigation
 ========================================================= */
 
-navToggleBtn.addEventListener("click", () => {
 
-    mobileNavPanel.classList.add("is-open");
+// Mobile sidebar toggle — same pattern as dashboard.js
+const sidebarToggleBtn = document.getElementById("sidebarToggleBtn");
+const appSidebar = document.getElementById("appSidebar");
+const appSidebarScrim = document.getElementById("appSidebarScrim");
 
-    mobileNavScrim.classList.add("is-open");
-
+sidebarToggleBtn.addEventListener("click", () => {
+  const isOpen = appSidebar.classList.toggle("is-open");
+  appSidebarScrim.classList.toggle("is-open");
+  sidebarToggleBtn.setAttribute("aria-expanded", isOpen);
 });
 
-function closeMenu() {
+appSidebarScrim.addEventListener("click", () => {
+  appSidebar.classList.remove("is-open");
+  appSidebarScrim.classList.remove("is-open");
+  sidebarToggleBtn.setAttribute("aria-expanded", "false");
+});
 
-    mobileNavPanel.classList.remove("is-open");
-
-    mobileNavScrim.classList.remove("is-open");
-
-}
-
-navCloseBtn.addEventListener("click", closeMenu);
-
-mobileNavScrim.addEventListener("click", closeMenu);
+// Mobile sidebar's own logout button reuses the same confirm modal
+// as the desktop dropdown's logout button — wire both to trigger it
+const mobileSidebarLogoutBtn = document.getElementById("mobileSidebarLogoutBtn");
+mobileSidebarLogoutBtn.addEventListener("click", () => {
+  document.getElementById("logoutBtn").click();
+});

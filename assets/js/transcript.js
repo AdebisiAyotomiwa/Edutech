@@ -38,11 +38,9 @@ const appSidebarScrim = document.getElementById("appSidebarScrim");
 const logoutBtn = document.getElementById("logoutBtn");
 
 const courseSearch = document.getElementById("courseSearch");
-const sessionFilter = document.getElementById("sessionFilter");
-const semesterFilter = document.getElementById("semesterFilter");
 const cgpaValue = document.getElementById("cgpaValue");
 
-const resultsTable = document.getElementById("resultsTable");
+const transcriptGroups = document.getElementById("transcriptGroups");
 const resultsCountBadge = document.getElementById("resultsCountBadge");
 const resultsEmpty = document.getElementById("resultsEmpty");
 
@@ -70,10 +68,8 @@ async function initTranscriptPage() {
     transcriptLoading.classList.add("d-none");
     transcriptContent.classList.remove("d-none");
 
-    populateFilters();
     initialiseListeners();
-    renderResults();
-    preparePrintArea(); // print area = full dataset, built once
+    renderOnScreen();
   } catch (error) {
     console.error(error);
     transcriptLoading.innerHTML = `
@@ -111,7 +107,8 @@ async function loadStudentData() {
     };
   });
 
-  // Chronological order for a transcript reads more naturally oldest → newest
+  // Chronological order — required for both the visual grouping
+  // and the running CGPA-per-semester calculation.
   resultsWithCourses.sort((a, b) => {
     if (a.session !== b.session) return a.session.localeCompare(b.session);
     return a.semester - b.semester;
@@ -119,7 +116,7 @@ async function loadStudentData() {
 }
 
 /* ========================================================
-   Sidebar / Logout (same pattern as results.js)
+   Sidebar / Logout
 ======================================================== */
 function initialiseSidebar() {
   sidebarUserName.textContent = `${student.firstName} ${student.lastName}`;
@@ -167,99 +164,138 @@ function initialiseLogout() {
   });
 }
 
-/* ========================================================
-   Filters
-======================================================== */
-function populateFilters() {
-  const sessions = [...new Set(resultsWithCourses.map((r) => r.session))].sort();
-
-  sessionFilter.innerHTML = `<option value="all">All Sessions</option>`;
-  sessions.forEach((session) => {
-    sessionFilter.innerHTML += `<option value="${session}">${session}</option>`;
-  });
-
-  const semesters = [...new Set(resultsWithCourses.map((r) => r.semester))].sort((a, b) => a - b);
-
-  semesterFilter.innerHTML = `<option value="all">All Semesters</option>`;
-  semesters.forEach((semester) => {
-    const label = SEMESTER_LABELS[semester] ?? `Semester ${semester}`;
-    semesterFilter.innerHTML += `<option value="${semester}">${label}</option>`;
-  });
-}
-
 function initialiseListeners() {
-  sessionFilter.addEventListener("change", renderResults);
-  semesterFilter.addEventListener("change", renderResults);
-  courseSearch.addEventListener("input", renderResults);
-  printTranscriptBtn.addEventListener("click", () => window.print());
+  courseSearch.addEventListener("input", renderOnScreen);
+  printTranscriptBtn.addEventListener("click", handlePrint);
 }
 
 /* ========================================================
-   On-screen filtering (search + session + semester)
+   Grouping helper — groups results by (session, semester) in
+   chronological order, with each group's own GPA and a running
+   cumulative GPA up to and including that group.
 ======================================================== */
-function getFilteredResults() {
-  const sessionValue = sessionFilter.value;
-  const semesterValue = semesterFilter.value;
+function buildSemesterGroups(records) {
+  const groups = [];
+  const seen = new Map(); // "session|semester" -> group index
+
+  records.forEach((result) => {
+    const key = `${result.session}|${result.semester}`;
+    if (!seen.has(key)) {
+      seen.set(key, groups.length);
+      groups.push({
+        session: result.session,
+        semester: result.semester,
+        rows: [],
+      });
+    }
+    groups[seen.get(key)].rows.push(result);
+  });
+
+  // Running cumulative GPA: computed from ALL results up to and
+  // including this group's semester — not just the visible/filtered
+  // rows, so it stays academically accurate even while searching.
+  let cumulativeSoFar = [];
+  groups.forEach((group) => {
+    group.semesterGpa = calculateGPA(group.rows);
+    cumulativeSoFar = cumulativeSoFar.concat(
+      resultsWithCourses.filter(
+        (r) => r.session === group.session && r.semester === group.semester
+      )
+    );
+    group.cumulativeGpa = calculateGPA(cumulativeSoFar);
+  });
+
+  return groups;
+}
+
+/* ========================================================
+   On-screen render — search filters rows within each group;
+   groups with zero matching rows are hidden entirely.
+======================================================== */
+function renderOnScreen() {
   const query = courseSearch.value.trim().toLowerCase();
 
-  return resultsWithCourses.filter((r) => {
-    const matchesSession = sessionValue === "all" || r.session === sessionValue;
-    const matchesSemester = semesterValue === "all" || String(r.semester) === semesterValue;
-    const matchesSearch =
-      query === "" ||
-      r.courseCode.toLowerCase().includes(query) ||
-      r.courseTitle.toLowerCase().includes(query);
+  const filteredRecords =
+    query === ""
+      ? resultsWithCourses
+      : resultsWithCourses.filter(
+          (r) =>
+            r.courseCode.toLowerCase().includes(query) ||
+            r.courseTitle.toLowerCase().includes(query)
+        );
 
-    return matchesSession && matchesSemester && matchesSearch;
-  });
-}
+  const groups = buildSemesterGroups(filteredRecords);
 
-function renderResults() {
-  const filtered = getFilteredResults();
-
-  renderTable(filtered);
-  renderCountBadge(filtered);
-
-  // CGPA always reflects the FULL record, not the current filter/search —
-  // it's a fixed academic figure, not something that should change because
-  // you searched for one course.
   cgpaValue.textContent = resultsWithCourses.length ? calculateGPA(resultsWithCourses) : "0.00";
-}
+  resultsCountBadge.textContent = `${filteredRecords.length} course${filteredRecords.length === 1 ? "" : "s"}`;
 
-function renderTable(filtered) {
-  resultsTable.innerHTML = "";
+  transcriptGroups.innerHTML = "";
 
-  if (filtered.length === 0) {
+  if (groups.length === 0) {
     resultsEmpty.classList.remove("d-none");
     return;
   }
 
   resultsEmpty.classList.add("d-none");
 
-  filtered.forEach((result) => {
-    const grade = scoreToGrade(result.score);
-    resultsTable.innerHTML += `
-      <tr>
-        <td>${result.session}</td>
-        <td>${SEMESTER_LABELS[result.semester] ?? result.semester}</td>
-        <td>${result.courseCode}</td>
-        <td>${result.courseTitle}</td>
-        <td>${result.creditUnit}</td>
-        <td>${result.score}</td>
-        <td><span class="badge badge-grade badge-grade--${grade.grade.toLowerCase()}">${grade.grade}</span></td>
-      </tr>
-    `;
+  groups.forEach((group) => {
+    transcriptGroups.innerHTML += renderGroupHtml(group);
   });
 }
 
-function renderCountBadge(filtered) {
-  const count = filtered.length;
-  resultsCountBadge.textContent = `${count} course${count === 1 ? "" : "s"}`;
+function renderGroupHtml(group) {
+  const label = `${group.session} — ${SEMESTER_LABELS[group.semester] ?? `Semester ${group.semester}`}`;
+
+  const rows = group.rows
+    .map((result) => {
+      const grade = scoreToGrade(result.score);
+      return `
+        <tr>
+          <td>${result.courseCode}</td>
+          <td>${result.courseTitle}</td>
+          <td>${result.creditUnit}</td>
+          <td>${result.score}</td>
+          <td><span class="badge badge-grade badge-grade--${grade.grade.toLowerCase()}">${grade.grade}</span></td>
+        </tr>
+      `;
+    })
+    .join("");
+
+  return `
+    <div class="transcript-group">
+      <div class="transcript-group-header">
+        <span class="transcript-group-title">${label}</span>
+        <div class="transcript-group-gpas">
+          <span>Semester GPA: <strong>${group.semesterGpa}</strong></span>
+          <span>CGPA: <strong>${group.cumulativeGpa}</strong></span>
+        </div>
+      </div>
+      <div class="table-responsive">
+        <table class="table table-hover align-middle mb-0">
+          <thead>
+            <tr>
+              <th>Course</th>
+              <th>Title</th>
+              <th>Credit Unit</th>
+              <th>Score</th>
+              <th>Grade</th>
+            </tr>
+          </thead>
+          <tbody>${rows}</tbody>
+        </table>
+      </div>
+    </div>
+  `;
 }
 
 /* ========================================================
-   Print Area — always the FULL, unfiltered result set
+   Print — always the FULL, unfiltered record, same grouping
 ======================================================== */
+function handlePrint() {
+  preparePrintArea();
+  window.print();
+}
+
 function preparePrintArea() {
   document.getElementById("printStudentName").textContent =
     `${student.firstName} ${student.lastName}${student.otherName ? " " + student.otherName : ""}`;
@@ -274,21 +310,54 @@ function preparePrintArea() {
   document.getElementById("printGeneratedDate").textContent =
     `Generated on ${new Date().toLocaleDateString("en-GB", { day: "numeric", month: "long", year: "numeric" })}`;
 
-  const printTable = document.getElementById("printResultsTable");
-  printTable.innerHTML = "";
+  const groups = buildSemesterGroups(resultsWithCourses);
+  const printGroups = document.getElementById("printGroups");
+  printGroups.innerHTML = "";
 
-  resultsWithCourses.forEach((result) => {
-    const grade = scoreToGrade(result.score);
-    printTable.innerHTML += `
-      <tr>
-        <td>${result.session}</td>
-        <td>${SEMESTER_LABELS[result.semester] ?? result.semester}</td>
-        <td>${result.courseCode}</td>
-        <td>${result.courseTitle}</td>
-        <td>${result.creditUnit}</td>
-        <td>${result.score}</td>
-        <td>${grade.grade}</td>
-      </tr>
-    `;
+  groups.forEach((group) => {
+    printGroups.innerHTML += renderPrintGroupHtml(group);
   });
+}
+
+function renderPrintGroupHtml(group) {
+  const label = `${group.session} — ${SEMESTER_LABELS[group.semester] ?? `Semester ${group.semester}`}`;
+
+  const rows = group.rows
+    .map((result) => {
+      const grade = scoreToGrade(result.score);
+      return `
+        <tr>
+          <td>${result.courseCode}</td>
+          <td>${result.courseTitle}</td>
+          <td>${result.creditUnit}</td>
+          <td>${result.score}</td>
+          <td>${grade.grade}</td>
+        </tr>
+      `;
+    })
+    .join("");
+
+  return `
+    <div class="print-group">
+      <div class="print-group-header">
+        <span>${label}</span>
+      </div>
+      <table class="print-table">
+        <thead>
+          <tr>
+            <th>Course Code</th>
+            <th>Course Title</th>
+            <th>Credit Unit</th>
+            <th>Score</th>
+            <th>Grade</th>
+          </tr>
+        </thead>
+        <tbody>${rows}</tbody>
+      </table>
+      <div class="print-group-gpas">
+        <span>Semester GPA: <strong>${group.semesterGpa}</strong></span>
+        <span>Cumulative GPA (CGPA): <strong>${group.cumulativeGpa}</strong></span>
+      </div>
+    </div>
+  `;
 }
