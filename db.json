@@ -80,7 +80,7 @@
       "admissionYear": 2022,
       "programme": "B.Sc Computer Science",
       "status": "Active",
-      "profileImage": "assets/images/image/mary-johnson.jpg"
+      "profileImage": "assets/images/image/jane-smith.jpg"
     },
     {
       "id": "4",
@@ -127,7 +127,7 @@
       "gender": "Male",
       "phone": "08039958838",
       "level": 400,
-      "departmentId": 1,
+      "departmentId": "1",
       "admissionYear": 2021,
       "programme": "B.Sc Computer Science",
       "status": "Active",
@@ -7814,7 +7814,77 @@
       "score": 15,
       "id": "tVdw8M9VjCI",
       "published": true
+    },
+    {
+      "studentId": "6",
+      "courseId": "58",
+      "session": "2024/2025",
+      "semester": 2,
+      "level": 400,
+      "score": 66,
+      "published": true,
+      "id": "fty4M4RP0bA"
+    },
+    {
+      "studentId": "1",
+      "courseId": "13",
+      "session": "2024/2025",
+      "semester": 2,
+      "level": 100,
+      "score": 45,
+      "published": true,
+      "id": "ync086_b-YU"
+    },
+    {
+      "studentId": 6,
+      "courseId": 57,
+      "session": "2024/2025",
+      "semester": 2,
+      "level": 400,
+      "score": 54,
+      "published": true,
+      "id": "MeSRoZgV95Y"
+    },
+    {
+      "studentId": 6,
+      "courseId": 59,
+      "session": "2024/2025",
+      "semester": 2,
+      "level": 400,
+      "score": 56,
+      "published": true,
+      "id": "-GYgJ0nsj4g"
+    },
+    {
+      "studentId": 2,
+      "courseId": 89,
+      "session": "2024/2025",
+      "semester": 2,
+      "level": 200,
+      "score": 58,
+      "published": true,
+      "id": "jkG5Txo7zyg"
+    },
+    {
+      "studentId": 2,
+      "courseId": 90,
+      "session": "2024/2025",
+      "semester": 2,
+      "level": 200,
+      "score": 76,
+      "published": true,
+      "id": "KHz3B1fJNSA"
+    },
+    {
+      "studentId": 2,
+      "courseId": 91,
+      "session": "2024/2025",
+      "semester": 2,
+      "level": 200,
+      "score": 88,
+      "published": true,
+      "id": "zdo0ZBp7hUA"
     }
   ],
-  "$schema": "./node_modules/json-server/schema.json"
+  "$schema": "http://json-schema.org/draft-07/schema#"
 }

@@ -143,6 +143,7 @@ function bindCurrentTab() {
   document.getElementById("rCurrSearch").addEventListener("input", () => { currPage = 1; renderCurrStudents(); });
   document.getElementById("backToStudentsBtn").addEventListener("click", showStudentList);
   document.getElementById("saveDraftBtn").addEventListener("click", saveDraft);
+  document.getElementById("saveAndPublishBtn").addEventListener("click", saveAndPublish);
   document.getElementById("publishScoresBtn").addEventListener("click", openPublishConfirm);
   document.getElementById("confirmPublishBtn").addEventListener("click", confirmPublish);
 }
@@ -573,10 +574,32 @@ function hideAlert(id)      { const el = document.getElementById(id); el.textCon
 
 /* ── Save Draft (saves scores, published=false, invisible to students) ── */
 async function saveDraft() {
+  await persistScores({ publishImmediately: false });
+}
+
+/* ── Save & Publish (saves scores, published=true, immediately visible) ── */
+async function saveAndPublish() {
+  await persistScores({ publishImmediately: true });
+}
+
+/**
+ * Core score persistence logic shared by Save Draft and Save & Publish.
+ *
+ * publishImmediately=false → stores published:false (draft, invisible to students)
+ * publishImmediately=true  → stores published:true  (live immediately, no second step needed)
+ *
+ * IMPORTANT: studentId is always coerced to a Number before writing so that
+ * all result records share the same type as the seeded data. json-server
+ * beta.15 uses strict type matching on filter queries — if some records store
+ * studentId as a string and others as a number, ?studentId=1 only returns
+ * one set and the student portal silently misses the other.
+ */
+async function persistScores({ publishImmediately }) {
   const { session, semester } = getCurrFilters();
-  const studentId  = currSelectedStudentId;
+  const studentId  = Number(currSelectedStudentId); // always Number — matches seeded data type
   const rows       = Array.from(document.getElementById("scoreTbody").querySelectorAll("tr"));
   const saveBtn    = document.getElementById("saveDraftBtn");
+  const pubBtn     = document.getElementById("saveAndPublishBtn");
   const statusEl   = document.getElementById("scorePublishStatus");
   const jobs       = [];
 
@@ -586,28 +609,30 @@ async function saveDraft() {
     if (val === "") return;
     const score    = Number(val);
     if (isNaN(score) || score < 0 || score > 100) return;
-    const courseId = row.dataset.courseId;
+    const courseId = Number(row.dataset.courseId); // Number to match seeded type
     const resultId = row.dataset.resultId;
     const level    = Number(row.dataset.level);
+    const published = publishImmediately ? true : false;
 
     if (resultId) {
-      /* Update existing — preserve published flag */
+      /* Update existing record */
       const existing = results.find(r => String(r.id) === String(resultId));
-      const alreadyPublished = existing?.published === true;
+      // When publishing, always set true; when drafting, don't downgrade an already-published record
+      const newPublished = publishImmediately ? true : (existing?.published === true ? true : false);
       jobs.push(
-        updateResult(resultId, { score, published: alreadyPublished }).then(upd => {
+        updateResult(resultId, { score, published: newPublished }).then(upd => {
           const idx = results.findIndex(r => String(r.id) === String(resultId));
           if (idx !== -1) results[idx] = { ...results[idx], ...upd };
-          markRowDraft(row, alreadyPublished);
+          markRowStatus(row, newPublished);
         })
       );
     } else {
-      /* Create new as draft */
+      /* Create new record */
       jobs.push(
-        createResult({ studentId, courseId, session, semester, level, score, published: false }).then(created => {
+        createResult({ studentId, courseId, session, semester, level, score, published }).then(created => {
           results.push(created);
           row.dataset.resultId = created.id;
-          markRowDraft(row, false);
+          markRowStatus(row, published);
         })
       );
     }
@@ -616,31 +641,25 @@ async function saveDraft() {
   if (jobs.length === 0) { statusEl.textContent = "No scores to save."; return; }
 
   saveBtn.disabled = true;
+  pubBtn.disabled  = true;
   statusEl.innerHTML = `<span class="text-muted"><i class="bi bi-hourglass-split"></i> Saving…</span>`;
 
   try {
     await Promise.all(jobs);
-    statusEl.innerHTML =
-      `<span class="text-success"><i class="bi bi-floppy-fill"></i> ${jobs.length} score${jobs.length === 1 ? "" : "s"} saved as draft. Use "Publish" to make visible to students.</span>`;
+    if (publishImmediately) {
+      statusEl.innerHTML =
+        `<span class="text-success"><i class="bi bi-check-circle-fill"></i> ${jobs.length} score${jobs.length === 1 ? "" : "s"} saved and published to the student portal.</span>`;
+    } else {
+      statusEl.innerHTML =
+        `<span class="text-success"><i class="bi bi-floppy-fill"></i> ${jobs.length} score${jobs.length === 1 ? "" : "s"} saved as draft. Use "Save &amp; Publish" to make visible to students.</span>`;
+    }
     renderCurrStudents();
   } catch (err) {
     console.error(err);
     statusEl.textContent = "Some scores failed to save. Please try again.";
   } finally {
     saveBtn.disabled = false;
-  }
-}
-
-function markRowDraft(row, alreadyPublished) {
-  if (alreadyPublished) {
-    row.classList.add("table-success");
-    row.querySelector("td:last-child").innerHTML =
-      `<span class="status-badge status-badge--completed">Published</span>`;
-  } else {
-    row.classList.remove("table-success");
-    row.classList.add("table-warning");
-    row.querySelector("td:last-child").innerHTML =
-      `<span class="status-badge status-badge--pending">Draft</span>`;
+    pubBtn.disabled  = false;
   }
 }
 
@@ -686,7 +705,7 @@ function openPublishConfirm() {
 
 async function confirmPublish() {
   const { session, semester } = getCurrFilters();
-  const studentId = currSelectedStudentId;
+  const studentId = Number(currSelectedStudentId); // Number to match seeded data type
   const statusEl  = document.getElementById("scorePublishStatus");
   const confirmBtn = document.getElementById("confirmPublishBtn");
 
@@ -731,9 +750,16 @@ async function confirmPublish() {
   }
 }
 
-function markRowPublished(row) {
-  row.classList.remove("table-warning");
-  row.classList.add("table-success");
-  row.querySelector("td:last-child").innerHTML =
-    `<span class="status-badge status-badge--completed">Published</span>`;
+function markRowStatus(row, published) {
+  if (published) {
+    row.classList.remove("table-warning");
+    row.classList.add("table-success");
+    row.querySelector("td:last-child").innerHTML =
+      `<span class="status-badge status-badge--completed">Published</span>`;
+  } else {
+    row.classList.remove("table-success");
+    row.classList.add("table-warning");
+    row.querySelector("td:last-child").innerHTML =
+      `<span class="status-badge status-badge--pending" style="background:var(--warn-100);color:var(--warn);">Draft</span>`;
+  }
 }

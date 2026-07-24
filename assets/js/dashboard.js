@@ -80,8 +80,12 @@ async function initDashboard() {
    Load Data
 ======================================================== */
 async function loadStudentData() {
-  const [results, courses, dept, registrations, calendar] = await Promise.all([
-    getResults({ studentId: student.id }),
+  // Fetch all results then filter client-side. This guards against the
+  // json-server type-coercion quirk where records created by the admin
+  // panel store studentId as a string while seeded records use a number —
+  // a server-side ?studentId= query can miss one type or the other.
+  const [allResults, courses, dept, registrations, calendar] = await Promise.all([
+    getResults(),
     getCourses(),
     getDepartmentById(student.departmentId),
     getRegistrations({ studentId: student.id }),
@@ -93,8 +97,11 @@ async function loadStudentData() {
   allRegistrations = registrations;
   academicCalendar = calendar;
 
-  resultsWithCourses = results
-    .filter(r => r.published !== false)   // only published results visible to students
+  resultsWithCourses = allResults
+    .filter(r =>
+      String(r.studentId) === String(student.id) && // match regardless of stored type
+      r.published !== false                          // only published results visible to students
+    )
     .map((result) => {
     const course = allCourses.find((c) => Number(c.id) === Number(result.courseId));
 

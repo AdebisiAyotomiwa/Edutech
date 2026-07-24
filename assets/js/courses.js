@@ -68,16 +68,22 @@ async function initCoursesPage() {
 
 /* ── Data ───────────────────────────────────────────────── */
 async function loadStudentData() {
-  const [courses, registrations, results, calendar] = await Promise.all([
+  // Fetch all results then filter client-side. This guards against the
+  // json-server type-coercion quirk where records created by the admin
+  // panel store studentId as a string while seeded records use a number —
+  // a server-side ?studentId= query can miss one type or the other.
+  const [courses, registrations, allFetchedResults, calendar] = await Promise.all([
     getCourses(),
     getRegistrations({ studentId: student.id }),
-    getResults({ studentId: student.id }),
+    getResults(),
     getAcademicCalendar(),
   ]);
 
   allCourses       = courses;
-  allResults       = results;
   academicCalendar = calendar;
+
+  // Keep only this student's results, comparing as strings to handle type mismatch
+  allResults = allFetchedResults.filter(r => String(r.studentId) === String(student.id));
 
   /* Sort registrations chronologically for the All Courses grouping */
   allRegistrations = registrations.sort((a, b) => {
@@ -149,17 +155,19 @@ function findCourse(courseId) {
 
 /**
  * A course registration is "completed" (result released) when there is
- * a matching result entry for the same student/course/session/semester.
- * This is purely database-driven — as soon as admin saves a score it
- * becomes visible here.
+ * a published result entry for this specific student/course/session/semester.
+ * We compare all IDs as strings to guard against numeric vs string type
+ * mismatches that arise when json-server stores newly-created records with
+ * string IDs while seeded records have numeric IDs.
  */
 function hasResult(reg) {
   return allResults.some(
     r =>
-      String(r.courseId) === String(reg.courseId) &&
-      r.session  === reg.session &&
-      Number(r.semester) === Number(reg.semester) &&
-      r.published !== false     // only published results count as "Completed"
+      String(r.studentId) === String(student.id) &&
+      String(r.courseId)  === String(reg.courseId) &&
+      r.session           === reg.session &&
+      Number(r.semester)  === Number(reg.semester) &&
+      r.published !== false   // only published results count as "Completed"
   );
 }
 
