@@ -20,6 +20,7 @@ import { API_BASE_URL } from "./config.js";
 /* =========================================================
    Generic Request Function
    ========================================================= */
+   
 
 export async function request(path, options = {}) {
   let response;
@@ -35,6 +36,34 @@ export async function request(path, options = {}) {
   }
 
   return response.json();
+}
+
+/* =========================================================
+   FACULTIES
+   ========================================================= */
+
+export function getFaculties() {
+  return request("/faculties");
+}
+
+export function createFaculty(data) {
+  return request("/faculties", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(data),
+  });
+}
+
+export function updateFaculty(id, data) {
+  return request(`/faculties/${id}`, {
+    method: "PATCH",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(data),
+  });
+}
+
+export function deleteFaculty(id) {
+  return request(`/faculties/${id}`, { method: "DELETE" });
 }
 
 /* =========================================================
@@ -177,4 +206,145 @@ export function getRegistrations(filters = {}) {
   const query = params.toString();
 
   return request(`/registrations${query ? `?${query}` : ""}`);
+}
+
+export function createRegistration(data) {
+  return request("/registrations", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(data),
+  });
+}
+
+export function updateRegistration(id, data) {
+  return request(`/registrations/${id}`, {
+    method: "PATCH",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(data),
+  });
+}
+
+export function deleteRegistration(id) {
+  return request(`/registrations/${id}`, { method: "DELETE" });
+}
+
+/* =========================================================
+   ADMINS
+   ========================================================= */
+
+export function getAdminsByEmail(email) {
+  return request(`/admins?email=${encodeURIComponent(email)}`);
+}
+
+/* =========================================================
+   STUDENTS — Admin CRUD (used later)
+   ========================================================= */
+
+export function createStudent(data) {
+  return request("/students", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(data),
+  });
+}
+
+export function deleteStudent(id) {
+  return request(`/students/${id}`, { method: "DELETE" });
+}
+
+/**
+ * Admin-only. Sets a NEW password for a student without ever reading
+ * the old one back — admins can reset access, they cannot view a
+ * student's existing password.
+ */
+export function resetStudentPassword(id, newPassword) {
+  return request(`/students/${id}`, {
+    method: "PATCH",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ password: newPassword }),
+  });
+}
+
+/* =========================================================
+   DEPARTMENTS — Admin CRUD
+   ========================================================= */
+
+export function createDepartment(data) {
+  return request("/departments", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(data),
+  });
+}
+
+export function updateDepartment(id, data) {
+  return request(`/departments/${id}`, {
+    method: "PATCH",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(data),
+  });
+}
+
+export function deleteDepartment(id) {
+  return request(`/departments/${id}`, { method: "DELETE" });
+}
+
+/* =========================================================
+   COURSES — Admin CRUD
+   ========================================================= */
+
+export function createCourse(data) {
+  return request("/courses", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(data),
+  });
+}
+
+export function updateCourse(id, data) {
+  return request(`/courses/${id}`, {
+    method: "PATCH",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(data),
+  });
+}
+
+export function deleteCourse(id) {
+  return request(`/courses/${id}`, { method: "DELETE" });
+}
+
+/* =========================================================
+   RESULTS — Admin CRUD
+   ========================================================= */
+
+export function createResult(data) {
+  return request("/results", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(data),
+  });
+}
+
+export function updateResult(id, data) {
+  return request(`/results/${id}`, {
+    method: "PATCH",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(data),
+  });
+}
+
+export function deleteResult(id) {
+  return request(`/results/${id}`, { method: "DELETE" });
+}
+
+/* =========================================================
+   ACADEMIC CALENDAR — Admin update
+   ========================================================= */
+
+export function updateAcademicCalendar(data) {
+  return request(`/academicCalendar`, {
+    method: "PATCH",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(data),
+  });
 }

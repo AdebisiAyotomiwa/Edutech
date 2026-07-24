@@ -1,0 +1,278 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Results · Admin · Edutech</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.3/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.11.3/font/bootstrap-icons.min.css" rel="stylesheet" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="/assets/css/dashboard.css" />
+    <link rel="stylesheet" href="/assets/css/shared.css" />
+    <link rel="stylesheet" href="/assets/css/admin.css" />
+  </head>
+  <body class="app-shell">
+
+    <aside class="app-sidebar app-sidebar--admin" id="appSidebar">
+      <a href="/assets/pages/admin/admin-dashboard.html" class="brand-lockup">
+        <span class="brand-mark"><i class="bi bi-mortarboard-fill"></i></span>
+        <span class="brand-name">Edutech<span class="admin-role-tag">Admin</span></span>
+      </a>
+      <nav class="app-sidebar-nav">
+        <a href="/assets/pages/admin/admin-dashboard.html" class="app-sidebar-link"><i class="bi bi-grid-1x2-fill"></i> Dashboard</a>
+        <a href="/assets/pages/admin/admin-students.html" class="app-sidebar-link"><i class="bi bi-people-fill"></i> Students</a>
+        <a href="/assets/pages/admin/admin-courses.html" class="app-sidebar-link"><i class="bi bi-bookmark-fill"></i> Courses &amp; Depts</a>
+        <a href="/assets/pages/admin/admin-results.html" class="app-sidebar-link active"><i class="bi bi-bar-chart-fill"></i> Results</a>
+        <a href="/assets/pages/admin/admin-registrations.html" class="app-sidebar-link"><i class="bi bi-journal-check"></i> Registrations</a>
+      </nav>
+      <div class="app-sidebar-footer">
+        <div class="app-sidebar-user">
+          <span class="app-sidebar-user-avatar"><span id="sidebarAvatarInitials"></span></span>
+          <div class="app-sidebar-user-info">
+            <div class="app-sidebar-user-name" id="sidebarUserName">&nbsp;</div>
+            <div class="app-sidebar-user-meta" id="sidebarUserMeta">&nbsp;</div>
+          </div>
+        </div>
+        <button class="app-sidebar-logout" id="logoutBtn"><i class="bi bi-box-arrow-right"></i> Logout</button>
+      </div>
+    </aside>
+    <div class="app-sidebar-scrim" id="appSidebarScrim"></div>
+
+    <div class="app-main">
+      <header class="app-topbar">
+        <button class="app-sidebar-toggle" id="sidebarToggleBtn" aria-label="Open menu" aria-expanded="false"><i class="bi bi-list"></i></button>
+        <h1 class="app-topbar-title">Results</h1>
+      </header>
+
+      <div class="app-content">
+        <div id="pageState" class="dashboard-state">Loading…</div>
+
+        <div id="pageContent" class="d-none">
+          <ul class="nav admin-tabs mb-4" id="mainTabs">
+            <li class="nav-item"><button class="nav-link active" data-tab="current"><i class="bi bi-pencil-square me-1"></i>Current Semester</button></li>
+            <li class="nav-item"><button class="nav-link" data-tab="history"><i class="bi bi-clock-history me-1"></i>Result History</button></li>
+          </ul>
+
+          <!-- ══ CURRENT SEMESTER TAB ══ -->
+          <div id="currentTab">
+            <!-- Hierarchy filters -->
+            <div class="card-surface mb-3">
+              <div class="row g-2 align-items-end">
+                <div class="col-6 col-md-2">
+                  <label class="form-label mb-1 small fw-semibold text-muted">FACULTY</label>
+                  <select class="form-select form-select-sm" id="rCurrFaculty"><option value="">Select Faculty</option></select>
+                </div>
+                <div class="col-6 col-md-3">
+                  <label class="form-label mb-1 small fw-semibold text-muted">DEPARTMENT</label>
+                  <select class="form-select form-select-sm" id="rCurrDept" disabled><option value="">Select Department</option></select>
+                </div>
+                <div class="col-4 col-md-2">
+                  <label class="form-label mb-1 small fw-semibold text-muted">LEVEL</label>
+                  <select class="form-select form-select-sm" id="rCurrLevel" disabled>
+                    <option value="">Select Level</option>
+                    <option value="100">100</option><option value="200">200</option>
+                    <option value="300">300</option><option value="400">400</option><option value="500">500</option>
+                  </select>
+                </div>
+                <div class="col-4 col-md-2">
+                  <label class="form-label mb-1 small fw-semibold text-muted">SESSION</label>
+                  <select class="form-select form-select-sm" id="rCurrSession" disabled></select>
+                </div>
+                <div class="col-4 col-md-2">
+                  <label class="form-label mb-1 small fw-semibold text-muted">SEMESTER</label>
+                  <select class="form-select form-select-sm" id="rCurrSemester" disabled>
+                    <option value="1">Semester 1</option><option value="2">Semester 2</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+
+            <!-- Student list for current semester -->
+            <div id="currStudentArea" class="d-none">
+              <div class="d-flex align-items-center gap-2 mb-3 flex-wrap">
+                <div class="input-group" style="max-width:280px;">
+                  <span class="input-group-text bg-white"><i class="bi bi-search text-muted"></i></span>
+                  <input type="text" class="form-control border-start-0" id="rCurrSearch" placeholder="Search student…">
+                </div>
+                <span class="text-muted small ms-auto" id="rCurrStudentCount"></span>
+              </div>
+              <div class="admin-table-card mb-3">
+                <div class="table-responsive">
+                  <table class="table admin-table">
+                    <thead><tr><th>Student</th><th>Matric No.</th><th>Pending</th><th>Published</th><th class="text-end">Action</th></tr></thead>
+                    <tbody id="currStudentsTbody"></tbody>
+                  </table>
+                </div>
+                <div class="admin-empty-state d-none" id="currStudentsEmpty"><i class="bi bi-people"></i><p class="mt-2 mb-0">No students found for the selected filters.</p></div>
+              </div>
+              <div class="d-flex justify-content-between align-items-center flex-wrap gap-2">
+                <div class="text-muted small" id="currPaginationInfo"></div>
+                <ul class="pagination pagination-sm mb-0" id="currPaginationList"></ul>
+              </div>
+            </div>
+
+            <div id="currFilterPrompt" class="admin-empty-state">
+              <i class="bi bi-funnel"></i>
+              <p class="mt-2 mb-0">Select Faculty → Department → Level to load students.</p>
+            </div>
+
+            <!-- Score entry panel (shown when a student is selected) -->
+            <div id="scoreEntryPanel" class="d-none mt-3">
+              <div class="card-surface mb-3">
+                <div class="d-flex align-items-center gap-3 flex-wrap">
+                  <div>
+                    <div class="fw-semibold" id="scoreStudentName"></div>
+                    <div class="text-muted small" id="scoreStudentMeta"></div>
+                  </div>
+                  <button class="btn btn-secondary-outline btn-sm ms-auto" id="backToStudentsBtn"><i class="bi bi-arrow-left"></i> Back to Students</button>
+                </div>
+              </div>
+              <div class="admin-table-card">
+                <div class="table-responsive">
+                  <table class="table admin-table">
+                    <thead><tr><th>Course Code</th><th>Course Title</th><th>Credits</th><th>Score (0–100)</th><th>Grade</th><th>Status</th></tr></thead>
+                    <tbody id="scoreTbody"></tbody>
+                  </table>
+                </div>
+                <div class="p-3 border-top d-flex align-items-center justify-content-between gap-2 flex-wrap">
+                  <div class="text-muted small" id="scorePublishStatus"></div>
+                  <div class="d-flex gap-2">
+                    <button class="btn btn-secondary-outline" id="saveDraftBtn">
+                      <i class="bi bi-floppy"></i> Save Draft
+                    </button>
+                    <button class="btn btn-brand" id="publishScoresBtn">
+                      <i class="bi bi-cloud-upload"></i> Publish to Portal
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- ══ RESULT HISTORY TAB ══ -->
+          <div id="historyTab" class="d-none">
+            <div class="card-surface mb-3">
+              <div class="row g-2 align-items-end">
+                <div class="col-6 col-md-2">
+                  <label class="form-label mb-1 small fw-semibold text-muted">FACULTY</label>
+                  <select class="form-select form-select-sm" id="rHistFaculty"><option value="">Select Faculty</option></select>
+                </div>
+                <div class="col-6 col-md-3">
+                  <label class="form-label mb-1 small fw-semibold text-muted">DEPARTMENT</label>
+                  <select class="form-select form-select-sm" id="rHistDept" disabled><option value="">Select Department</option></select>
+                </div>
+                <div class="col-4 col-md-1">
+                  <label class="form-label mb-1 small fw-semibold text-muted">LEVEL</label>
+                  <select class="form-select form-select-sm" id="rHistLevel" disabled>
+                    <option value="">All</option>
+                    <option value="100">100</option><option value="200">200</option>
+                    <option value="300">300</option><option value="400">400</option><option value="500">500</option>
+                  </select>
+                </div>
+                <div class="col-4 col-md-2">
+                  <label class="form-label mb-1 small fw-semibold text-muted">SESSION</label>
+                  <select class="form-select form-select-sm" id="rHistSession" disabled></select>
+                </div>
+                <div class="col-4 col-md-2">
+                  <label class="form-label mb-1 small fw-semibold text-muted">SEMESTER</label>
+                  <select class="form-select form-select-sm" id="rHistSemester" disabled>
+                    <option value="">Both</option>
+                    <option value="1">Semester 1</option><option value="2">Semester 2</option>
+                  </select>
+                </div>
+                <div class="col-12 col-md-2 d-flex align-items-end">
+                  <button class="btn btn-brand btn-sm w-100" id="loadHistoryBtn" disabled><i class="bi bi-search"></i> Load</button>
+                </div>
+              </div>
+            </div>
+
+            <div id="histFilterPrompt" class="admin-empty-state">
+              <i class="bi bi-clock-history"></i>
+              <p class="mt-2 mb-0">Select Faculty → Department, then click Load to view result history.</p>
+            </div>
+
+            <div id="histResultsArea" class="d-none">
+              <div class="d-flex align-items-center gap-2 mb-3 flex-wrap">
+                <div class="input-group" style="max-width:280px;">
+                  <span class="input-group-text bg-white"><i class="bi bi-search text-muted"></i></span>
+                  <input type="text" class="form-control border-start-0" id="rHistSearch" placeholder="Search student or course…">
+                </div>
+                <span class="text-muted small ms-auto" id="rHistCount"></span>
+              </div>
+              <div id="histAccordion"></div>
+              <div class="admin-empty-state d-none" id="histResultsEmpty"><i class="bi bi-bar-chart"></i><p class="mt-2 mb-0">No results match your filters.</p></div>
+              <div class="d-flex justify-content-between align-items-center flex-wrap gap-2 mt-3">
+                <div class="text-muted small" id="histPaginationInfo"></div>
+                <ul class="pagination pagination-sm mb-0" id="histPaginationList"></ul>
+              </div>
+            </div>
+          </div>
+
+        </div><!-- /pageContent -->
+      </div>
+    </div>
+
+    <!-- ══ PUBLISH CONFIRM MODAL ══ -->
+    <div class="modal fade" id="publishConfirmModal" tabindex="-1" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+        <div class="modal-content">
+          <div class="modal-body text-center py-4">
+            <i class="bi bi-cloud-upload fs-1 text-success mb-3 d-block"></i>
+            <h5 class="fw-semibold mb-2">Publish results?</h5>
+            <p class="text-muted mb-1" id="publishConfirmBody"></p>
+            <p class="text-muted small mb-4">Once published, these results will be immediately visible to the student. Any unpublished (draft) scores for this student and semester will be published.</p>
+            <div class="d-flex gap-2 justify-content-center">
+              <button type="button" class="btn btn-secondary-outline" data-bs-dismiss="modal">Cancel</button>
+              <button type="button" class="btn btn-brand" id="confirmPublishBtn"><i class="bi bi-cloud-upload"></i> Yes, Publish</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══ EDIT RESULT MODAL ══ -->
+    <div class="modal fade" id="editResultModal" tabindex="-1" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+        <div class="modal-content">
+          <form id="editResultForm" novalidate>
+            <div class="modal-header">
+              <h5 class="modal-title">Edit Result</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+              <div id="editResultAlert" class="alert alert-danger d-none py-2 px-3 mb-3"></div>
+              <p class="text-muted small mb-3" id="editResultMeta"></p>
+              <label class="form-label">Score (0–100) <span class="text-danger">*</span></label>
+              <input type="number" class="form-control" id="editResultScore" min="0" max="100" required>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary-outline" data-bs-dismiss="modal">Cancel</button>
+              <button type="submit" class="btn btn-brand">Save</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══ LOGOUT MODAL ══ -->
+    <div class="modal fade" id="logoutConfirmModal" tabindex="-1" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+          <div class="modal-body text-center py-4">
+            <i class="bi bi-box-arrow-right fs-1 text-danger mb-3 d-block"></i>
+            <h5 class="fw-semibold mb-2">Log out?</h5>
+            <p class="text-muted mb-4">Are you sure you want to log out of the admin console?</p>
+            <div class="d-flex gap-2 justify-content-center">
+              <button type="button" class="btn btn-secondary-outline" data-bs-dismiss="modal">Cancel</button>
+              <button type="button" class="btn btn-danger-soft" id="confirmLogoutBtn">Yes, log out</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.3/js/bootstrap.bundle.min.js"></script>
+    <script type="module" src="/assets/js/admin/admin-results.js"></script>
+  </body>
+</html>

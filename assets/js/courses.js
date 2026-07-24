@@ -1,73 +1,57 @@
 import { requireAuth, getCurrentStudent, logout } from "./auth.js";
 import { getCourses, getRegistrations, getResults, getAcademicCalendar } from "./api.js";
 
-/* ========================================================
-   Protect Courses Page
-======================================================== */
+function resolveImagePath(raw) {
+  if (!raw || !raw.trim()) return "";
+  if (raw.startsWith("/") || raw.startsWith("http")) return raw;
+  return "/" + raw;
+}
+
 requireAuth();
 
-/* ========================================================
-   Global State
-======================================================== */
+/* ── State ──────────────────────────────────────────────── */
 let student = null;
 let allCourses = [];
 let allRegistrations = [];
 let allResults = [];
 let academicCalendar = null;
 
-const SEMESTER_LABELS = {
-  1: "First Semester",
-  2: "Second Semester",
-};
+const SEMESTER_LABELS = { 1: "First Semester", 2: "Second Semester" };
 
-/* ========================================================
-   DOM Elements
-======================================================== */
-const coursesLoading = document.getElementById("coursesLoading");
-const coursesContent = document.getElementById("coursesContent");
-
-const sidebarUserName = document.getElementById("sidebarUserName");
-const sidebarUserMeta = document.getElementById("sidebarUserMeta");
-const sidebarAvatarImg = document.getElementById("sidebarAvatarImg");
-const sidebarAvatarInitials = document.getElementById("sidebarAvatarInitials");
-
-const sidebarToggleBtn = document.getElementById("sidebarToggleBtn");
-const appSidebar = document.getElementById("appSidebar");
-const appSidebarScrim = document.getElementById("appSidebarScrim");
-
-const logoutBtn = document.getElementById("logoutBtn");
-
-const registeredTabBtn = document.getElementById("registeredTabBtn");
-const allTabBtn = document.getElementById("allTabBtn");
-const registeredPanel = document.getElementById("registeredPanel");
-const allPanel = document.getElementById("allPanel");
-
+/* ── DOM refs ───────────────────────────────────────────── */
+const coursesLoading    = document.getElementById("coursesLoading");
+const coursesContent    = document.getElementById("coursesContent");
+const registeredTabBtn  = document.getElementById("registeredTabBtn");
+const allTabBtn         = document.getElementById("allTabBtn");
+const registeredPanel   = document.getElementById("registeredPanel");
+const allPanel          = document.getElementById("allPanel");
 const currentSemesterLabel = document.getElementById("currentSemesterLabel");
-const registeredTable = document.getElementById("registeredTable");
-const registeredEmpty = document.getElementById("registeredEmpty");
+const registeredTable   = document.getElementById("registeredTable");
+const registeredEmpty   = document.getElementById("registeredEmpty");
 const registeredTabBadge = document.getElementById("registeredTabBadge");
+const allGroups         = document.getElementById("allGroups");
+const allEmpty          = document.getElementById("allEmpty");
+const allTabBadge       = document.getElementById("allTabBadge");
 
-const allGroups = document.getElementById("allGroups");
-const allEmpty = document.getElementById("allEmpty");
-const allTabBadge = document.getElementById("allTabBadge");
+const sidebarUserName       = document.getElementById("sidebarUserName");
+const sidebarUserMeta       = document.getElementById("sidebarUserMeta");
+const sidebarAvatarImg      = document.getElementById("sidebarAvatarImg");
+const sidebarAvatarInitials = document.getElementById("sidebarAvatarInitials");
+const sidebarToggleBtn      = document.getElementById("sidebarToggleBtn");
+const appSidebar            = document.getElementById("appSidebar");
+const appSidebarScrim       = document.getElementById("appSidebarScrim");
+const logoutBtn             = document.getElementById("logoutBtn");
 
-/* ========================================================
-   Start
-======================================================== */
+/* ── Boot ───────────────────────────────────────────────── */
 document.addEventListener("DOMContentLoaded", initCoursesPage);
 
 async function initCoursesPage() {
   try {
     student = getCurrentStudent();
-
-    if (!student) {
-      window.location.href = "/assets/pages/login.html";
-      return;
-    }
+    if (!student) { window.location.href = "/assets/pages/login.html"; return; }
 
     initialiseSidebar();
     initialiseLogout();
-
     await loadStudentData();
 
     coursesLoading.classList.add("d-none");
@@ -76,17 +60,13 @@ async function initCoursesPage() {
     initialiseTabs();
     renderRegisteredTab();
     renderAllCoursesTab();
-  } catch (error) {
-    console.error(error);
-    coursesLoading.innerHTML = `
-      <div class="alert alert-danger mb-0">Failed to load courses.</div>
-    `;
+  } catch (err) {
+    console.error(err);
+    coursesLoading.innerHTML = `<div class="alert alert-danger mb-0">Failed to load courses.</div>`;
   }
 }
 
-/* ========================================================
-   Load Data
-======================================================== */
+/* ── Data ───────────────────────────────────────────────── */
 async function loadStudentData() {
   const [courses, registrations, results, calendar] = await Promise.all([
     getCourses(),
@@ -95,29 +75,25 @@ async function loadStudentData() {
     getAcademicCalendar(),
   ]);
 
-  allCourses = courses;
-  allRegistrations = registrations;
-  allResults = results;
+  allCourses       = courses;
+  allResults       = results;
   academicCalendar = calendar;
 
-  // Chronological order for the "All Courses" grouping
-  allRegistrations.sort((a, b) => {
+  /* Sort registrations chronologically for the All Courses grouping */
+  allRegistrations = registrations.sort((a, b) => {
     if (a.session !== b.session) return a.session.localeCompare(b.session);
     return a.semester - b.semester;
   });
 }
 
-/* ========================================================
-   Sidebar / Logout
-======================================================== */
+/* ── Sidebar ────────────────────────────────────────────── */
 function initialiseSidebar() {
   sidebarUserName.textContent = `${student.firstName} ${student.lastName}`;
   sidebarUserMeta.textContent = student.matricNumber;
+  const initials = student.firstName[0] + student.lastName[0];
 
-  const initials = student.firstName.charAt(0) + student.lastName.charAt(0);
-
-  if (student.profileImage && student.profileImage.trim() !== "") {
-    sidebarAvatarImg.src = student.profileImage;
+  if (student.profileImage && student.profileImage.trim()) {
+    sidebarAvatarImg.src = resolveImagePath(student.profileImage);
     sidebarAvatarImg.onerror = () => {
       sidebarAvatarImg.classList.add("d-none");
       sidebarAvatarInitials.style.display = "flex";
@@ -131,11 +107,10 @@ function initialiseSidebar() {
   }
 
   sidebarToggleBtn.addEventListener("click", () => {
-    const isOpen = appSidebar.classList.toggle("is-open");
+    const open = appSidebar.classList.toggle("is-open");
     appSidebarScrim.classList.toggle("is-open");
-    sidebarToggleBtn.setAttribute("aria-expanded", isOpen);
+    sidebarToggleBtn.setAttribute("aria-expanded", open);
   });
-
   appSidebarScrim.addEventListener("click", () => {
     appSidebar.classList.remove("is-open");
     appSidebarScrim.classList.remove("is-open");
@@ -144,119 +119,128 @@ function initialiseSidebar() {
 }
 
 function initialiseLogout() {
-  const logoutModalEl = document.getElementById("logoutConfirmModal");
-  const logoutModal = new bootstrap.Modal(logoutModalEl);
-  const confirmLogoutBtn = document.getElementById("confirmLogoutBtn");
-
-  logoutBtn.addEventListener("click", () => logoutModal.show());
-
-  confirmLogoutBtn.addEventListener("click", () => {
-    logout();
-    window.location.href = "/assets/pages/login.html";
+  const modal = new bootstrap.Modal(document.getElementById("logoutConfirmModal"));
+  logoutBtn.addEventListener("click", () => modal.show());
+  document.getElementById("confirmLogoutBtn").addEventListener("click", () => {
+    logout(); window.location.href = "/assets/pages/login.html";
   });
 }
 
-/* ========================================================
-   Tabs
-======================================================== */
+/* ── Tabs ───────────────────────────────────────────────── */
 function initialiseTabs() {
   registeredTabBtn.addEventListener("click", () => switchTab("registered"));
   allTabBtn.addEventListener("click", () => switchTab("all"));
 }
 
 function switchTab(tab) {
-  const isRegistered = tab === "registered";
-
-  registeredTabBtn.classList.toggle("active", isRegistered);
-  allTabBtn.classList.toggle("active", !isRegistered);
-  registeredTabBtn.setAttribute("aria-selected", isRegistered);
-  allTabBtn.setAttribute("aria-selected", !isRegistered);
-
-  registeredPanel.classList.toggle("d-none", !isRegistered);
-  allPanel.classList.toggle("d-none", isRegistered);
+  const isReg = tab === "registered";
+  registeredTabBtn.classList.toggle("active", isReg);
+  allTabBtn.classList.toggle("active", !isReg);
+  registeredTabBtn.setAttribute("aria-selected", isReg);
+  allTabBtn.setAttribute("aria-selected", !isReg);
+  registeredPanel.classList.toggle("d-none", !isReg);
+  allPanel.classList.toggle("d-none", isReg);
 }
 
-/* ========================================================
-   Shared helper: does a given registration have a result yet?
-======================================================== */
-function hasResult(registration) {
+/* ── Helpers ────────────────────────────────────────────── */
+function findCourse(courseId) {
+  return allCourses.find(c => Number(c.id) === Number(courseId));
+}
+
+/**
+ * A course registration is "completed" (result released) when there is
+ * a matching result entry for the same student/course/session/semester.
+ * This is purely database-driven — as soon as admin saves a score it
+ * becomes visible here.
+ */
+function hasResult(reg) {
   return allResults.some(
-    (r) =>
-      r.courseId === registration.courseId &&
-      r.session === registration.session &&
-      Number(r.semester) === Number(registration.semester)
+    r =>
+      String(r.courseId) === String(reg.courseId) &&
+      r.session  === reg.session &&
+      Number(r.semester) === Number(reg.semester) &&
+      r.published !== false     // only published results count as "Completed"
   );
 }
 
-function findCourse(courseId) {
-  return allCourses.find((c) => Number(c.id) === Number(courseId));
-}
-
-function statusBadge(isCompleted) {
-  return isCompleted
+function statusBadge(completed) {
+  return completed
     ? `<span class="badge status-badge status-badge--completed">Completed</span>`
     : `<span class="badge status-badge status-badge--pending">Pending</span>`;
 }
 
-/* ========================================================
-   Registered Courses tab — current semester only
-======================================================== */
+/* ── Registered Courses Tab ─────────────────────────────── */
+/**
+ * Always shows current session + current semester registrations.
+ *
+ * States:
+ *  A) Courses registered, some/all results released → show table with live status
+ *  B) Courses registered, no results yet → show table with Pending status
+ *  C) No courses registered for current semester → contextual empty state
+ */
 function renderRegisteredTab() {
-  currentSemesterLabel.textContent = `${academicCalendar.currentSession}, ${
-    SEMESTER_LABELS[academicCalendar.currentSemester] ?? `Semester ${academicCalendar.currentSemester}`
-  }`;
+  const { currentSession, currentSemester } = academicCalendar;
+
+  currentSemesterLabel.textContent =
+    `${currentSession}, ${SEMESTER_LABELS[currentSemester] ?? `Semester ${currentSemester}`}`;
 
   const currentRegs = allRegistrations.filter(
-    (r) =>
-      r.session === academicCalendar.currentSession &&
-      Number(r.semester) === Number(academicCalendar.currentSemester)
+    r => r.session === currentSession && Number(r.semester) === Number(currentSemester)
   );
 
-  registeredTabBadge.textContent = currentRegs.length;
-
-  registeredTable.innerHTML = "";
+  registeredTabBadge.textContent = currentRegs.length || "";
 
   if (currentRegs.length === 0) {
+    /* No registration for current semester */
+    registeredTable.innerHTML = "";
     registeredEmpty.classList.remove("d-none");
+    registeredEmpty.innerHTML = `
+      <i class="bi bi-journal-x"></i>
+      <p class="mb-0 fw-semibold mt-2">No courses registered yet</p>
+      <p class="text-muted small mt-1 mb-0">
+        Course registration for ${currentSession} ${SEMESTER_LABELS[currentSemester] ?? `Semester ${currentSemester}`}
+        has not been completed. Please contact your department or check back when registration opens.
+      </p>`;
     return;
   }
 
   registeredEmpty.classList.add("d-none");
-
-  currentRegs.forEach((reg) => {
-    const course = findCourse(reg.courseId);
-    if (!course) return;
-
-    registeredTable.innerHTML += `
-      <tr>
-        <td>${course.courseCode}</td>
-        <td>${course.courseTitle}${reg.type === "carry-over" ? ' <span class="carryover-tag">Carry-over</span>' : ""}</td>
-        <td>${course.creditUnit}</td>
-        <td>${statusBadge(hasResult(reg))}</td>
-      </tr>
-    `;
-  });
+  registeredTable.innerHTML = currentRegs.map(reg => {
+    const course    = findCourse(reg.courseId);
+    if (!course) return "";
+    const completed = hasResult(reg);
+    const carryTag  = reg.type === "carry-over"
+      ? ` <span class="carryover-tag">Carry-over</span>` : "";
+    return `<tr>
+      <td>${course.courseCode}</td>
+      <td>${course.courseTitle}${carryTag}</td>
+      <td>${course.creditUnit}</td>
+      <td>${statusBadge(completed)}</td>
+    </tr>`;
+  }).join("");
 }
 
-/* ========================================================
-   All Courses tab — full history, grouped by session/semester
-======================================================== */
+/* ── All Courses Tab ────────────────────────────────────── */
+/**
+ * Shows full registration history grouped by session/semester.
+ * Groups are built from allRegistrations (includes current semester).
+ * Status for each course is live — based on whether a result exists.
+ */
 function renderAllCoursesTab() {
-  allTabBadge.textContent = allRegistrations.length;
-
-  allGroups.innerHTML = "";
+  allTabBadge.textContent = allRegistrations.length || "";
 
   if (allRegistrations.length === 0) {
     allEmpty.classList.remove("d-none");
+    allGroups.innerHTML = "";
     return;
   }
-
   allEmpty.classList.add("d-none");
 
+  /* Build ordered groups */
   const groups = [];
-  const seen = new Map();
+  const seen   = new Map();
 
-  allRegistrations.forEach((reg) => {
+  allRegistrations.forEach(reg => {
     const key = `${reg.session}|${reg.semester}`;
     if (!seen.has(key)) {
       seen.set(key, groups.length);
@@ -265,48 +249,48 @@ function renderAllCoursesTab() {
     groups[seen.get(key)].rows.push(reg);
   });
 
-  groups.forEach((group) => {
-    allGroups.innerHTML += renderAllGroupHtml(group);
-  });
+  allGroups.innerHTML = groups.map(renderAllGroupHtml).join("");
 }
 
 function renderAllGroupHtml(group) {
+  const { currentSession, currentSemester } = academicCalendar;
+  const isCurrent =
+    group.session === currentSession &&
+    Number(group.semester) === Number(currentSemester);
+
   const label = `${group.session} — ${SEMESTER_LABELS[group.semester] ?? `Semester ${group.semester}`}`;
+  const currentTag = isCurrent
+    ? `<span class="status-badge status-badge--pending ms-2" style="font-size:.7rem;">Current</span>`
+    : "";
 
-  const rows = group.rows
-    .map((reg) => {
-      const course = findCourse(reg.courseId);
-      if (!course) return "";
-
-      return `
-        <tr>
-          <td>${course.courseCode}</td>
-          <td>${course.courseTitle}${reg.type === "carry-over" ? ' <span class="carryover-tag">Carry-over</span>' : ""}</td>
-          <td>${course.creditUnit}</td>
-          <td>${statusBadge(hasResult(reg))}</td>
-        </tr>
-      `;
-    })
-    .join("");
+  const rows = group.rows.map(reg => {
+    const course   = findCourse(reg.courseId);
+    if (!course) return "";
+    const completed = hasResult(reg);
+    const carryTag  = reg.type === "carry-over"
+      ? ` <span class="carryover-tag">Carry-over</span>` : "";
+    return `<tr>
+      <td>${course.courseCode}</td>
+      <td>${course.courseTitle}${carryTag}</td>
+      <td>${course.creditUnit}</td>
+      <td>${statusBadge(completed)}</td>
+    </tr>`;
+  }).join("");
 
   return `
     <div class="transcript-group">
       <div class="transcript-group-header">
-        <span class="transcript-group-title">${label}</span>
+        <span class="transcript-group-title">${label}${currentTag}</span>
       </div>
       <div class="table-responsive">
         <table class="table table-hover align-middle mb-0">
           <thead>
             <tr>
-              <th>Course Code</th>
-              <th>Course Title</th>
-              <th>Credit Unit</th>
-              <th>Status</th>
+              <th>Course Code</th><th>Course Title</th><th>Credit Unit</th><th>Status</th>
             </tr>
           </thead>
           <tbody>${rows}</tbody>
         </table>
       </div>
-    </div>
-  `;
+    </div>`;
 }

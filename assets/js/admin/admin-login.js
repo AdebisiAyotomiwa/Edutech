@@ -1,25 +1,30 @@
-import { login } from "./auth.js";
+import { adminLogin, isAdminLoggedIn } from "../adminAuth.js";
 
 /* =========================================================
-   login.js
+   admin-login.js
    ---------------------------------------------------------
-   Handles everything related to the Login page UI.
+   Handles everything related to the Admin Login page UI.
    ========================================================= */
 
-const loginForm = document.querySelector("#loginForm");
+// Already signed in? Skip straight to the dashboard.
+if (isAdminLoggedIn()) {
+  window.location.href = "/assets/pages/admin/admin-dashboard.html";
+}
 
-const identifierInput = document.querySelector("#identifierInput");
-const passwordInput = document.querySelector("#passwordInput");
+const adminLoginForm = document.querySelector("#adminLoginForm");
 
-const loginAlert = document.querySelector("#loginAlert");
+const emailInput = document.querySelector("#adminEmailInput");
+const passwordInput = document.querySelector("#adminPasswordInput");
 
-const loginButton = document.querySelector("#loginBtn");
-const loginSpinner = document.querySelector("#loginSpinner");
+const loginAlert = document.querySelector("#adminLoginAlert");
+
+const loginButton = document.querySelector("#adminLoginBtn");
+const loginSpinner = document.querySelector("#adminLoginSpinner");
 const buttonLabel = loginButton.querySelector(".btn-label");
 
 /* ========================================================= */
 
-loginForm.addEventListener("submit", handleLogin);
+adminLoginForm.addEventListener("submit", handleLogin);
 
 /* ========================================================= */
 
@@ -28,40 +33,27 @@ async function handleLogin(event) {
 
   hideAlert();
 
-  const identifier = identifierInput.value.trim();
+  const email = emailInput.value.trim();
   const password = passwordInput.value.trim();
 
-  /* ------------------------------
-       Basic Validation
-    ------------------------------ */
-
-  if (!identifier || !password) {
-    showAlert("Please enter your email/matric number and password.");
-
+  if (!email || !password) {
+    showAlert("Please enter your email and password.");
     return;
   }
-
-  /* ------------------------------
-       Show Loading State
-    ------------------------------ */
 
   setLoading(true);
 
   try {
-    const result = await login(identifier, password);
+    const result = await adminLogin(email, password);
 
     if (!result.success) {
       showAlert(result.message);
-
       return;
     }
 
-    // Login successful
-
-    window.location.href = "/assets/pages/dashboard.html";
+    window.location.href = "/assets/pages/admin/admin-dashboard.html";
   } catch (error) {
     console.error(error);
-
     showAlert("Unable to connect to the server.");
   } finally {
     setLoading(false);
@@ -72,13 +64,11 @@ async function handleLogin(event) {
 
 function showAlert(message) {
   loginAlert.textContent = message;
-
   loginAlert.classList.remove("d-none");
 }
 
 function hideAlert() {
   loginAlert.textContent = "";
-
   loginAlert.classList.add("d-none");
 }
 
@@ -86,20 +76,16 @@ function hideAlert() {
 
 function setLoading(isLoading) {
   loginButton.disabled = isLoading;
-
   loginSpinner.classList.toggle("d-none", !isLoading);
-
   buttonLabel.textContent = isLoading ? "Signing in..." : "Login";
 }
 
-const togglePassword = document.querySelector("#togglePassword");
+const togglePassword = document.querySelector("#toggleAdminPassword");
 const toggleIcon = togglePassword.querySelector("i");
 
 togglePassword.addEventListener("click", () => {
   const isPassword = passwordInput.type === "password";
-
   passwordInput.type = isPassword ? "text" : "password";
-
   toggleIcon.classList.toggle("bi-eye");
   toggleIcon.classList.toggle("bi-eye-slash");
 });

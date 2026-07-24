@@ -1,0 +1,472 @@
+/* =========================================================
+   ADMIN PANEL — styles specific to /assets/pages/admin/*.
+   Relies on shared.css for tokens, buttons, forms, badges,
+   and the .app-shell / .app-sidebar layout system.
+   ========================================================= */
+
+/* Admin sidebar uses a slightly different ink so it never
+   gets mistaken for the student portal at a glance. */
+.app-sidebar--admin {
+  background: var(--ink-900);
+}
+.app-sidebar--admin .app-sidebar-link.active {
+  background: rgba(255, 255, 255, 0.12);
+}
+.admin-role-tag {
+  display: inline-block;
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--gold-500);
+  background: rgba(199, 154, 59, 0.14);
+  padding: 0.15em 0.55em;
+  border-radius: 6px;
+  margin-left: 0.5rem;
+  vertical-align: middle;
+}
+
+/* Mirrors .carryover-tag from courses.css so pages that don't
+   load courses.css (e.g. registrations) still render it correctly. */
+.carryover-tag {
+  display: inline-block;
+  font-size: 0.7rem;
+  font-weight: 700;
+  color: var(--danger);
+  background: var(--danger-100);
+  padding: 0.1em 0.5em;
+  border-radius: 5px;
+  margin-left: 0.4rem;
+  vertical-align: middle;
+}
+
+/* =========================================================
+   TOOLBAR — search + filters + primary action, sits above
+   every admin table.
+   ========================================================= */
+.admin-toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 1.1rem;
+}
+.admin-toolbar .admin-search {
+  flex: 1 1 240px;
+  min-width: 200px;
+}
+.admin-toolbar .admin-filter {
+  flex: 0 0 auto;
+  min-width: 150px;
+}
+.admin-toolbar .admin-toolbar-actions {
+  margin-left: auto;
+  display: flex;
+  gap: 0.6rem;
+}
+
+/* =========================================================
+   TABLE CARD
+   ========================================================= */
+.admin-table-card {
+  background: #fff;
+  border: 1px solid var(--line-200);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-card);
+  overflow: hidden;
+}
+.admin-table {
+  margin-bottom: 0;
+}
+.admin-table thead th {
+  background: var(--paper-100);
+  color: var(--ink-700);
+  font-size: 0.78rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  border-bottom: 1px solid var(--line-200);
+  padding: 0.85rem 1rem;
+  white-space: nowrap;
+}
+.admin-table tbody td {
+  padding: 0.8rem 1rem;
+  vertical-align: middle;
+  font-size: 0.92rem;
+  color: var(--ink-900);
+  border-bottom: 1px solid var(--line-200);
+}
+.admin-table tbody tr:last-child td {
+  border-bottom: none;
+}
+.admin-table tbody tr:hover {
+  background: var(--paper-50);
+}
+.admin-table .text-muted-cell {
+  color: var(--ink-400);
+  font-size: 0.85rem;
+}
+.admin-row-actions {
+  display: flex;
+  gap: 0.4rem;
+  justify-content: flex-end;
+}
+.admin-row-actions .btn {
+  padding: 0.35rem 0.55rem;
+  font-size: 0.85rem;
+  border-radius: 8px;
+}
+
+.admin-empty-state {
+  padding: 3rem 1.5rem;
+  text-align: center;
+  color: var(--ink-400);
+}
+.admin-empty-state i {
+  font-size: 2rem;
+  display: block;
+  margin-bottom: 0.6rem;
+  color: var(--line-200);
+}
+
+/* =========================================================
+   STAT CARDS (dashboard)
+   ========================================================= */
+.stat-card {
+  background: #fff;
+  border: 1px solid var(--line-200);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-card);
+  padding: 1.1rem 1.25rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+.stat-card-label {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--ink-700);
+}
+.stat-card-value {
+  font-family: var(--font-display);
+  font-size: 1.6rem;
+  font-weight: 700;
+  color: var(--ink-900);
+}
+.stat-card--green { border-top: 3px solid var(--brand-500); }
+.stat-card--blue { border-top: 3px solid var(--info); }
+.stat-card--amber { border-top: 3px solid var(--gold-500); }
+.stat-card--red { border-top: 3px solid var(--danger); }
+
+.dashboard-state {
+  padding: 3rem 1rem;
+  text-align: center;
+  color: var(--ink-400);
+}
+
+/* =========================================================
+   TABS (Courses & Departments)
+   ========================================================= */
+.admin-tabs .nav-link {
+  color: var(--ink-700);
+  font-weight: 600;
+  border: none;
+  border-bottom: 3px solid transparent;
+  border-radius: 0;
+  padding: 0.7rem 0.25rem;
+  margin-right: 1.5rem;
+}
+.admin-tabs .nav-link.active {
+  color: var(--brand-900);
+  background: transparent;
+  border-bottom-color: var(--brand-900);
+}
+
+/* =========================================================
+   MODAL FORM
+   ========================================================= */
+.modal-header {
+  border-bottom: 1px solid var(--line-200);
+}
+.modal-footer {
+  border-top: 1px solid var(--line-200);
+}
+.admin-form-hint {
+  font-size: 0.8rem;
+  color: var(--ink-400);
+  margin-top: 0.25rem;
+}
+
+/* =========================================================
+   BULK RESULT ENTRY (roster table)
+   ========================================================= */
+.roster-score-input {
+  width: 90px;
+}
+.roster-row--saved {
+  background: var(--success-100) !important;
+}
+
+/* =========================================================
+   Small-screen tweaks
+   ========================================================= */
+@media (max-width: 767.98px) {
+  .admin-toolbar .admin-toolbar-actions {
+    margin-left: 0;
+    width: 100%;
+  }
+  .admin-toolbar .admin-toolbar-actions .btn {
+    flex: 1;
+  }
+}
+
+/* =========================================================
+   EXTENDED ADMIN STYLES — added for rebuilt pages
+   ========================================================= */
+
+/* ── Hierarchy / breadcrumb filter panel ─────────────────── */
+.hierarchy-nav {
+  background: #fff;
+  border: 1px solid var(--line-200);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-card);
+}
+
+/* ── Student avatar — mini (table rows) ──────────────────── */
+.student-avatar-mini {
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  background: var(--brand-100);
+  color: var(--brand-900);
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 0.75rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+/* ── Student avatar — large (view modal) ─────────────────── */
+.student-avatar-lg {
+  width: 72px;
+  height: 72px;
+  border-radius: 50%;
+  background: var(--brand-100);
+  color: var(--brand-900);
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 1.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* ── Pagination tweaks ───────────────────────────────────── */
+.pagination .page-link {
+  color: var(--brand-700);
+  border-color: var(--line-200);
+  border-radius: 8px !important;
+  margin: 0 1px;
+  min-width: 34px;
+  text-align: center;
+}
+.pagination .page-item.active .page-link {
+  background: var(--brand-900);
+  border-color: var(--brand-900);
+  color: #fff;
+}
+.pagination .page-item.disabled .page-link {
+  opacity: 0.4;
+}
+
+/* ── Score input in result entry ─────────────────────────── */
+.score-input {
+  width: 90px;
+  text-align: center;
+}
+
+/* ── Saved row highlight ─────────────────────────────────── */
+.table-success td {
+  background: var(--success-100) !important;
+}
+
+/* ── Info-badge (status-badge--info) ─────────────────────── */
+.status-badge--info {
+  background: var(--info-100);
+  color: var(--info);
+}
+
+/* ── Filter section label ────────────────────────────────── */
+.filter-label {
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--ink-400);
+  margin-bottom: 0.25rem;
+  display: block;
+}
+
+/* ── Card-surface used in filter bars & panel headers ─────── */
+.card-surface {
+  background: #fff;
+  border: 1px solid var(--line-200);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-card);
+  padding: 1rem 1.25rem;
+}
+
+/* ── Archived row styling (courses table) ────────────────── */
+.opacity-75 { opacity: 0.75; }
+
+/* ── Tab nav active underline glow ───────────────────────── */
+.admin-tabs .nav-link.active {
+  box-shadow: 0 2px 0 var(--brand-900);
+}
+
+/* ── Topbar action button spacing ────────────────────────── */
+.app-topbar .btn {
+  flex-shrink: 0;
+}
+
+/* ── Add course picker panel ─────────────────────────────── */
+#addCoursePicker {
+  border-left: 3px solid var(--brand-500);
+}
+
+/* ── Score entry table grade column ──────────────────────── */
+.grade-cell {
+  min-width: 48px;
+}
+
+/* ── History read-only info banner ───────────────────────── */
+.alert-info {
+  background: var(--info-100);
+  color: var(--info);
+  border: 1px solid transparent;
+}
+
+/* ── Small form selects in filter bars ───────────────────── */
+.form-select-sm {
+  font-size: 0.875rem;
+  padding: 0.35rem 2rem 0.35rem 0.65rem;
+}
+
+/* ── Responsive: stack filter rows nicely on mobile ─────── */
+@media (max-width: 575.98px) {
+  .card-surface .row > [class*="col-"] {
+    margin-bottom: 0.25rem;
+  }
+  .student-avatar-lg {
+    width: 56px;
+    height: 56px;
+    font-size: 1.2rem;
+  }
+}
+
+/* ── View modal field layout ─────────────────────────────── */
+#viewStudentBody .fw-medium {
+  font-size: 0.95rem;
+  color: var(--ink-900);
+}
+#viewStudentBody .text-muted.small.fw-semibold {
+  font-size: 0.72rem;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--ink-400);
+}
+
+/* =========================================================
+   MODAL SCROLLABILITY FIX
+   Bootstrap's modal-dialog-scrollable makes the .modal-body
+   scroll independently, but we also need a sensible max-height
+   so the modal never exceeds the viewport on small screens.
+   ========================================================= */
+
+/* Ensure the modal backdrop can always cover the full page */
+.modal { overflow-x: hidden; overflow-y: auto; }
+
+/* Make every admin modal dialog scrollable by default */
+.modal-dialog {
+  max-height: calc(100vh - 3.5rem);
+}
+
+/* The scrollable body gets a capped height so header/footer
+   stay visible and the body itself scrolls */
+.modal-dialog-scrollable .modal-body {
+  overflow-y: auto;
+  max-height: calc(100vh - 12rem); /* header + footer + margins */
+}
+
+/* On very small screens give a bit more room */
+@media (max-width: 575.98px) {
+  .modal-dialog {
+    margin: 0.5rem;
+    max-height: calc(100vh - 1rem);
+  }
+  .modal-dialog-scrollable .modal-body {
+    max-height: calc(100vh - 9rem);
+  }
+}
+
+/* =========================================================
+   RESULT HISTORY — per-student expandable accordion cards
+   ========================================================= */
+.hist-student-card {
+  border: 1px solid var(--line-200);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  background: #fff;
+  box-shadow: var(--shadow-card);
+}
+
+.hist-student-header {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.85rem 1.1rem;
+  border: none;
+  background: var(--paper-50);
+  cursor: pointer;
+  text-align: left;
+  gap: 0.5rem;
+  transition: background 0.15s ease;
+}
+.hist-student-header:hover { background: var(--paper-100); }
+.hist-student-header[aria-expanded="true"] { background: var(--brand-100); }
+.hist-student-header[aria-expanded="true"] .hist-chevron { transform: rotate(180deg); }
+
+.hist-student-meta {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  flex-shrink: 0;
+}
+
+.hist-chevron {
+  transition: transform 0.2s ease;
+  color: var(--ink-400);
+}
+
+.hist-student-body {
+  padding: 1rem 1.1rem;
+  border-top: 1px solid var(--line-200);
+}
+
+/* Publish button distinct style */
+#publishScoresBtn {
+  background: var(--brand-900);
+  font-weight: 700;
+}
+#publishScoresBtn:hover { background: var(--brand-700); }
+
+/* ── Draft row highlight (score saved but not published) ── */
+.admin-table .table-warning td {
+  background: var(--warn-100) !important;
+}
+.admin-table .table-success td {
+  background: var(--success-100) !important;
+}

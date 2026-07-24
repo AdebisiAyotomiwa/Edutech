@@ -2,6 +2,14 @@ import { requireAuth, getCurrentStudent, logout } from "./auth.js";
 import { getResults, getCourses, getDepartmentById, getRegistrations, getAcademicCalendar } from "./api.js";
 import { calculateGPA, getStudentDisplayName, scoreToGrade } from "./utils.js";
 
+/* Normalise a profile image path to absolute so it resolves correctly
+   from any sub-folder page (e.g. /assets/pages/dashboard.html). */
+function resolveImagePath(raw) {
+  if (!raw || !raw.trim()) return "";
+  if (raw.startsWith("/") || raw.startsWith("http")) return raw;
+  return "/" + raw;
+}
+
 /* ========================================================
    Protect Dashboard
 ======================================================== */
@@ -85,7 +93,9 @@ async function loadStudentData() {
   allRegistrations = registrations;
   academicCalendar = calendar;
 
-  resultsWithCourses = results.map((result) => {
+  resultsWithCourses = results
+    .filter(r => r.published !== false)   // only published results visible to students
+    .map((result) => {
     const course = allCourses.find((c) => Number(c.id) === Number(result.courseId));
 
     if (!course) {
@@ -113,7 +123,7 @@ function initialiseSidebar() {
   const initials = student.firstName.charAt(0) + student.lastName.charAt(0);
 
   if (student.profileImage && student.profileImage.trim() !== "") {
-    sidebarAvatarImg.src = student.profileImage;
+    sidebarAvatarImg.src = resolveImagePath(student.profileImage);
     sidebarAvatarImg.onerror = () => {
       sidebarAvatarImg.classList.add("d-none");
       sidebarAvatarInitials.style.display = "flex";

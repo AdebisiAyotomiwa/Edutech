@@ -1,6 +1,17 @@
 import { requireAuth, getCurrentStudent, logout } from "./auth.js";
 import { getDepartmentById } from "./api.js";
 
+/* Normalise a profile image path to an absolute URL so it resolves
+   correctly regardless of which sub-folder the page lives in.
+   "assets/images/image/foo.jpg"  → "/assets/images/image/foo.jpg"
+   "/assets/images/image/foo.jpg" → "/assets/images/image/foo.jpg"  (unchanged)
+   ""  or null                    → ""  (caller treats as "no image") */
+function resolveImagePath(raw) {
+  if (!raw || !raw.trim()) return "";
+  if (raw.startsWith("/") || raw.startsWith("http")) return raw;
+  return "/" + raw;
+}
+
 /* ========================================================
    Protect Profile Page
 ======================================================== */
@@ -73,7 +84,7 @@ function initialiseSidebar() {
   const initials = student.firstName.charAt(0) + student.lastName.charAt(0);
 
   if (student.profileImage && student.profileImage.trim() !== "") {
-    sidebarAvatarImg.src = student.profileImage;
+    sidebarAvatarImg.src = resolveImagePath(student.profileImage);
     sidebarAvatarImg.onerror = () => {
       sidebarAvatarImg.classList.add("d-none");
       sidebarAvatarInitials.style.display = "flex";
@@ -122,7 +133,7 @@ function renderProfile() {
   // to initials cleanly if the file doesn't exist yet (or ever fails
   // to load) — layout never breaks either way.
   if (student.profileImage && student.profileImage.trim() !== "") {
-    profileAvatarImg.src = student.profileImage;
+    profileAvatarImg.src = resolveImagePath(student.profileImage);
     profileAvatarImg.onerror = () => {
       profileAvatarImg.classList.add("d-none");
       profileAvatarInitials.style.display = "flex";

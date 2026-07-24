@@ -2,6 +2,12 @@ import { requireAuth, getCurrentStudent, logout } from "./auth.js";
 import { getResults, getCourses, getDepartmentById } from "./api.js";
 import { calculateGPA, scoreToGrade } from "./utils.js";
 
+function resolveImagePath(raw) {
+  if (!raw || !raw.trim()) return "";
+  if (raw.startsWith("/") || raw.startsWith("http")) return raw;
+  return "/" + raw;
+}
+
 /* ========================================================
    Protect Transcript Page
 ======================================================== */
@@ -91,7 +97,9 @@ async function loadStudentData() {
   allCourses = courses;
   department = dept;
 
-  resultsWithCourses = results.map((result) => {
+  resultsWithCourses = results
+    .filter(r => r.published !== false)   // only published results visible to students
+    .map((result) => {
     const course = allCourses.find((c) => Number(c.id) === Number(result.courseId));
 
     if (!course) {
@@ -125,7 +133,7 @@ function initialiseSidebar() {
   const initials = student.firstName.charAt(0) + student.lastName.charAt(0);
 
   if (student.profileImage && student.profileImage.trim() !== "") {
-    sidebarAvatarImg.src = student.profileImage;
+    sidebarAvatarImg.src = resolveImagePath(student.profileImage);
     sidebarAvatarImg.onerror = () => {
       sidebarAvatarImg.classList.add("d-none");
       sidebarAvatarInitials.style.display = "flex";
