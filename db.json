@@ -7884,7 +7884,17 @@
       "score": 88,
       "published": true,
       "id": "zdo0ZBp7hUA"
+    },
+    {
+      "studentId": 1,
+      "courseId": 10,
+      "session": "2024/2025",
+      "semester": 2,
+      "level": 100,
+      "score": 90,
+      "published": true,
+      "id": "DMNea42tdSM"
     }
   ],
-  "$schema": "http://json-schema.org/draft-07/schema#"
+  "$schema": "./node_modules/json-server/schema.json"
 }

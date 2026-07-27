@@ -63,13 +63,15 @@ async function loadData() {
 }
 
 function buildSessionList() {
-  /* History sessions = sessions that have published results (not current) */
-  const sessionSet = new Set([
-    ...results.map(r => r.session),
-    ...registrations.map(r => r.session),
-  ]);
-  /* Exclude current session from history */
-  sessionSet.delete(calendar.currentSession);
+  /* History sessions = all sessions that have any published results */
+  const sessionSet = new Set(
+    results
+      .filter(r => r.published !== false)
+      .map(r => r.session)
+  );
+  /* Also include all sessions from registrations so even sessions
+     with no results yet still appear as filter options */
+  registrations.forEach(r => sessionSet.add(r.session));
   allSessions = Array.from(sessionSet).sort().reverse();
 }
 
@@ -384,8 +386,6 @@ function buildHistStudents() {
   const session  = document.getElementById("rHistSession").value;
   const semester = document.getElementById("rHistSemester").value;
 
-  /* Get all students in dept (+ optional level) who have published results
-     that are NOT from the current session */
   histStudents = students
     .filter(s =>
       String(s.departmentId) === String(deptId) &&
@@ -393,11 +393,10 @@ function buildHistStudents() {
     )
     .map(s => {
       const studentResults = results.filter(r => {
-        const notCurrent   = r.session !== calendar.currentSession;
-        const sessMatch    = !session  || r.session === session;
-        const semMatch     = !semester || Number(r.semester) === Number(semester);
-        const isPublished  = r.published !== false;   // only show published in history
-        return String(r.studentId) === String(s.id) && notCurrent && sessMatch && semMatch && isPublished;
+        const sessMatch   = !session  || r.session === session;
+        const semMatch    = !semester || Number(r.semester) === Number(semester);
+        const isPublished = r.published !== false;
+        return String(r.studentId) === String(s.id) && sessMatch && semMatch && isPublished;
       }).map(r => ({
         ...r,
         course: courses.find(c => String(c.id) === String(r.courseId)),
