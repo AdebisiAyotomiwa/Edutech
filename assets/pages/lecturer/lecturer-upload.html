@@ -1,0 +1,205 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Upload Results · Lecturer · Edutech</title>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.3/css/bootstrap.min.css" rel="stylesheet" />
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.11.3/font/bootstrap-icons.min.css" rel="stylesheet" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/assets/css/shared.css" />
+  <link rel="stylesheet" href="/assets/css/dashboard.css" />
+  <link rel="stylesheet" href="/assets/css/lecturer.css" />
+</head>
+<body class="app-shell">
+
+  <!-- ═══════════════════════ SIDEBAR ═══════════════════════ -->
+  <aside class="app-sidebar app-sidebar--lecturer" id="appSidebar">
+    <a href="/assets/pages/lecturer/lecturer-dashboard.html" class="brand-lockup">
+      <span class="brand-mark"><i class="bi bi-mortarboard-fill"></i></span>
+      <span class="brand-name">Edutech <span class="lecturer-role-tag">Lecturer</span></span>
+    </a>
+    <span class="sidebar-section-label">Menu</span>
+    <nav class="app-sidebar-nav">
+      <a href="/assets/pages/lecturer/lecturer-dashboard.html" class="app-sidebar-link">
+        <i class="bi bi-grid-1x2-fill"></i> Dashboard
+      </a>
+      <a href="/assets/pages/lecturer/lecturer-courses.html" class="app-sidebar-link">
+        <i class="bi bi-bookmark-fill"></i> My Courses
+      </a>
+      <a href="/assets/pages/lecturer/lecturer-upload.html" class="app-sidebar-link active">
+        <i class="bi bi-cloud-upload-fill"></i> Upload Results
+      </a>
+      <a href="/assets/pages/lecturer/lecturer-history.html" class="app-sidebar-link">
+        <i class="bi bi-clock-history"></i> Submission History
+      </a>
+    </nav>
+    <div class="app-sidebar-footer">
+      <div class="app-sidebar-user">
+        <span class="app-sidebar-user-avatar"><span id="sidebarAvatarInitials"></span></span>
+        <div class="app-sidebar-user-info">
+          <div class="app-sidebar-user-name" id="sidebarUserName">&nbsp;</div>
+          <div class="app-sidebar-user-meta" id="sidebarUserMeta">&nbsp;</div>
+        </div>
+      </div>
+      <button class="app-sidebar-logout" id="logoutBtn">
+        <i class="bi bi-box-arrow-right"></i> Logout
+      </button>
+    </div>
+  </aside>
+  <div class="app-sidebar-scrim" id="appSidebarScrim"></div>
+
+  <!-- ═══════════════════════ MAIN ═══════════════════════ -->
+  <div class="app-main">
+    <header class="app-topbar">
+      <button class="app-sidebar-toggle" id="sidebarToggleBtn" aria-label="Open menu" aria-expanded="false">
+        <i class="bi bi-list"></i>
+      </button>
+      <span class="app-topbar-title">Upload Results</span>
+    </header>
+
+    <div class="app-content">
+      <div class="dashboard-state" id="pageLoading">
+        <div class="spinner-border text-success mb-3" style="width:2rem;height:2rem;" role="status"></div>
+        <div>Loading…</div>
+      </div>
+
+      <div id="pageContent" class="d-none">
+
+        <!-- ── Course selector ── -->
+        <div class="card-surface mb-4" id="courseSelectorSection">
+          <h2 style="font-family:var(--font-display);font-size:1rem;font-weight:600;margin-bottom:.75rem;">
+            Select a Course
+          </h2>
+          <div class="d-flex gap-3 align-items-end flex-wrap">
+            <div class="flex-grow-1">
+              <label class="form-label" for="courseSelect">Assigned Course</label>
+              <select class="form-select" id="courseSelect">
+                <option value="">— Choose a course —</option>
+              </select>
+            </div>
+            <button class="btn btn-brand" id="loadCourseBtn">
+              <i class="bi bi-people"></i> Load Students
+            </button>
+          </div>
+        </div>
+
+        <!-- ── Score entry panel (shown after course is loaded) ── -->
+        <div id="scoreEntrySection" class="d-none">
+
+          <!-- Course info banner -->
+          <div class="card-surface mb-3" id="courseInfoBanner">
+            <!-- filled by JS -->
+          </div>
+
+          <!-- Locked/pending notice (shown when batch already submitted) -->
+          <div id="pendingNotice" class="d-none alert mb-3" style="background:var(--warn-100);color:var(--warn);border:1px solid transparent;border-radius:var(--radius-md);">
+            <i class="bi bi-hourglass-split me-2"></i>
+            <strong>Awaiting Admin Approval</strong> — This batch has been submitted and is locked for editing until admin reviews it.
+          </div>
+
+          <!-- Approved notice -->
+          <div id="approvedNotice" class="d-none alert mb-3" style="background:var(--success-100);color:var(--success);border:1px solid transparent;border-radius:var(--radius-md);">
+            <i class="bi bi-check-circle-fill me-2"></i>
+            <strong>Approved &amp; Published</strong> — These results are visible to students.
+          </div>
+
+          <!-- Rejected notice with reason -->
+          <div id="rejectedNotice" class="d-none alert mb-3" style="background:var(--danger-100);color:var(--danger);border:1px solid transparent;border-radius:var(--radius-md);">
+            <i class="bi bi-x-circle-fill me-2"></i>
+            <strong>Rejected — </strong><span id="rejectionReasonText"></span>
+            <div class="mt-1 small">Edit the scores below and click <strong>Submit for Approval</strong> to resubmit.</div>
+          </div>
+
+          <!-- Student score table -->
+          <div class="admin-table-card mb-3">
+            <div class="p-3 border-bottom d-flex align-items-center justify-content-between gap-2 flex-wrap">
+              <div>
+                <span class="fw-semibold" id="scoreTableTitle">Student Scores</span>
+                <span class="text-muted small ms-2" id="scoreTableCount"></span>
+              </div>
+              <!-- Live validation summary -->
+              <div class="text-muted small" id="validationSummary"></div>
+            </div>
+
+            <!-- Empty state — no registered students -->
+            <div id="noStudentsEmpty" class="d-none" style="padding:3rem 1.5rem;text-align:center;color:var(--ink-400);">
+              <i class="bi bi-people" style="font-size:2rem;color:var(--line-200);display:block;margin-bottom:.5rem;"></i>
+              <p class="fw-semibold mb-1">No students registered</p>
+              <p class="text-muted small mb-0">No students are registered for this course in the current session &amp; semester.</p>
+            </div>
+
+            <div class="table-responsive" id="scoreTableWrap">
+              <table class="table admin-table" id="scoreTable">
+                <thead>
+                  <tr>
+                    <th>#</th>
+                    <th>Student</th>
+                    <th>Matric No.</th>
+                    <th>Score (0–100) <span class="text-danger">*</span></th>
+                    <th>Grade Preview</th>
+                  </tr>
+                </thead>
+                <tbody id="scoreTbody"></tbody>
+              </table>
+            </div>
+          </div>
+
+          <!-- Action bar -->
+          <div id="actionBar" class="d-flex align-items-center gap-3 flex-wrap">
+            <div class="text-muted small" id="submitStatusMsg"></div>
+            <div class="ms-auto d-flex gap-2 flex-wrap">
+              <!-- Submit is deliberately a separate, prominent action from any casual save -->
+              <button class="btn btn-brand" id="submitBtn">
+                <i class="bi bi-send-fill"></i> Submit for Approval
+              </button>
+            </div>
+          </div>
+
+        </div><!-- /scoreEntrySection -->
+      </div><!-- /pageContent -->
+    </div><!-- /app-content -->
+  </div><!-- /app-main -->
+
+  <!-- ── Submit confirmation modal ── -->
+  <div class="modal fade" id="submitConfirmModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-body text-center py-4">
+          <i class="bi bi-send-fill fs-1 text-success mb-3 d-block"></i>
+          <h5 class="fw-semibold mb-2">Submit for Admin Approval?</h5>
+          <p class="text-muted mb-1" id="submitConfirmBody"></p>
+          <p class="text-muted small mb-4">Once submitted, this batch will be locked for editing until admin approves or rejects it.</p>
+          <div class="d-flex gap-2 justify-content-center">
+            <button type="button" class="btn btn-secondary-outline" data-bs-dismiss="modal">Cancel</button>
+            <button type="button" class="btn btn-brand" id="confirmSubmitBtn">
+              <i class="bi bi-send-fill"></i> Yes, Submit
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Logout modal -->
+  <div class="modal fade" id="logoutConfirmModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-body text-center py-4">
+          <i class="bi bi-box-arrow-right fs-1 text-danger mb-3 d-block"></i>
+          <h5 class="fw-semibold mb-2">Log out?</h5>
+          <p class="text-muted mb-4">Are you sure you want to log out?</p>
+          <div class="d-flex gap-2 justify-content-center">
+            <button type="button" class="btn btn-secondary-outline" data-bs-dismiss="modal">Cancel</button>
+            <button type="button" class="btn btn-danger-soft" id="confirmLogoutBtn">Yes, log out</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.3/js/bootstrap.bundle.min.js"></script>
+  <script type="module" src="/assets/js/lecturer/lecturer-upload.js"></script>
+</body>
+</html>

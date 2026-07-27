@@ -1,0 +1,255 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Lecturers · Admin · Edutech</title>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.3/css/bootstrap.min.css" rel="stylesheet" />
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.11.3/font/bootstrap-icons.min.css" rel="stylesheet" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/assets/css/shared.css" />
+  <link rel="stylesheet" href="/assets/css/dashboard.css" />
+  <link rel="stylesheet" href="/assets/css/admin.css" />
+</head>
+<body class="app-shell">
+
+  <!-- ═══════════════════════ SIDEBAR ═══════════════════════ -->
+  <aside class="app-sidebar app-sidebar--admin" id="appSidebar">
+    <a href="/assets/pages/admin/admin-dashboard.html" class="brand-lockup">
+      <span class="brand-mark"><i class="bi bi-mortarboard-fill"></i></span>
+      <span class="brand-name">Edutech <span class="admin-role-tag">Admin</span></span>
+    </a>
+    <span class="sidebar-section-label">Menu</span>
+    <nav class="app-sidebar-nav">
+      <a href="/assets/pages/admin/admin-dashboard.html"     class="app-sidebar-link"><i class="bi bi-grid-1x2-fill"></i> Dashboard</a>
+      <a href="/assets/pages/admin/admin-students.html"      class="app-sidebar-link"><i class="bi bi-people-fill"></i> Students</a>
+      <a href="/assets/pages/admin/admin-courses.html"       class="app-sidebar-link"><i class="bi bi-bookmark-fill"></i> Courses &amp; Depts</a>
+      <a href="/assets/pages/admin/admin-results.html"       class="app-sidebar-link"><i class="bi bi-bar-chart-fill"></i> Results</a>
+      <a href="/assets/pages/admin/admin-registrations.html" class="app-sidebar-link"><i class="bi bi-journal-check"></i> Registrations</a>
+      <a href="/assets/pages/admin/admin-approvals.html"     class="app-sidebar-link">
+        <i class="bi bi-shield-check"></i> Approvals
+        <span class="sidebar-badge" id="sidebarPendingBadge" style="display:none;"></span>
+      </a>
+      <a href="/assets/pages/admin/admin-lecturers.html"     class="app-sidebar-link active"><i class="bi bi-person-badge-fill"></i> Lecturers</a>
+    </nav>
+    <div class="app-sidebar-footer">
+      <div class="app-sidebar-user">
+        <span class="app-sidebar-user-avatar"><span id="sidebarAvatarInitials"></span></span>
+        <div class="app-sidebar-user-info">
+          <div class="app-sidebar-user-name" id="sidebarUserName">&nbsp;</div>
+          <div class="app-sidebar-user-meta" id="sidebarUserMeta">&nbsp;</div>
+        </div>
+      </div>
+      <button class="app-sidebar-logout" id="logoutBtn"><i class="bi bi-box-arrow-right"></i> Logout</button>
+    </div>
+  </aside>
+  <div class="app-sidebar-scrim" id="appSidebarScrim"></div>
+
+  <!-- ═══════════════════════ MAIN ═══════════════════════ -->
+  <div class="app-main">
+    <header class="app-topbar">
+      <button class="app-sidebar-toggle" id="sidebarToggleBtn" aria-label="Open menu" aria-expanded="false">
+        <i class="bi bi-list"></i>
+      </button>
+      <h1 class="app-topbar-title">Lecturer Management</h1>
+    </header>
+
+    <div class="app-content">
+      <div id="pageState" class="dashboard-state">Loading…</div>
+
+      <div id="pageContent" class="d-none">
+
+        <!-- Tabs -->
+        <ul class="nav admin-tabs mb-4" id="mainTabs">
+          <li class="nav-item"><button class="nav-link active" data-tab="lecturers"><i class="bi bi-person-badge me-1"></i>Lecturers</button></li>
+          <li class="nav-item"><button class="nav-link" data-tab="assignments"><i class="bi bi-link-45deg me-1"></i>Course Assignments</button></li>
+        </ul>
+
+        <!-- ══ LECTURERS TAB ══ -->
+        <div id="lecturersTab">
+          <div class="d-flex align-items-center gap-2 mb-3 flex-wrap">
+            <div class="input-group" style="max-width:300px;">
+              <span class="input-group-text bg-white"><i class="bi bi-search text-muted"></i></span>
+              <input type="text" class="form-control border-start-0" id="lecturerSearch" placeholder="Search name or staff ID…">
+            </div>
+            <div class="ms-auto">
+              <button class="btn btn-brand" id="addLecturerBtn"><i class="bi bi-person-plus"></i> Add Lecturer</button>
+            </div>
+          </div>
+
+          <div class="admin-table-card">
+            <div class="table-responsive">
+              <table class="table admin-table">
+                <thead>
+                  <tr><th>Name</th><th>Staff ID</th><th>Email</th><th>Department</th><th>Assignments</th><th class="text-end">Actions</th></tr>
+                </thead>
+                <tbody id="lecturersTbody"></tbody>
+              </table>
+            </div>
+            <div class="admin-empty-state d-none" id="lecturersEmpty">
+              <i class="bi bi-person-badge"></i>
+              <p class="mt-2 mb-0">No lecturers found.</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- ══ COURSE ASSIGNMENTS TAB ══ -->
+        <div id="assignmentsTab" class="d-none">
+          <div class="d-flex align-items-center gap-2 mb-3 flex-wrap">
+            <span class="text-muted small">Assign lecturers to courses for a specific session &amp; semester.</span>
+            <div class="ms-auto">
+              <button class="btn btn-brand" id="addAssignmentBtn"><i class="bi bi-plus-lg"></i> Add Assignment</button>
+            </div>
+          </div>
+
+          <div class="admin-table-card">
+            <div class="table-responsive">
+              <table class="table admin-table">
+                <thead>
+                  <tr><th>Lecturer</th><th>Course</th><th>Session</th><th>Semester</th><th class="text-end">Actions</th></tr>
+                </thead>
+                <tbody id="assignmentsTbody"></tbody>
+              </table>
+            </div>
+            <div class="admin-empty-state d-none" id="assignmentsEmpty">
+              <i class="bi bi-link-45deg"></i>
+              <p class="mt-2 mb-0">No course assignments yet.</p>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ ADD/EDIT LECTURER MODAL ══ -->
+  <div class="modal fade" id="lecturerModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
+      <div class="modal-content">
+        <form id="lecturerForm" novalidate>
+          <div class="modal-header">
+            <h5 class="modal-title" id="lecturerModalTitle">Add Lecturer</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+          </div>
+          <div class="modal-body">
+            <div id="lecturerFormAlert" class="alert alert-danger d-none py-2 px-3 mb-3"></div>
+            <div class="row g-3">
+              <div class="col-md-6">
+                <label class="form-label">Full Name <span class="text-danger">*</span></label>
+                <input type="text" class="form-control" id="lName" required placeholder="e.g. Dr. Amina Yusuf">
+              </div>
+              <div class="col-md-6">
+                <label class="form-label">Staff ID <span class="text-danger">*</span></label>
+                <input type="text" class="form-control" id="lStaffId" required placeholder="e.g. STF/CSC/001">
+              </div>
+              <div class="col-md-6">
+                <label class="form-label">Email <span class="text-danger">*</span></label>
+                <input type="email" class="form-control" id="lEmail" required>
+              </div>
+              <div class="col-md-6">
+                <label class="form-label">Department <span class="text-danger">*</span></label>
+                <select class="form-select" id="lDepartment" required>
+                  <option value="">Select department…</option>
+                </select>
+              </div>
+              <div class="col-md-6" id="lPasswordWrap">
+                <label class="form-label">Password <span class="text-danger">*</span></label>
+                <input type="text" class="form-control" id="lPassword" minlength="6" placeholder="Min. 6 characters">
+                <div class="admin-form-hint">Set once. Use Edit to reset password later.</div>
+              </div>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary-outline" data-bs-dismiss="modal">Cancel</button>
+            <button type="submit" class="btn btn-brand" id="lecturerFormSubmit">Save Lecturer</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ ADD COURSE ASSIGNMENT MODAL ══ -->
+  <div class="modal fade" id="assignmentModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+      <div class="modal-content">
+        <form id="assignmentForm" novalidate>
+          <div class="modal-header">
+            <h5 class="modal-title" id="assignmentModalTitle">Add Course Assignment</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+          </div>
+          <div class="modal-body">
+            <div id="assignmentFormAlert" class="alert alert-danger d-none py-2 px-3 mb-3"></div>
+            <div class="mb-3">
+              <label class="form-label">Lecturer <span class="text-danger">*</span></label>
+              <select class="form-select" id="aLecturer" required>
+                <option value="">Select lecturer…</option>
+              </select>
+            </div>
+            <div class="mb-3">
+              <label class="form-label">Course <span class="text-danger">*</span></label>
+              <select class="form-select" id="aCourse" required>
+                <option value="">Select course…</option>
+              </select>
+            </div>
+            <div class="row g-3">
+              <div class="col-md-6">
+                <label class="form-label">Session <span class="text-danger">*</span></label>
+                <input type="text" class="form-control" id="aSession" placeholder="e.g. 2024/2025" required>
+              </div>
+              <div class="col-md-6">
+                <label class="form-label">Semester <span class="text-danger">*</span></label>
+                <select class="form-select" id="aSemester" required>
+                  <option value="1">Semester 1</option>
+                  <option value="2">Semester 2</option>
+                </select>
+              </div>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary-outline" data-bs-dismiss="modal">Cancel</button>
+            <button type="submit" class="btn btn-brand">Save Assignment</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ DELETE CONFIRM MODAL ══ -->
+  <div class="modal fade" id="deleteConfirmModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-body text-center py-4">
+          <i class="bi bi-exclamation-triangle fs-1 text-danger mb-3 d-block"></i>
+          <h5 class="fw-semibold mb-2" id="deleteConfirmTitle">Delete?</h5>
+          <p class="text-muted mb-4" id="deleteConfirmBody"></p>
+          <div class="d-flex gap-2 justify-content-center">
+            <button type="button" class="btn btn-secondary-outline" data-bs-dismiss="modal">Cancel</button>
+            <button type="button" class="btn btn-danger-soft" id="confirmDeleteBtn">Yes, delete</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Logout modal -->
+  <div class="modal fade" id="logoutConfirmModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-body text-center py-4">
+          <i class="bi bi-box-arrow-right fs-1 text-danger mb-3 d-block"></i>
+          <h5 class="fw-semibold mb-2">Log out?</h5>
+          <p class="text-muted mb-4">Are you sure you want to log out of the admin console?</p>
+          <div class="d-flex gap-2 justify-content-center">
+            <button type="button" class="btn btn-secondary-outline" data-bs-dismiss="modal">Cancel</button>
+            <button type="button" class="btn btn-danger-soft" id="confirmLogoutBtn">Yes, log out</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.3/js/bootstrap.bundle.min.js"></script>
+  <script type="module" src="/assets/js/admin/admin-lecturers.js"></script>
+</body>
+</html>

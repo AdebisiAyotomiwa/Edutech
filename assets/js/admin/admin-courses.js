@@ -4,6 +4,7 @@ import {
   createCourse, updateCourse, deleteCourse,
   createDepartment, updateDepartment, deleteDepartment,
   createFaculty, updateFaculty, deleteFaculty,
+  getResultSubmissions,
 } from "../api.js";
 
 requireAdminAuth();
@@ -11,6 +12,7 @@ requireAdminAuth();
 /* ── State ──────────────────────────────────────────────── */
 let admin = null;
 let courses = [], departments = [], faculties = [], students = [], results = [];
+let submissions = [];   // for pending badge count
 let editingCourseId = null, editingDeptId = null, editingFacultyId = null;
 let pendingDelete = null;   // { type, id }
 let coursePage = 1;
@@ -55,8 +57,9 @@ async function init() {
 }
 
 async function loadData() {
-  [courses, departments, faculties, students, results] = await Promise.all([
+  [courses, departments, faculties, students, results, submissions] = await Promise.all([
     getCourses(), getDepartments(), getFaculties(), getStudents(), getResults(),
+    getResultSubmissions(),
   ]);
   /* Ensure every course has a status field */
   courses = courses.map(c => ({ status: "active", ...c }));
@@ -68,6 +71,12 @@ function setupSidebar() {
   document.getElementById("sidebarUserMeta").textContent = admin.email;
   document.getElementById("sidebarAvatarInitials").textContent =
     (admin.name || "A").split(" ").map(p => p[0]).join("").slice(0, 2).toUpperCase();
+
+  // Pending approval badge
+  const pendingCount = submissions.filter(s => s.status === "pending").length;
+  const badge = document.getElementById("sidebarPendingBadge");
+  if (badge && pendingCount > 0) { badge.textContent = pendingCount; badge.style.display = ""; }
+
   sidebarToggleBtn.addEventListener("click", () => {
     const open = appSidebar.classList.toggle("is-open");
     appSidebarScrim.classList.toggle("is-open");

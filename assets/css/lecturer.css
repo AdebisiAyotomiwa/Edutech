@@ -1,0 +1,143 @@
+/* =========================================================
+   LECTURER PORTAL — styles specific to /assets/pages/lecturer/*.
+   Relies on shared.css and dashboard.css for tokens, buttons,
+   cards, the app shell layout, and stat cards.
+   ========================================================= */
+
+/* ── Lecturer sidebar — teal-navy variant ─────────────── */
+.app-sidebar--lecturer {
+  background: #1a2e44;   /* slightly different from both student & admin */
+}
+
+.app-sidebar--lecturer .app-sidebar-link.active {
+  background: var(--brand-500);
+  color: #fff;
+}
+.app-sidebar--lecturer .app-sidebar-link.active::before {
+  background: var(--gold-500);
+}
+
+/* Role tag shown in sidebar brand name */
+.lecturer-role-tag {
+  display: inline-block;
+  font-size: 0.65rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--gold-500);
+  background: rgba(199, 154, 59, 0.18);
+  padding: 0.12em 0.5em;
+  border-radius: 5px;
+  margin-left: 0.45rem;
+  vertical-align: middle;
+}
+
+/* ── Course card icon ────────────────────────────────────── */
+.lecturer-course-icon {
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  background: var(--brand-100);
+  color: var(--brand-700);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.25rem;
+  flex-shrink: 0;
+}
+
+/* ── Score input table ───────────────────────────────────── */
+.score-input {
+  width: 90px;
+  text-align: center;
+}
+
+/* Highlight invalid score inputs in red */
+.score-input.is-invalid {
+  border-color: var(--danger);
+  box-shadow: 0 0 0 3px var(--danger-100);
+}
+
+/* ── Admin table card re-use from admin.css ──────────────── */
+/* (admin.css is not loaded on lecturer pages, so we replicate
+   the minimal styles needed for the history table)           */
+.admin-table-card {
+  background: #fff;
+  border: 1px solid var(--line-200);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-card);
+  overflow: hidden;
+}
+.admin-table {
+  margin-bottom: 0;
+}
+.admin-table thead th {
+  background: var(--paper-100);
+  color: var(--ink-700);
+  font-size: 0.78rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  border-bottom: 1px solid var(--line-200);
+  padding: 0.85rem 1rem;
+  white-space: nowrap;
+}
+.admin-table tbody td {
+  padding: 0.8rem 1rem;
+  vertical-align: middle;
+  font-size: 0.92rem;
+  color: var(--ink-900);
+  border-bottom: 1px solid var(--line-200);
+}
+.admin-table tbody tr:last-child td {
+  border-bottom: none;
+}
+.admin-table tbody tr:hover {
+  background: var(--paper-50);
+}
+.admin-table .text-muted-cell {
+  color: var(--ink-400);
+  font-size: 0.85rem;
+}
+.admin-empty-state {
+  padding: 3rem 1.5rem;
+  text-align: center;
+  color: var(--ink-400);
+}
+.admin-empty-state i {
+  font-size: 2rem;
+  display: block;
+  margin-bottom: 0.6rem;
+  color: var(--line-200);
+}
+
+/* Student avatar mini — same as admin.css */
+.student-avatar-mini {
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  background: var(--brand-100);
+  color: var(--brand-900);
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 0.75rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+/* Grade cell */
+.grade-preview { min-width: 60px; }
+
+/* ── Status badge danger variant (not in shared.css) ─────── */
+.status-badge--danger {
+  background: var(--danger-100);
+  color: var(--danger);
+}
+
+/* ── Stat trend "down" (danger) ──────────────────────────── */
+.stat-card-trend.down {
+  color: var(--danger);
+  background: var(--danger-100);
+}

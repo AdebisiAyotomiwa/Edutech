@@ -1,0 +1,154 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Lecturer Dashboard · Edutech</title>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.3/css/bootstrap.min.css" rel="stylesheet" />
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.11.3/font/bootstrap-icons.min.css" rel="stylesheet" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/assets/css/shared.css" />
+  <link rel="stylesheet" href="/assets/css/dashboard.css" />
+  <link rel="stylesheet" href="/assets/css/lecturer.css" />
+</head>
+<body class="app-shell">
+
+  <!-- ═══════════════════════ SIDEBAR ═══════════════════════ -->
+  <aside class="app-sidebar app-sidebar--lecturer" id="appSidebar">
+    <a href="/assets/pages/lecturer/lecturer-dashboard.html" class="brand-lockup">
+      <span class="brand-mark"><i class="bi bi-mortarboard-fill"></i></span>
+      <span class="brand-name">Edutech <span class="lecturer-role-tag">Lecturer</span></span>
+    </a>
+
+    <span class="sidebar-section-label">Menu</span>
+    <nav class="app-sidebar-nav">
+      <a href="/assets/pages/lecturer/lecturer-dashboard.html" class="app-sidebar-link active">
+        <i class="bi bi-grid-1x2-fill"></i> Dashboard
+      </a>
+      <a href="/assets/pages/lecturer/lecturer-courses.html" class="app-sidebar-link">
+        <i class="bi bi-bookmark-fill"></i> My Courses
+      </a>
+      <a href="/assets/pages/lecturer/lecturer-upload.html" class="app-sidebar-link">
+        <i class="bi bi-cloud-upload-fill"></i> Upload Results
+      </a>
+      <a href="/assets/pages/lecturer/lecturer-history.html" class="app-sidebar-link">
+        <i class="bi bi-clock-history"></i> Submission History
+      </a>
+    </nav>
+
+    <div class="app-sidebar-footer">
+      <div class="app-sidebar-user">
+        <span class="app-sidebar-user-avatar"><span id="sidebarAvatarInitials"></span></span>
+        <div class="app-sidebar-user-info">
+          <div class="app-sidebar-user-name" id="sidebarUserName">&nbsp;</div>
+          <div class="app-sidebar-user-meta" id="sidebarUserMeta">&nbsp;</div>
+        </div>
+      </div>
+      <button class="app-sidebar-logout" id="logoutBtn">
+        <i class="bi bi-box-arrow-right"></i> Logout
+      </button>
+    </div>
+  </aside>
+  <div class="app-sidebar-scrim" id="appSidebarScrim"></div>
+
+  <!-- ═══════════════════════ MAIN ═══════════════════════ -->
+  <div class="app-main">
+    <header class="app-topbar">
+      <button class="app-sidebar-toggle" id="sidebarToggleBtn" aria-label="Open menu" aria-expanded="false">
+        <i class="bi bi-list"></i>
+      </button>
+      <span class="app-topbar-title">Dashboard</span>
+    </header>
+
+    <div class="app-content">
+      <!-- Loading state -->
+      <div class="dashboard-state" id="pageLoading">
+        <div class="spinner-border text-success mb-3" style="width:2rem;height:2rem;" role="status"></div>
+        <div>Loading your dashboard…</div>
+      </div>
+
+      <!-- Dashboard content (hidden until data loads) -->
+      <div id="pageContent" class="d-none">
+
+        <!-- Page header -->
+        <div class="page-header">
+          <div class="page-header-text">
+            <h1 id="greetingHeading">Dashboard</h1>
+            <p id="greetingSubtitle">Here's your overview for the current session.</p>
+          </div>
+          <div class="page-header-actions">
+            <a href="/assets/pages/lecturer/lecturer-upload.html" class="btn btn-brand btn-sm">
+              <i class="bi bi-cloud-upload"></i> Upload Results
+            </a>
+          </div>
+        </div>
+
+        <!-- ── Summary stat cards ── -->
+        <div class="stat-grid" style="margin-bottom:1.5rem;">
+          <div class="stat-card stat-card--hero">
+            <span class="stat-card-label">Assigned Courses</span>
+            <span class="stat-card-value" id="statAssigned">—</span>
+            <span class="stat-card-trend"><i class="bi bi-bookmark-fill"></i> Current semester</span>
+            <button class="stat-arrow-btn" aria-hidden="true"><i class="bi bi-arrow-up-right"></i></button>
+          </div>
+          <div class="stat-card">
+            <span class="stat-card-label">Pending Approval</span>
+            <span class="stat-card-value" id="statPending">—</span>
+            <span class="stat-card-trend"><i class="bi bi-hourglass-split"></i> Awaiting review</span>
+            <button class="stat-arrow-btn" aria-hidden="true"><i class="bi bi-arrow-up-right"></i></button>
+          </div>
+          <div class="stat-card">
+            <span class="stat-card-label">Approved</span>
+            <span class="stat-card-value" id="statApproved">—</span>
+            <span class="stat-card-trend"><i class="bi bi-check-circle-fill"></i> Published to students</span>
+            <button class="stat-arrow-btn" aria-hidden="true"><i class="bi bi-arrow-up-right"></i></button>
+          </div>
+          <div class="stat-card">
+            <span class="stat-card-label">Needs Resubmission</span>
+            <span class="stat-card-value" id="statRejected">—</span>
+            <span class="stat-card-trend down"><i class="bi bi-exclamation-circle-fill"></i> Rejected by admin</span>
+            <button class="stat-arrow-btn" aria-hidden="true"><i class="bi bi-arrow-up-right"></i></button>
+          </div>
+        </div>
+
+        <!-- ── Recent activity ── -->
+        <div class="panel">
+          <div class="panel-header">
+            <h2 class="panel-title">Recent Submissions</h2>
+            <a href="/assets/pages/lecturer/lecturer-history.html" class="panel-action-btn">
+              <i class="bi bi-arrow-up-right"></i> View All
+            </a>
+          </div>
+          <div class="panel-body--flush">
+            <div class="activity-list" id="recentSubmissionsList">
+              <!-- filled by JS -->
+            </div>
+          </div>
+        </div>
+
+      </div><!-- /pageContent -->
+    </div><!-- /app-content -->
+  </div><!-- /app-main -->
+
+  <!-- Logout modal -->
+  <div class="modal fade" id="logoutConfirmModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-body text-center py-4">
+          <i class="bi bi-box-arrow-right fs-1 text-danger mb-3 d-block"></i>
+          <h5 class="fw-semibold mb-2">Log out?</h5>
+          <p class="text-muted mb-4">Are you sure you want to log out of the lecturer portal?</p>
+          <div class="d-flex gap-2 justify-content-center">
+            <button type="button" class="btn btn-secondary-outline" data-bs-dismiss="modal">Cancel</button>
+            <button type="button" class="btn btn-danger-soft" id="confirmLogoutBtn">Yes, log out</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.3/js/bootstrap.bundle.min.js"></script>
+  <script type="module" src="/assets/js/lecturer/lecturer-dashboard.js"></script>
+</body>
+</html>
