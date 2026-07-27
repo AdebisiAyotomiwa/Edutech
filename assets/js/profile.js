@@ -53,7 +53,7 @@ async function initProfilePage() {
     student = getCurrentStudent();
 
     if (!student) {
-      window.location.href = "/assets/pages/login.html";
+      window.location.href = "/index.html";
       return;
     }
 
@@ -119,7 +119,7 @@ function initialiseLogout() {
 
   confirmLogoutBtn.addEventListener("click", () => {
     logout();
-    window.location.href = "/assets/pages/login.html";
+    window.location.href = "/index.html";
   });
 }
 

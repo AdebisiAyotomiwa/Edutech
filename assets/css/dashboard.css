@@ -272,6 +272,7 @@
   font-size: 1.25rem;
   color: var(--ink-900);
   margin: 0;
+  margin-right: auto;   /* always push title left, whether or not a search/chip follows */
 }
 .app-topbar-search {
   flex: 1;

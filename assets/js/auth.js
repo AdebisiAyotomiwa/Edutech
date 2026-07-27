@@ -117,7 +117,7 @@ export function isLoggedIn() {
    ========================================================= */
 
 
-export function requireAuth(loginPage = "/assets/pages/login.html") {
+export function requireAuth(loginPage = "/index.html") {
   if (!isLoggedIn()) {
     window.location.href = loginPage;
   }

@@ -130,29 +130,15 @@
 }
 
 /* =========================================================
-   STAT CARDS (dashboard)
+   STAT CARDS — admin overrides
+   The base .stat-card, .stat-card-label, .stat-card-value,
+   and .stat-card--hero rules all live in dashboard.css.
+   Only admin-specific colour variants are defined here.
    ========================================================= */
-.stat-card {
-  background: #fff;
-  border: 1px solid var(--line-200);
-  border-radius: var(--radius-md);
-  box-shadow: var(--shadow-card);
-  padding: 1.1rem 1.25rem;
-  display: flex;
-  flex-direction: column;
-  gap: 0.35rem;
-}
-.stat-card-label {
-  font-size: 0.8rem;
-  font-weight: 600;
-  color: var(--ink-700);
-}
-.stat-card-value {
-  font-family: var(--font-display);
-  font-size: 1.6rem;
-  font-weight: 700;
-  color: var(--ink-900);
-}
+.stat-card--hero .stat-card-label { color: rgba(255,255,255,0.75); }
+.stat-card--hero .stat-card-value { color: #fff; }
+.stat-card--hero .stat-card-trend { color: rgba(255,255,255,0.75); background: rgba(255,255,255,0.14); }
+.stat-card--hero .stat-arrow-btn  { border-color: rgba(255,255,255,0.25); color: rgba(255,255,255,0.8); }
 .stat-card--green { border-top: 3px solid var(--brand-500); }
 .stat-card--blue { border-top: 3px solid var(--info); }
 .stat-card--amber { border-top: 3px solid var(--gold-500); }
@@ -469,4 +455,17 @@
 }
 .admin-table .table-success td {
   background: var(--success-100) !important;
+}
+
+/* ── Hero card — explicit override to guarantee dark green background ─ */
+.stat-card.stat-card--hero {
+  background: #0B3D2E !important;
+  border-color: #0B3D2E !important;
+  color: #fff !important;
+}
+.stat-card.stat-card--hero .stat-card-label { color: rgba(255,255,255,0.75) !important; }
+.stat-card.stat-card--hero .stat-card-value { color: #fff !important; }
+.stat-card.stat-card--hero .stat-card-trend {
+  color: rgba(255,255,255,0.8) !important;
+  background: rgba(255,255,255,0.14) !important;
 }

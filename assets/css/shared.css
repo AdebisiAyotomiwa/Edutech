@@ -150,93 +150,9 @@ a:hover{ color:var(--brand-900); }
 .transcript-group-gpas strong{ color:var(--ink-900); }
 
 /* =========================================================
-   APP SHELL — sidebar + content layout, used by Dashboard,
-   Results, Transcript, Courses, Profile.
+   APP SHELL — layout rules live exclusively in dashboard.css.
+   All pages load dashboard.css for the shell.
    ========================================================= */
-.app-shell{ display:flex; min-height:100vh; background:var(--paper-50); }
-
-.app-sidebar{
-  width:250px; flex-shrink:0; background:var(--brand-900); color:#fff;
-  display:flex; flex-direction:column; padding:1.5rem 1.1rem;
-  position:sticky; top:0; height:100vh; overflow-y:auto;
-}
-.app-sidebar .brand-lockup{
-  display:inline-flex; align-items:center; gap:.6rem; text-decoration:none;
-  margin-bottom:2.25rem; padding:0 .4rem;
-}
-.app-sidebar .brand-mark{
-  width:34px; height:34px; border-radius:9px; background:rgba(255,255,255,.12);
-  color:var(--gold-500); display:flex; align-items:center; justify-content:center;
-  font-size:1rem; flex-shrink:0;
-}
-.app-sidebar .brand-name{ font-family:var(--font-display); font-weight:600; font-size:1.1rem; color:#fff; }
-
-.app-sidebar-nav{ display:flex; flex-direction:column; gap:.25rem; }
-.app-sidebar-link{
-  display:flex; align-items:center; gap:.85rem; padding:.7rem .9rem; border-radius:10px;
-  font-size:.94rem; font-weight:500; color:rgba(255,255,255,.72); text-decoration:none;
-}
-.app-sidebar-link i{ font-size:1.05rem; }
-.app-sidebar-link:hover{ background:rgba(255,255,255,.08); color:#fff; }
-.app-sidebar-link.active{ background:rgba(255,255,255,.12); color:#fff; font-weight:600; }
-.app-sidebar-link.active i{ color:var(--gold-500); }
-
-.app-sidebar-footer{ margin-top:auto; padding-top:1rem; border-top:1px solid rgba(255,255,255,.12); }
-.app-sidebar-user{ display:flex; align-items:center; gap:.7rem; padding:.6rem .5rem; border-radius:10px; }
-.app-sidebar-user-avatar{
-  width:36px; height:36px; border-radius:50%; background:rgba(255,255,255,.12);
-  display:flex; align-items:center; justify-content:center; overflow:hidden; flex-shrink:0;
-}
-.app-sidebar-user-avatar img{ width:100%; height:100%; object-fit:cover; }
-.app-sidebar-user-avatar span{ font-family:var(--font-display); font-weight:600; font-size:.8rem; color:#fff; }
-.app-sidebar-user-info{ min-width:0; }
-.app-sidebar-user-name{ font-size:.87rem; font-weight:600; color:#fff; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
-.app-sidebar-user-meta{ font-size:.76rem; color:rgba(255,255,255,.6); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
-
-.app-sidebar-logout{
-  display:flex; align-items:center; gap:.6rem; width:100%; margin-top:.5rem;
-  padding:.65rem .9rem; border:none; border-radius:10px; background:transparent;
-  color:rgba(255,255,255,.72); font-size:.88rem; font-weight:500; cursor:pointer; text-align:left;
-}
-.app-sidebar-logout:hover{ background:rgba(255,255,255,.08); color:#fff; }
-
-.app-main{ flex:1; min-width:0; }
-
-.app-topbar{
-  background:#fff; border-bottom:1px solid var(--line-200); padding:1rem 1.75rem;
-  display:flex; align-items:center; gap:1rem; position:sticky; top:0; z-index:10;
-}
-.app-topbar-title{ font-family:var(--font-display); font-weight:600; font-size:1.15rem; color:var(--ink-900); margin:0; margin-right:auto; }
-
-.app-sidebar-toggle{
-  display:none; width:38px; height:38px; align-items:center; justify-content:center;
-  border:1px solid var(--line-200); border-radius:9px; background:#fff; color:var(--ink-900);
-  font-size:1.15rem; cursor:pointer;
-}
-.app-sidebar-toggle:hover{ background:var(--paper-100); }
-
-.app-content{ padding:1.75rem; }
-
-.app-sidebar-scrim{
-  position:fixed; inset:0; background:rgba(11,61,46,.35);
-  opacity:0; pointer-events:none; transition:opacity .2s ease; z-index:39;
-}
-.app-sidebar-scrim.is-open{ opacity:1; pointer-events:auto; }
-
-@media (max-width:991.98px){
-  .app-sidebar{
-    position:fixed; left:0; top:0; height:100%;
-    transform:translateX(-100%); transition:transform .25s ease;
-    z-index:40; box-shadow:8px 0 28px rgba(18,33,28,.18);
-  }
-  .app-sidebar.is-open{ transform:translateX(0); }
-  .app-sidebar-toggle{ display:flex; }
-}
-
-@media (max-width:480px){
-  .app-topbar{ padding:.85rem 1.1rem; }
-  .app-content{ padding:1.1rem; }
-}
 
 /* =========================================================
    STATUS BADGES — used by Courses page (Completed/Pending)

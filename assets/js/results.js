@@ -47,7 +47,7 @@ document.addEventListener("DOMContentLoaded", initResultsPage);
 async function initResultsPage() {
   try {
     student = getCurrentStudent();
-    if (!student) { window.location.href = "/assets/pages/login.html"; return; }
+    if (!student) { window.location.href = "/index.html"; return; }
 
     initialiseSidebar();
     initialiseLogout();
@@ -137,7 +137,7 @@ function initialiseLogout() {
   const modal = new bootstrap.Modal(document.getElementById("logoutConfirmModal"));
   logoutBtn.addEventListener("click", () => modal.show());
   document.getElementById("confirmLogoutBtn").addEventListener("click", () => {
-    logout(); window.location.href = "/assets/pages/login.html";
+    logout(); window.location.href = "/index.html";
   });
 }
 
