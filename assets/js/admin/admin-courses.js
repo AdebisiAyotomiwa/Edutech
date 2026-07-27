@@ -133,6 +133,11 @@ function bindCourseEvents() {
   );
   document.getElementById("courseSearchInput").addEventListener("input", () => { coursePage = 1; renderCourses(); });
   document.getElementById("addCourseBtn").addEventListener("click", openAddCourseModal);
+  document.getElementById("importCsvBtn").addEventListener("click", () => {
+    document.getElementById("csvFileInput").value = "";
+    document.getElementById("csvFileInput").click();
+  });
+  document.getElementById("csvFileInput").addEventListener("change", handleCsvImport);
   document.getElementById("cFilterFaculty").addEventListener("change", onCourseFilterFacultyChange);
   document.getElementById("cFaculty").addEventListener("change", () =>
     populateCourseModalDepts(document.getElementById("cFaculty").value)
@@ -634,3 +639,143 @@ async function handleConfirmedDelete() {
 /* ── Helpers ────────────────────────────────────────────── */
 function showAlert(id, msg) { const el = document.getElementById(id); el.textContent = msg; el.classList.remove("d-none"); }
 function hideAlert(id)      { const el = document.getElementById(id); el.textContent = "";  el.classList.add("d-none"); }
+
+/* ════════════════════════════════════════════════════════
+   CSV IMPORT
+   Expected columns (case-insensitive header row):
+   courseCode, courseTitle, creditUnit, level, semester,
+   departmentId  OR  departmentName, [status]
+
+   Example:
+   courseCode,courseTitle,creditUnit,level,semester,departmentId
+   CSC5001,Advanced Topics in AI,3,500,1,1
+   ════════════════════════════════════════════════════════ */
+async function handleCsvImport(e) {
+  const file = e.target.files[0];
+  if (!file) return;
+
+  const csvImportModal = new bootstrap.Modal(document.getElementById("csvImportModal"));
+  const body = document.getElementById("csvImportBody");
+  body.innerHTML = `<div class="text-center py-3"><div class="spinner-border text-success"></div><div class="mt-2">Processing…</div></div>`;
+  csvImportModal.show();
+
+  try {
+    const text = await file.text();
+    const rows = parseCsv(text);
+
+    if (rows.length === 0) {
+      body.innerHTML = `<div class="alert alert-warning mb-0">No data rows found in the file.</div>`;
+      return;
+    }
+
+    let imported = 0, skipped = 0, errors = [];
+
+    for (const row of rows) {
+      /* Normalise keys to lowercase */
+      const r = Object.fromEntries(Object.entries(row).map(([k, v]) => [k.toLowerCase().trim(), v?.trim()]));
+
+      const code   = (r.coursecode || "").toUpperCase();
+      const title  = r.coursetitle || r.title || "";
+      const credit = Number(r.creditunit || r.credits || 0);
+      const level  = Number(r.level || 0);
+      const sem    = Number(r.semester || 0);
+      const status = (r.status || "active").toLowerCase();
+
+      /* Resolve departmentId — accept numeric id or name */
+      let deptId = r.departmentid || r.dept_id || "";
+      if (!deptId && (r.departmentname || r.department)) {
+        const dName = (r.departmentname || r.department || "").toLowerCase();
+        const found = departments.find(d => d.name.toLowerCase() === dName);
+        if (found) deptId = String(found.id);
+      }
+
+      /* Validate */
+      if (!code || !title || !credit || !level || !sem || !deptId) {
+        errors.push(`Row skipped (missing fields): ${code || "?"} — ${title || "?"}`);
+        skipped++;
+        continue;
+      }
+
+      /* Duplicate code check */
+      const dup = courses.find(c => c.courseCode.toUpperCase() === code);
+      if (dup) {
+        errors.push(`Skipped (duplicate code): ${code}`);
+        skipped++;
+        continue;
+      }
+
+      try {
+        const created = await createCourse({
+          courseCode: code, courseTitle: title,
+          creditUnit: credit, level, semester: sem,
+          departmentId: deptId, status,
+        });
+        courses.push({ status: "active", ...created });
+        imported++;
+      } catch {
+        errors.push(`Failed to save: ${code}`);
+        skipped++;
+      }
+    }
+
+    /* Show summary */
+    const summaryClass  = imported > 0 ? "success" : "warning";
+    const errHtml = errors.length
+      ? `<ul class="mb-0 mt-2" style="font-size:.82rem;">${errors.map(e => `<li>${e}</li>`).join("")}</ul>`
+      : "";
+    body.innerHTML = `
+      <div class="alert alert-${summaryClass} mb-0">
+        <strong>${imported} course${imported === 1 ? "" : "s"} imported</strong>
+        ${skipped > 0 ? `, ${skipped} skipped` : ""}.
+        ${errHtml}
+      </div>`;
+
+    if (imported > 0) renderCourses();
+
+  } catch (err) {
+    console.error(err);
+    body.innerHTML = `<div class="alert alert-danger mb-0">Failed to read file: ${err.message}</div>`;
+  }
+}
+
+/**
+ * Minimal CSV parser — handles quoted fields and commas inside quotes.
+ * Returns an array of objects keyed by the header row.
+ */
+function parseCsv(text) {
+  const lines = text.replace(/\r\n/g, "\n").replace(/\r/g, "\n").trim().split("\n");
+  if (lines.length < 2) return [];
+
+  const headers = splitCsvLine(lines[0]);
+  const rows = [];
+
+  for (let i = 1; i < lines.length; i++) {
+    const line = lines[i].trim();
+    if (!line) continue;
+    const values = splitCsvLine(line);
+    const obj = {};
+    headers.forEach((h, idx) => { obj[h.trim()] = (values[idx] ?? "").trim(); });
+    rows.push(obj);
+  }
+  return rows;
+}
+
+function splitCsvLine(line) {
+  const result = [];
+  let current = "";
+  let inQuotes = false;
+  for (let i = 0; i < line.length; i++) {
+    const ch = line[i];
+    if (ch === '"') {
+      if (inQuotes && line[i + 1] === '"') { current += '"'; i++; }
+      else inQuotes = !inQuotes;
+    } else if (ch === "," && !inQuotes) {
+      result.push(current);
+      current = "";
+    } else {
+      current += ch;
+    }
+  }
+  result.push(current);
+  return result;
+}

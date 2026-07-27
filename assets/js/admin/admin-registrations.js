@@ -49,6 +49,8 @@ async function init() {
     bindTabs();
     bindCurrentTab();
     bindHistoryTab();
+    /* Auto-load all students for current semester */
+    renderCurrStudents();
   } catch (err) {
     console.error(err);
     pageState.innerHTML = `<div class="alert alert-danger mb-0">Failed to load registrations.</div>`;
@@ -165,24 +167,15 @@ function bindCurrentTab() {
 function onCurrFacultyChange() {
   const faculty = document.getElementById("rCurrFaculty").value;
   const deptSel = document.getElementById("rCurrDept");
-  deptSel.innerHTML = `<option value="">Select Department</option>` +
+  deptSel.innerHTML = `<option value="">All Departments</option>` +
     departments.filter(d => !faculty || d.faculty === faculty)
       .map(d => `<option value="${d.id}">${d.name}</option>`).join("");
-  deptSel.disabled = !faculty;
-  ["rCurrLevel","rCurrSession","rCurrSemester"].forEach(id => { document.getElementById(id).disabled = true; });
-  document.getElementById("currStudentArea").classList.add("d-none");
-  document.getElementById("regManagePanel").classList.add("d-none");
-  document.getElementById("currFilterPrompt").classList.remove("d-none");
+  deptSel.disabled = false;
+  renderCurrStudents();
 }
 
 function onCurrDeptChange() {
-  const hasDept = !!document.getElementById("rCurrDept").value;
-  ["rCurrLevel","rCurrSession","rCurrSemester"].forEach(id => { document.getElementById(id).disabled = !hasDept; });
-  if (hasDept) renderCurrStudents();
-  else {
-    document.getElementById("currStudentArea").classList.add("d-none");
-    document.getElementById("currFilterPrompt").classList.remove("d-none");
-  }
+  renderCurrStudents();
 }
 
 function getCurrFilters() {
@@ -196,14 +189,15 @@ function getCurrFilters() {
 
 function renderCurrStudents() {
   const { deptId, level, session, semester } = getCurrFilters();
-  if (!deptId) return;
 
   document.getElementById("regManagePanel").classList.add("d-none");
   document.getElementById("currFilterPrompt").classList.add("d-none");
   document.getElementById("currStudentArea").classList.remove("d-none");
 
-  let deptStudents = students.filter(s => String(s.departmentId) === String(deptId));
-  if (level) deptStudents = deptStudents.filter(s => Number(s.level) === Number(level));
+  let deptStudents = students.filter(s =>
+    (!deptId || String(s.departmentId) === String(deptId)) &&
+    (!level  || Number(s.level) === Number(level))
+  );
 
   const q = document.getElementById("rCurrSearch").value.trim().toLowerCase();
   if (q) deptStudents = deptStudents.filter(s =>
@@ -431,20 +425,14 @@ function bindHistoryTab() {
 function onHistFacultyChange() {
   const faculty = document.getElementById("rHistFaculty").value;
   const deptSel = document.getElementById("rHistDept");
-  deptSel.innerHTML = `<option value="">Select Department</option>` +
+  deptSel.innerHTML = `<option value="">All Departments</option>` +
     departments.filter(d => !faculty || d.faculty === faculty)
       .map(d => `<option value="${d.id}">${d.name}</option>`).join("");
-  deptSel.disabled = !faculty;
-  ["rHistLevel","rHistSession","rHistSemester"].forEach(id => { document.getElementById(id).disabled = true; });
-  document.getElementById("loadHistoryBtn").disabled = true;
-  document.getElementById("histResultsArea").classList.add("d-none");
-  document.getElementById("histFilterPrompt").classList.remove("d-none");
+  deptSel.disabled = false;
 }
 
 function onHistDeptChange() {
-  const hasDept = !!document.getElementById("rHistDept").value;
-  ["rHistLevel","rHistSession","rHistSemester"].forEach(id => { document.getElementById(id).disabled = !hasDept; });
-  document.getElementById("loadHistoryBtn").disabled = !hasDept;
+  document.getElementById("loadHistoryBtn").disabled = false;
 }
 
 function loadHistory() {

@@ -61,9 +61,15 @@ async function loadData() {
     .filter(r => r.published !== false)
     .map(r => {
       const course = allCourses.find(c => Number(c.id) === Number(r.courseId));
-      return { ...r, course };
+      if (!course) return null;
+      return {
+        ...r,
+        course,
+        /* Hoist creditUnit to the top level so calculateGPA() can read it directly */
+        creditUnit: course.creditUnit,
+      };
     })
-    .filter(r => r.course);
+    .filter(r => r !== null);
 }
 
 /* ── Sidebar ────────────────────────────────────────────── */

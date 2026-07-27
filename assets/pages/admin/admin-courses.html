@@ -58,23 +58,19 @@
           <!-- ══ COURSES TAB ══ -->
           <div id="coursesTab">
             <!-- Hierarchy filters -->
-            <div class="card-surface mb-3">
-              <div class="row g-2 align-items-end">
-                <div class="col-6 col-md-2">
-                  <label class="form-label mb-1 small fw-semibold text-muted">FACULTY</label>
-                  <select class="form-select form-select-sm" id="cFilterFaculty">
-                    <option value="">All Faculties</option>
-                  </select>
+            <div class="filter-card">
+              <div class="filter-card-row">
+                <div class="filter-group">
+                  <span class="filter-group-label">Faculty</span>
+                  <select class="form-select" id="cFilterFaculty"><option value="">All Faculties</option></select>
                 </div>
-                <div class="col-6 col-md-3">
-                  <label class="form-label mb-1 small fw-semibold text-muted">DEPARTMENT</label>
-                  <select class="form-select form-select-sm" id="cFilterDept">
-                    <option value="">All Departments</option>
-                  </select>
+                <div class="filter-group">
+                  <span class="filter-group-label">Department</span>
+                  <select class="form-select" id="cFilterDept"><option value="">All Departments</option></select>
                 </div>
-                <div class="col-4 col-md-2">
-                  <label class="form-label mb-1 small fw-semibold text-muted">LEVEL</label>
-                  <select class="form-select form-select-sm" id="cFilterLevel">
+                <div class="filter-group">
+                  <span class="filter-group-label">Level</span>
+                  <select class="form-select" id="cFilterLevel">
                     <option value="">All Levels</option>
                     <option value="100">100</option>
                     <option value="200">200</option>
@@ -83,17 +79,17 @@
                     <option value="500">500</option>
                   </select>
                 </div>
-                <div class="col-4 col-md-2">
-                  <label class="form-label mb-1 small fw-semibold text-muted">SEMESTER</label>
-                  <select class="form-select form-select-sm" id="cFilterSemester">
+                <div class="filter-group">
+                  <span class="filter-group-label">Semester</span>
+                  <select class="form-select" id="cFilterSemester">
                     <option value="">Both</option>
                     <option value="1">Semester 1</option>
                     <option value="2">Semester 2</option>
                   </select>
                 </div>
-                <div class="col-4 col-md-2">
-                  <label class="form-label mb-1 small fw-semibold text-muted">STATUS</label>
-                  <select class="form-select form-select-sm" id="cFilterStatus">
+                <div class="filter-group">
+                  <span class="filter-group-label">Status</span>
+                  <select class="form-select" id="cFilterStatus">
                     <option value="">All</option>
                     <option value="active">Active</option>
                     <option value="archived">Archived</option>
@@ -108,7 +104,11 @@
                 <input type="text" class="form-control border-start-0" id="courseSearchInput" placeholder="Search code or title…">
               </div>
               <span class="text-muted small" id="courseResultCount"></span>
-              <div class="ms-auto">
+              <div class="ms-auto d-flex gap-2">
+                <button class="btn btn-secondary-outline" id="importCsvBtn">
+                  <i class="bi bi-upload"></i> Import CSV
+                </button>
+                <input type="file" id="csvFileInput" accept=".csv" class="d-none" />
                 <button class="btn btn-brand" id="addCourseBtn"><i class="bi bi-journal-plus"></i> Add Course</button>
               </div>
             </div>
@@ -305,6 +305,24 @@
               <button type="submit" class="btn btn-brand">Save Faculty</button>
             </div>
           </form>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══ CSV IMPORT RESULT MODAL ══ -->
+    <div class="modal fade" id="csvImportModal" tabindex="-1" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">CSV Import Results</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+          </div>
+          <div class="modal-body" id="csvImportBody">
+            <!-- filled by JS -->
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-brand" data-bs-dismiss="modal">Done</button>
+          </div>
         </div>
       </div>
     </div>
