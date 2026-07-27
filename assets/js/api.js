@@ -348,3 +348,196 @@ export function updateAcademicCalendar(data) {
     body: JSON.stringify(data),
   });
 }
+
+/* =========================================================
+   LECTURERS — new collection
+   ========================================================= */
+
+export function getLecturers() {
+  return request("/lecturers");
+}
+
+export function getLecturerById(id) {
+  return request(`/lecturers/${id}`);
+}
+
+export function getLecturersByEmail(email) {
+  return request(`/lecturers?email=${encodeURIComponent(email)}`);
+}
+
+export function createLecturer(data) {
+  return request("/lecturers", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(data),
+  });
+}
+
+export function updateLecturer(id, data) {
+  return request(`/lecturers/${id}`, {
+    method: "PATCH",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(data),
+  });
+}
+
+export function deleteLecturer(id) {
+  return request(`/lecturers/${id}`, { method: "DELETE" });
+}
+
+/* =========================================================
+   COURSE ASSIGNMENTS — links a lecturer to a course
+   ========================================================= */
+
+export function getCourseAssignments(filters = {}) {
+  const params = new URLSearchParams();
+  Object.entries(filters).forEach(([k, v]) => {
+    if (v !== undefined && v !== null) params.append(k, v);
+  });
+  const query = params.toString();
+  return request(`/courseAssignments${query ? `?${query}` : ""}`);
+}
+
+export function getCourseAssignmentById(id) {
+  return request(`/courseAssignments/${id}`);
+}
+
+export function createCourseAssignment(data) {
+  return request("/courseAssignments", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(data),
+  });
+}
+
+export function updateCourseAssignment(id, data) {
+  return request(`/courseAssignments/${id}`, {
+    method: "PATCH",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(data),
+  });
+}
+
+export function deleteCourseAssignment(id) {
+  return request(`/courseAssignments/${id}`, { method: "DELETE" });
+}
+
+/* =========================================================
+   RESULT SUBMISSIONS — one record per batch upload
+   ========================================================= */
+
+export function getResultSubmissions(filters = {}) {
+  const params = new URLSearchParams();
+  Object.entries(filters).forEach(([k, v]) => {
+    if (v !== undefined && v !== null) params.append(k, v);
+  });
+  const query = params.toString();
+  return request(`/resultSubmissions${query ? `?${query}` : ""}`);
+}
+
+export function getResultSubmissionById(id) {
+  return request(`/resultSubmissions/${id}`);
+}
+
+export function createResultSubmission(data) {
+  return request("/resultSubmissions", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(data),
+  });
+}
+
+export function updateResultSubmission(id, data) {
+  return request(`/resultSubmissions/${id}`, {
+    method: "PATCH",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(data),
+  });
+}
+
+/* =========================================================
+   APPROVAL CASCADE
+   ---------------------------------------------------------
+   json-server cannot atomically update a submission AND all
+   its linked result rows in one request.
+
+   CHOSEN APPROACH: client-side sequential PATCHes with clear
+   error handling. The admin clicks Approve/Reject, and the
+   browser fires:
+     1. PATCH /resultSubmissions/:id   (update status, reviewedBy, reviewedAt)
+     2. PATCH /results/:id × N         (flip published = true for each row)
+
+   TRADEOFF vs custom Express middleware:
+   - Client-side is simpler for a beginner project — no extra
+     server file to maintain, no Node.js middleware knowledge needed.
+   - The risk of a "partial failure" (submission marked approved
+     but some result rows not yet updated) is low in a local
+     dev environment with json-server, but we mitigate it by:
+       a) updating result rows FIRST, then the submission record.
+       b) wrapping in try/catch and showing a clear error if
+          any step fails — the admin can retry safely since
+          PATCH is idempotent.
+   ========================================================= */
+
+/**
+ * Approve a result submission batch.
+ *
+ * Steps (order matters for safety):
+ *  1. Flip every linked result row to published: true
+ *  2. Update submission status to "approved"
+ *
+ * @param {string} submissionId - ID of the resultSubmissions record
+ * @param {Array}  resultIds    - Array of result record IDs in this batch
+ * @param {string} adminId      - ID of the admin performing the review
+ */
+export async function approveSubmission(submissionId, resultIds, adminId) {
+  // Step 1: publish all result rows first.
+  // If this fails, the submission stays "pending" — safe to retry.
+  await Promise.all(
+    resultIds.map(rid =>
+      request(`/results/${rid}`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ published: true }),
+      })
+    )
+  );
+
+  // Step 2: mark the submission as approved.
+  return request(`/resultSubmissions/${submissionId}`, {
+    method: "PATCH",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      status: "approved",
+      reviewedBy: adminId,
+      reviewedAt: new Date().toISOString(),
+      rejectionReason: null,
+    }),
+  });
+}
+
+/**
+ * Reject a result submission batch.
+ *
+ * Steps:
+ *  1. Ensure all linked result rows stay published: false (they already are)
+ *  2. Update submission status to "rejected" with a reason
+ *
+ * @param {string} submissionId    - ID of the resultSubmissions record
+ * @param {string} adminId         - ID of the admin performing the review
+ * @param {string} rejectionReason - Mandatory reason for rejection
+ */
+export async function rejectSubmission(submissionId, adminId, rejectionReason) {
+  // For rejection we only update the submission record.
+  // Result rows already have published: false and stay that way.
+  return request(`/resultSubmissions/${submissionId}`, {
+    method: "PATCH",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      status: "rejected",
+      reviewedBy: adminId,
+      reviewedAt: new Date().toISOString(),
+      rejectionReason,
+    }),
+  });
+}

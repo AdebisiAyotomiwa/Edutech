@@ -7793,7 +7793,9 @@
       "level": 100,
       "score": 72,
       "id": "kJ87PejwKJU",
-      "published": true
+      "published": true,
+      "submissionId": "1",
+      "uploadedBy": "1"
     },
     {
       "studentId": "3",
@@ -7863,7 +7865,9 @@
       "level": 200,
       "score": 58,
       "published": true,
-      "id": "jkG5Txo7zyg"
+      "id": "jkG5Txo7zyg",
+      "submissionId": "4",
+      "uploadedBy": "3"
     },
     {
       "studentId": 2,
@@ -7892,8 +7896,10 @@
       "semester": 2,
       "level": 100,
       "score": 90,
-      "published": true,
-      "id": "DMNea42tdSM"
+      "published": false,
+      "id": "DMNea42tdSM",
+      "submissionId": "2",
+      "uploadedBy": "1"
     },
     {
       "studentId": 4,
@@ -7904,6 +7910,196 @@
       "score": 90,
       "published": true,
       "id": "7X1iIorb_o4"
+    },
+    {
+      "studentId": 3,
+      "courseId": 42,
+      "session": "2024/2025",
+      "semester": 2,
+      "level": 300,
+      "score": 55,
+      "published": false,
+      "id": "sub3_result_1",
+      "submissionId": "3",
+      "uploadedBy": "2"
+    },
+    {
+      "studentId": 7,
+      "courseId": 42,
+      "session": "2024/2025",
+      "semester": 2,
+      "level": 300,
+      "score": 48,
+      "published": false,
+      "id": "sub3_result_2",
+      "submissionId": "3",
+      "uploadedBy": "2"
+    },
+    {
+      "studentId": 9,
+      "courseId": 89,
+      "session": "2024/2025",
+      "semester": 2,
+      "level": 200,
+      "score": 67,
+      "published": true,
+      "id": "sub4_result_2",
+      "submissionId": "4",
+      "uploadedBy": "3"
+    }
+  ],
+  "lecturers": [
+    {
+      "id": "1",
+      "staffId": "STF/CSC/001",
+      "name": "Dr. Amina Yusuf",
+      "email": "amina.yusuf@edutech.ng",
+      "password": "Lecturer123",
+      "departmentId": "1",
+      "role": "lecturer"
+    },
+    {
+      "id": "2",
+      "staffId": "STF/CSC/002",
+      "name": "Dr. Chukwuemeka Obi",
+      "email": "chukwuemeka.obi@edutech.ng",
+      "password": "Lecturer123",
+      "departmentId": "1",
+      "role": "lecturer"
+    },
+    {
+      "id": "3",
+      "staffId": "STF/SEN/001",
+      "name": "Mrs. Funmi Adeyinka",
+      "email": "funmi.adeyinka@edutech.ng",
+      "password": "Lecturer123",
+      "departmentId": "2",
+      "role": "lecturer"
+    },
+    {
+      "name": "Prof. Ayo Precious",
+      "staffId": "STF/CSC/004",
+      "email": "ayo.precious@edutech.ng",
+      "departmentId": "1",
+      "role": "lecturer",
+      "password": "1234567",
+      "id": "PSXU7JBZAGs"
+    }
+  ],
+  "courseAssignments": [
+    {
+      "id": "1",
+      "lecturerId": "1",
+      "courseId": "9",
+      "session": "2024/2025",
+      "semester": 2
+    },
+    {
+      "id": "2",
+      "lecturerId": "1",
+      "courseId": "10",
+      "session": "2024/2025",
+      "semester": 2
+    },
+    {
+      "id": "3",
+      "lecturerId": "1",
+      "courseId": "41",
+      "session": "2024/2025",
+      "semester": 2
+    },
+    {
+      "id": "4",
+      "lecturerId": "2",
+      "courseId": "42",
+      "session": "2024/2025",
+      "semester": 2
+    },
+    {
+      "id": "5",
+      "lecturerId": "2",
+      "courseId": "43",
+      "session": "2024/2025",
+      "semester": 2
+    },
+    {
+      "id": "6",
+      "lecturerId": "3",
+      "courseId": "89",
+      "session": "2024/2025",
+      "semester": 2
+    },
+    {
+      "id": "7",
+      "lecturerId": "3",
+      "courseId": "90",
+      "session": "2024/2025",
+      "semester": 2
+    },
+    {
+      "lecturerId": "PSXU7JBZAGs",
+      "courseId": "126",
+      "session": "2025",
+      "semester": 2,
+      "id": "TU4oTjA6ZcI"
+    }
+  ],
+  "resultSubmissions": [
+    {
+      "id": "1",
+      "lecturerId": "1",
+      "courseId": "9",
+      "session": "2024/2025",
+      "semester": 2,
+      "level": 100,
+      "status": "approved",
+      "submittedAt": "2026-07-20T09:00:00Z",
+      "reviewedBy": "1",
+      "reviewedAt": "2026-07-21T10:30:00Z",
+      "rejectionReason": null,
+      "version": 1
+    },
+    {
+      "id": "2",
+      "lecturerId": "1",
+      "courseId": "10",
+      "session": "2024/2025",
+      "semester": 2,
+      "level": 100,
+      "status": "pending",
+      "submittedAt": "2026-07-25T14:00:00Z",
+      "reviewedBy": null,
+      "reviewedAt": null,
+      "rejectionReason": null,
+      "version": 1
+    },
+    {
+      "id": "3",
+      "lecturerId": "2",
+      "courseId": "42",
+      "session": "2024/2025",
+      "semester": 2,
+      "level": 300,
+      "status": "rejected",
+      "submittedAt": "2026-07-22T11:00:00Z",
+      "reviewedBy": "1",
+      "reviewedAt": "2026-07-23T09:00:00Z",
+      "rejectionReason": "Several scores appear inconsistent. Please review and resubmit.",
+      "version": 1
+    },
+    {
+      "id": "4",
+      "lecturerId": "3",
+      "courseId": "89",
+      "session": "2024/2025",
+      "semester": 2,
+      "level": 200,
+      "status": "approved",
+      "submittedAt": "2026-07-26T16:00:00Z",
+      "reviewedBy": "1",
+      "reviewedAt": "2026-07-27T16:19:15.674Z",
+      "rejectionReason": null,
+      "version": 1
     }
   ],
   "$schema": "./node_modules/json-server/schema.json"

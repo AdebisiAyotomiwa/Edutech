@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Lecturer Login · Edutech</title>
+
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.3/css/bootstrap.min.css" rel="stylesheet" />
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.11.3/font/bootstrap-icons.min.css" rel="stylesheet" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+
+  <link rel="stylesheet" href="/assets/css/login.css" />
+  <link rel="stylesheet" href="/assets/css/shared.css" />
+</head>
+<body>
+
+<div class="auth-shell">
+
+  <!-- ===== Left: Form Panel ===== -->
+  <div class="auth-panel">
+    <div class="auth-panel-inner">
+
+      <a href="#" class="brand-lockup">
+        <span class="brand-mark"><i class="bi bi-mortarboard-fill"></i></span>
+        <span class="brand-name">Edutech</span>
+      </a>
+
+      <p class="brand-tagline">Lecturer Portal</p>
+
+      <div class="auth-copy">
+        <h1>Lecturer sign in</h1>
+        <p>Upload results for your assigned courses. Every submission goes through admin approval before students can see it.</p>
+      </div>
+
+      <form id="lecturerLoginForm" class="auth-form" novalidate>
+
+        <div class="mb-3">
+          <label for="lecturerEmailInput" class="form-label">Staff email</label>
+          <div class="input-group input-group-custom">
+            <span class="input-group-text"><i class="bi bi-person-badge"></i></span>
+            <input type="email" class="form-control" id="lecturerEmailInput"
+                   placeholder="e.g. amina.yusuf@edutech.ng"
+                   autocomplete="username" required />
+          </div>
+        </div>
+
+        <div class="mb-2">
+          <label for="lecturerPasswordInput" class="form-label">Password</label>
+          <div class="input-group input-group-custom">
+            <span class="input-group-text"><i class="bi bi-lock"></i></span>
+            <input type="password" class="form-control" id="lecturerPasswordInput"
+                   placeholder="Enter your password"
+                   autocomplete="current-password" required minlength="6" />
+            <button class="btn btn-toggle-pass" type="button" id="toggleLecturerPassword" aria-label="Show password">
+              <i class="bi bi-eye"></i>
+            </button>
+          </div>
+        </div>
+
+        <!-- Alert shown on login failure -->
+        <div id="lecturerLoginAlert" class="alert alert-danger d-none py-2 px-3 mt-3 mb-0" role="alert"></div>
+
+        <button type="submit" class="btn btn-brand w-100 mt-4" id="lecturerLoginBtn">
+          <span class="btn-label">Sign In</span>
+          <span class="spinner-border spinner-border-sm d-none" id="lecturerLoginSpinner" role="status" aria-hidden="true"></span>
+        </button>
+
+        <p class="auth-footnote">
+          Student? <a href="/assets/pages/login.html">Go to student login</a>
+        </p>
+        <p class="auth-footnote">
+          Admin? <a href="/assets/pages/admin/admin-login.html">Go to admin login</a>
+        </p>
+
+      </form>
+    </div>
+
+    <div class="auth-legal">&copy; 2026 Edutech. All rights reserved.</div>
+  </div>
+
+  <!-- ===== Right: Visual Panel ===== -->
+  <div class="auth-visual">
+    <img src="/assets/images/image/student_portal1.jpg"
+         alt="Lecturer reviewing academic results on campus"
+         class="auth-visual-img" />
+    <div class="auth-visual-overlay"></div>
+    <div class="auth-visual-content">
+      <div class="auth-quote-mark">&ldquo;</div>
+      <p class="auth-visual-quote">Your scores, properly reviewed and published.</p>
+      <p class="auth-visual-sub">Submit results for your courses. Admin approval keeps everything accurate.</p>
+    </div>
+  </div>
+
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.3/js/bootstrap.bundle.min.js"></script>
+<script type="module" src="/assets/js/lecturer/lecturer-login.js"></script>
+</body>
+</html>

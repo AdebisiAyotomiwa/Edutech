@@ -2,6 +2,7 @@ import { requireAdminAuth, getCurrentAdmin, adminLogout } from "../adminAuth.js"
 import {
   getStudents, getCourses, getDepartments, getResults,
   getFaculties, getRegistrations, getAcademicCalendar,
+  getResultSubmissions,
 } from "../api.js";
 import { scoreToGrade } from "../utils.js";
 
@@ -11,6 +12,7 @@ requireAdminAuth();
 let admin        = null;
 let students     = [], courses = [], departments = [];
 let results      = [], faculties = [], registrations = [], calendar = null;
+let submissions  = [];   // resultSubmissions — used for pending approval badge
 let gradeChartInst = null;
 
 /* ── Boot ───────────────────────────────────────────────── */
@@ -41,9 +43,10 @@ async function init() {
 }
 
 async function loadData() {
-  [students, courses, departments, results, faculties, registrations, calendar] = await Promise.all([
+  [students, courses, departments, results, faculties, registrations, calendar, submissions] = await Promise.all([
     getStudents(), getCourses(), getDepartments(), getResults(),
     getFaculties(), getRegistrations(), getAcademicCalendar(),
+    getResultSubmissions(),
   ]);
 }
 
@@ -56,6 +59,14 @@ function setupSidebar() {
   document.getElementById("topbarAvatarInitials").textContent = initials;
   document.getElementById("topbarUserName").textContent = admin.name || "Admin";
   document.getElementById("greetingName").textContent = `Welcome back, ${(admin.name || "Admin").split(" ")[0]} 👋`;
+
+  // Show pending approval count badge in sidebar nav
+  const pendingCount = submissions.filter(s => s.status === "pending").length;
+  const badge = document.getElementById("sidebarPendingBadge");
+  if (badge && pendingCount > 0) {
+    badge.textContent = pendingCount;
+    badge.style.display = "";
+  }
 
   const toggle = document.getElementById("sidebarToggleBtn");
   const sidebar = document.getElementById("appSidebar");

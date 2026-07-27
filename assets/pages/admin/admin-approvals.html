@@ -1,0 +1,215 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Pending Approvals · Admin · Edutech</title>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.3/css/bootstrap.min.css" rel="stylesheet" />
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.11.3/font/bootstrap-icons.min.css" rel="stylesheet" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/assets/css/shared.css" />
+  <link rel="stylesheet" href="/assets/css/dashboard.css" />
+  <link rel="stylesheet" href="/assets/css/admin.css" />
+</head>
+<body class="app-shell">
+
+  <!-- ═══════════════════════ SIDEBAR ═══════════════════════ -->
+  <aside class="app-sidebar app-sidebar--admin" id="appSidebar">
+    <a href="/assets/pages/admin/admin-dashboard.html" class="brand-lockup">
+      <span class="brand-mark"><i class="bi bi-mortarboard-fill"></i></span>
+      <span class="brand-name">Edutech <span class="admin-role-tag">Admin</span></span>
+    </a>
+    <span class="sidebar-section-label">Menu</span>
+    <nav class="app-sidebar-nav">
+      <a href="/assets/pages/admin/admin-dashboard.html"     class="app-sidebar-link"><i class="bi bi-grid-1x2-fill"></i> Dashboard</a>
+      <a href="/assets/pages/admin/admin-students.html"      class="app-sidebar-link"><i class="bi bi-people-fill"></i> Students</a>
+      <a href="/assets/pages/admin/admin-courses.html"       class="app-sidebar-link"><i class="bi bi-bookmark-fill"></i> Courses &amp; Depts</a>
+      <a href="/assets/pages/admin/admin-results.html"       class="app-sidebar-link"><i class="bi bi-bar-chart-fill"></i> Results</a>
+      <a href="/assets/pages/admin/admin-registrations.html" class="app-sidebar-link"><i class="bi bi-journal-check"></i> Registrations</a>
+      <a href="/assets/pages/admin/admin-approvals.html"     class="app-sidebar-link active">
+        <i class="bi bi-shield-check"></i> Approvals
+        <span class="sidebar-badge" id="sidebarPendingBadge" style="display:none;"></span>
+      </a>
+      <a href="/assets/pages/admin/admin-lecturers.html"     class="app-sidebar-link"><i class="bi bi-person-badge-fill"></i> Lecturers</a>
+    </nav>
+    <div class="app-sidebar-footer">
+      <div class="app-sidebar-user">
+        <span class="app-sidebar-user-avatar"><span id="sidebarAvatarInitials"></span></span>
+        <div class="app-sidebar-user-info">
+          <div class="app-sidebar-user-name" id="sidebarUserName">&nbsp;</div>
+          <div class="app-sidebar-user-meta" id="sidebarUserMeta">&nbsp;</div>
+        </div>
+      </div>
+      <button class="app-sidebar-logout" id="logoutBtn"><i class="bi bi-box-arrow-right"></i> Logout</button>
+    </div>
+  </aside>
+  <div class="app-sidebar-scrim" id="appSidebarScrim"></div>
+
+  <!-- ═══════════════════════ MAIN ═══════════════════════ -->
+  <div class="app-main">
+    <header class="app-topbar">
+      <button class="app-sidebar-toggle" id="sidebarToggleBtn" aria-label="Open menu" aria-expanded="false">
+        <i class="bi bi-list"></i>
+      </button>
+      <h1 class="app-topbar-title">Pending Approvals</h1>
+    </header>
+
+    <div class="app-content">
+      <div id="pageState" class="dashboard-state">Loading…</div>
+
+      <div id="pageContent" class="d-none">
+
+        <!-- Metrics bar -->
+        <div class="metrics-bar" id="approvalsMetrics">
+          <div class="metric-chip">
+            <div class="metric-chip-icon metric-chip-icon--amber"><i class="bi bi-hourglass-split"></i></div>
+            <div class="metric-chip-body">
+              <div class="metric-chip-value" id="mPending">—</div>
+              <div class="metric-chip-label">Pending</div>
+            </div>
+          </div>
+          <div class="metric-chip">
+            <div class="metric-chip-icon metric-chip-icon--green"><i class="bi bi-check-circle-fill"></i></div>
+            <div class="metric-chip-body">
+              <div class="metric-chip-value" id="mApproved">—</div>
+              <div class="metric-chip-label">Approved</div>
+            </div>
+          </div>
+          <div class="metric-chip">
+            <div class="metric-chip-icon metric-chip-icon--red"><i class="bi bi-x-circle-fill"></i></div>
+            <div class="metric-chip-body">
+              <div class="metric-chip-value" id="mRejected">—</div>
+              <div class="metric-chip-label">Rejected</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Filter card -->
+        <div class="filter-card mb-3">
+          <div class="filter-card-row">
+            <div class="filter-group">
+              <span class="filter-group-label">Status</span>
+              <select class="form-select" id="filterStatus">
+                <option value="pending">Pending (Action Required)</option>
+                <option value="">All Statuses</option>
+                <option value="approved">Approved</option>
+                <option value="rejected">Rejected</option>
+              </select>
+            </div>
+            <div class="filter-group">
+              <span class="filter-group-label">Session</span>
+              <select class="form-select" id="filterSession">
+                <option value="">All Sessions</option>
+              </select>
+            </div>
+            <div class="filter-group">
+              <span class="filter-group-label">Semester</span>
+              <select class="form-select" id="filterSemester">
+                <option value="">Both</option>
+                <option value="1">Semester 1</option>
+                <option value="2">Semester 2</option>
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <!-- Submissions queue table -->
+        <div class="admin-table-card" id="queuePanel">
+          <div class="table-responsive">
+            <table class="table admin-table">
+              <thead>
+                <tr>
+                  <th>Course</th>
+                  <th>Lecturer</th>
+                  <th>Level</th>
+                  <th>Session / Sem</th>
+                  <th>Students</th>
+                  <th>Submitted</th>
+                  <th>Version</th>
+                  <th>Status</th>
+                  <th class="text-end">Action</th>
+                </tr>
+              </thead>
+              <tbody id="queueTbody"></tbody>
+            </table>
+          </div>
+          <div class="admin-empty-state d-none" id="queueEmpty">
+            <i class="bi bi-shield-check" style="color:var(--success-100);"></i>
+            <p class="mt-2 mb-0" style="color:var(--success);">No pending submissions — you're all caught up!</p>
+          </div>
+        </div>
+
+        <!-- ── Detail panel (shown when a submission is opened) ── -->
+        <div id="detailPanel" class="d-none mt-4">
+          <div class="card-surface mb-3" id="detailHeader"></div>
+
+          <!-- Scores table -->
+          <div class="admin-table-card mb-3">
+            <div class="p-3 border-bottom fw-semibold d-flex align-items-center justify-content-between gap-2">
+              <span>Student Scores in this Batch</span>
+              <button class="btn btn-secondary-outline btn-sm" id="backToQueueBtn">
+                <i class="bi bi-arrow-left"></i> Back to Queue
+              </button>
+            </div>
+            <div class="table-responsive">
+              <table class="table admin-table">
+                <thead>
+                  <tr><th>#</th><th>Student</th><th>Matric No.</th><th>Score</th><th>Grade</th></tr>
+                </thead>
+                <tbody id="detailScoresTbody"></tbody>
+              </table>
+            </div>
+            <div class="admin-empty-state d-none" id="detailEmpty">
+              <i class="bi bi-people"></i>
+              <p class="mt-2 mb-0">No scores in this batch.</p>
+            </div>
+          </div>
+
+          <!-- Approve / Reject action panel (only shown for pending submissions) -->
+          <div id="reviewActionPanel" class="card-surface d-none">
+            <div id="reviewAlert" class="alert d-none py-2 px-3 mb-3"></div>
+            <div class="d-flex gap-3 align-items-start flex-wrap">
+              <button class="btn btn-brand" id="approveBtn">
+                <i class="bi bi-check-circle-fill"></i> Approve &amp; Publish
+              </button>
+              <div class="flex-grow-1">
+                <label class="form-label mb-1" for="rejectReasonInput">Rejection reason <span class="text-danger">*</span></label>
+                <div class="d-flex gap-2">
+                  <input type="text" class="form-control" id="rejectReasonInput"
+                         placeholder="Explain why you are rejecting this batch…" />
+                  <button class="btn btn-danger-soft" id="rejectBtn">
+                    <i class="bi bi-x-circle-fill"></i> Reject
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div><!-- /detailPanel -->
+
+      </div><!-- /pageContent -->
+    </div>
+  </div>
+
+  <!-- Logout modal -->
+  <div class="modal fade" id="logoutConfirmModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-body text-center py-4">
+          <i class="bi bi-box-arrow-right fs-1 text-danger mb-3 d-block"></i>
+          <h5 class="fw-semibold mb-2">Log out?</h5>
+          <p class="text-muted mb-4">Are you sure you want to log out of the admin console?</p>
+          <div class="d-flex gap-2 justify-content-center">
+            <button type="button" class="btn btn-secondary-outline" data-bs-dismiss="modal">Cancel</button>
+            <button type="button" class="btn btn-danger-soft" id="confirmLogoutBtn">Yes, log out</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.3/js/bootstrap.bundle.min.js"></script>
+  <script type="module" src="/assets/js/admin/admin-approvals.js"></script>
+</body>
+</html>
