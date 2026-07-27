@@ -53,25 +53,78 @@
 
         <div id="pageContent" class="d-none">
 
-          <!-- ── Breadcrumb nav ── -->
-          <div class="hierarchy-nav card-surface mb-3 p-3">
-            <div class="row g-2 align-items-end">
-              <div class="col-6 col-md-3">
-                <label class="form-label mb-1 small fw-semibold text-muted">FACULTY</label>
+          <!-- ── Metrics bar ── -->
+          <div class="metrics-bar" id="studentsMetricsBar">
+            <div class="metric-chip">
+              <div class="metric-chip-icon metric-chip-icon--teal"><i class="bi bi-people-fill"></i></div>
+              <div class="metric-chip-body">
+                <div class="metric-chip-value" id="mTotal">—</div>
+                <div class="metric-chip-label">Total Students</div>
+              </div>
+            </div>
+            <div class="metric-chip">
+              <div class="metric-chip-icon metric-chip-icon--blue"><i class="bi bi-gender-male"></i></div>
+              <div class="metric-chip-body">
+                <div class="metric-chip-value" id="mMale">—</div>
+                <div class="metric-chip-label">Male</div>
+              </div>
+            </div>
+            <div class="metric-chip">
+              <div class="metric-chip-icon metric-chip-icon--purple"><i class="bi bi-gender-female"></i></div>
+              <div class="metric-chip-body">
+                <div class="metric-chip-value" id="mFemale">—</div>
+                <div class="metric-chip-label">Female</div>
+              </div>
+            </div>
+            <div class="metric-chip">
+              <div class="metric-chip-icon metric-chip-icon--green"><i class="bi bi-1-circle"></i></div>
+              <div class="metric-chip-body">
+                <div class="metric-chip-value" id="m100">—</div>
+                <div class="metric-chip-label">100 Level</div>
+              </div>
+            </div>
+            <div class="metric-chip">
+              <div class="metric-chip-icon metric-chip-icon--amber"><i class="bi bi-2-circle"></i></div>
+              <div class="metric-chip-body">
+                <div class="metric-chip-value" id="m200">—</div>
+                <div class="metric-chip-label">200 Level</div>
+              </div>
+            </div>
+            <div class="metric-chip">
+              <div class="metric-chip-icon metric-chip-icon--red"><i class="bi bi-3-circle"></i></div>
+              <div class="metric-chip-body">
+                <div class="metric-chip-value" id="m300">—</div>
+                <div class="metric-chip-label">300 Level</div>
+              </div>
+            </div>
+            <div class="metric-chip">
+              <div class="metric-chip-icon metric-chip-icon--teal"><i class="bi bi-4-circle"></i></div>
+              <div class="metric-chip-body">
+                <div class="metric-chip-value" id="m400">—</div>
+                <div class="metric-chip-label">400 Level</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- ── Uniform filter card ── -->
+          <div class="filter-card">
+            <div class="filter-card-row">
+              <div class="filter-group">
+                <span class="filter-group-label">Faculty</span>
                 <select class="form-select" id="filterFaculty">
-                  <option value="">Select Faculty</option>
+                  <option value="">All Faculties</option>
                 </select>
               </div>
-              <div class="col-6 col-md-3">
-                <label class="form-label mb-1 small fw-semibold text-muted">DEPARTMENT</label>
-                <select class="form-select" id="filterDept" disabled>
-                  <option value="">Select Department</option>
+              <div class="filter-group">
+                <span class="filter-group-label">Department</span>
+                <select class="form-select" id="filterDept">
+                  <option value="">All Departments</option>
                 </select>
               </div>
-              <div class="col-6 col-md-2">
-                <label class="form-label mb-1 small fw-semibold text-muted">LEVEL</label>
-                <select class="form-select" id="filterLevel" disabled>
-                  <option value="">Select Level</option>
+              <div class="filter-group">
+                <span class="filter-group-label">Level</span>
+                <select class="form-select" id="filterLevel">
+                  <option value="">All Levels</option>
                   <option value="100">100 Level</option>
                   <option value="200">200 Level</option>
                   <option value="300">300 Level</option>
@@ -79,29 +132,23 @@
                   <option value="500">500 Level</option>
                 </select>
               </div>
-              <div class="col-6 col-md-2">
-                <label class="form-label mb-1 small fw-semibold text-muted">STATUS</label>
-                <select class="form-select" id="filterStatus" disabled>
+              <div class="filter-group">
+                <span class="filter-group-label">Status</span>
+                <select class="form-select" id="filterStatus">
                   <option value="">All Status</option>
                   <option value="Active">Active</option>
                   <option value="Suspended">Suspended</option>
                   <option value="Graduated">Graduated</option>
                 </select>
               </div>
-              <div class="col-12 col-md-2 d-flex align-items-end">
-                <button class="btn btn-secondary-outline w-100" id="clearFiltersBtn"><i class="bi bi-x-circle"></i> Clear</button>
+              <div class="filter-group" style="flex:0 0 auto;min-width:unset;">
+                <span class="filter-group-label">&nbsp;</span>
+                <button class="btn btn-secondary-outline" id="clearFiltersBtn" style="white-space:nowrap;">
+                  <i class="bi bi-x-circle"></i> Clear
+                </button>
               </div>
             </div>
           </div>
-
-          <!-- ── Prompt to select filters ── -->
-          <div id="filterPrompt" class="admin-empty-state">
-            <i class="bi bi-filter-circle"></i>
-            <p class="mt-2 mb-0">Select a Faculty, then Department and Level to view students.</p>
-          </div>
-
-          <!-- ── Student list area ── -->
-          <div id="studentListArea" class="d-none">
             <!-- Search + count bar -->
             <div class="d-flex align-items-center gap-2 mb-3 flex-wrap">
               <div class="input-group" style="max-width:320px;">
@@ -140,7 +187,6 @@
                 <ul class="pagination pagination-sm mb-0" id="paginationList"></ul>
               </nav>
             </div>
-          </div>
 
         </div><!-- /pageContent -->
       </div>

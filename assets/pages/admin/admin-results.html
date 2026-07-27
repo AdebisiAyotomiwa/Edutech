@@ -56,32 +56,64 @@
 
           <!-- ══ CURRENT SEMESTER TAB ══ -->
           <div id="currentTab">
-            <!-- Hierarchy filters -->
-            <div class="card-surface mb-3">
-              <div class="row g-2 align-items-end">
-                <div class="col-6 col-md-2">
-                  <label class="form-label mb-1 small fw-semibold text-muted">FACULTY</label>
-                  <select class="form-select form-select-sm" id="rCurrFaculty"><option value="">Select Faculty</option></select>
+            <!-- Metrics bar (current semester stats) -->
+            <div class="metrics-bar" id="resultsMetricsBar">
+              <div class="metric-chip">
+                <div class="metric-chip-icon metric-chip-icon--teal"><i class="bi bi-people-fill"></i></div>
+                <div class="metric-chip-body">
+                  <div class="metric-chip-value" id="rmRegistered">—</div>
+                  <div class="metric-chip-label">Registered Students</div>
                 </div>
-                <div class="col-6 col-md-3">
-                  <label class="form-label mb-1 small fw-semibold text-muted">DEPARTMENT</label>
-                  <select class="form-select form-select-sm" id="rCurrDept" disabled><option value="">Select Department</option></select>
+              </div>
+              <div class="metric-chip">
+                <div class="metric-chip-icon metric-chip-icon--green"><i class="bi bi-check-circle-fill"></i></div>
+                <div class="metric-chip-body">
+                  <div class="metric-chip-value" id="rmPublished">—</div>
+                  <div class="metric-chip-label">Published Results</div>
                 </div>
-                <div class="col-4 col-md-2">
-                  <label class="form-label mb-1 small fw-semibold text-muted">LEVEL</label>
-                  <select class="form-select form-select-sm" id="rCurrLevel" disabled>
-                    <option value="">Select Level</option>
+              </div>
+              <div class="metric-chip">
+                <div class="metric-chip-icon metric-chip-icon--amber"><i class="bi bi-floppy-fill"></i></div>
+                <div class="metric-chip-body">
+                  <div class="metric-chip-value" id="rmDrafts">—</div>
+                  <div class="metric-chip-label">Draft Results</div>
+                </div>
+              </div>
+              <div class="metric-chip">
+                <div class="metric-chip-icon metric-chip-icon--red"><i class="bi bi-hourglass-split"></i></div>
+                <div class="metric-chip-body">
+                  <div class="metric-chip-value" id="rmPending">—</div>
+                  <div class="metric-chip-label">Pending Entry</div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Uniform filter card -->
+            <div class="filter-card">
+              <div class="filter-card-row">
+                <div class="filter-group">
+                  <span class="filter-group-label">Faculty</span>
+                  <select class="form-select" id="rCurrFaculty"><option value="">All Faculties</option></select>
+                </div>
+                <div class="filter-group">
+                  <span class="filter-group-label">Department</span>
+                  <select class="form-select" id="rCurrDept"><option value="">All Departments</option></select>
+                </div>
+                <div class="filter-group">
+                  <span class="filter-group-label">Level</span>
+                  <select class="form-select" id="rCurrLevel">
+                    <option value="">All Levels</option>
                     <option value="100">100</option><option value="200">200</option>
                     <option value="300">300</option><option value="400">400</option><option value="500">500</option>
                   </select>
                 </div>
-                <div class="col-4 col-md-2">
-                  <label class="form-label mb-1 small fw-semibold text-muted">SESSION</label>
-                  <select class="form-select form-select-sm" id="rCurrSession" disabled></select>
+                <div class="filter-group" style="flex:0 0 auto;min-width:unset;">
+                  <span class="filter-group-label">Session</span>
+                  <select class="form-select" id="rCurrSession" disabled></select>
                 </div>
-                <div class="col-4 col-md-2">
-                  <label class="form-label mb-1 small fw-semibold text-muted">SEMESTER</label>
-                  <select class="form-select form-select-sm" id="rCurrSemester" disabled>
+                <div class="filter-group" style="flex:0 0 auto;min-width:unset;">
+                  <span class="filter-group-label">Semester</span>
+                  <select class="form-select" id="rCurrSemester" disabled>
                     <option value="1">Semester 1</option><option value="2">Semester 2</option>
                   </select>
                 </div>
@@ -112,9 +144,9 @@
               </div>
             </div>
 
-            <div id="currFilterPrompt" class="admin-empty-state">
+            <div id="currFilterPrompt" class="admin-empty-state d-none">
               <i class="bi bi-funnel"></i>
-              <p class="mt-2 mb-0">Select Faculty → Department → Level to load students.</p>
+              <p class="mt-2 mb-0">Use the filters above to narrow down students.</p>
             </div>
 
             <!-- Score entry panel (shown when a student is selected) -->
@@ -155,37 +187,38 @@
 
           <!-- ══ RESULT HISTORY TAB ══ -->
           <div id="historyTab" class="d-none">
-            <div class="card-surface mb-3">
-              <div class="row g-2 align-items-end">
-                <div class="col-6 col-md-2">
-                  <label class="form-label mb-1 small fw-semibold text-muted">FACULTY</label>
-                  <select class="form-select form-select-sm" id="rHistFaculty"><option value="">Select Faculty</option></select>
+            <div class="filter-card">
+              <div class="filter-card-row">
+                <div class="filter-group">
+                  <span class="filter-group-label">Faculty</span>
+                  <select class="form-select" id="rHistFaculty"><option value="">All Faculties</option></select>
                 </div>
-                <div class="col-6 col-md-3">
-                  <label class="form-label mb-1 small fw-semibold text-muted">DEPARTMENT</label>
-                  <select class="form-select form-select-sm" id="rHistDept" disabled><option value="">Select Department</option></select>
+                <div class="filter-group">
+                  <span class="filter-group-label">Department</span>
+                  <select class="form-select" id="rHistDept"><option value="">All Departments</option></select>
                 </div>
-                <div class="col-4 col-md-1">
-                  <label class="form-label mb-1 small fw-semibold text-muted">LEVEL</label>
-                  <select class="form-select form-select-sm" id="rHistLevel" disabled>
+                <div class="filter-group">
+                  <span class="filter-group-label">Level</span>
+                  <select class="form-select" id="rHistLevel">
                     <option value="">All</option>
                     <option value="100">100</option><option value="200">200</option>
                     <option value="300">300</option><option value="400">400</option><option value="500">500</option>
                   </select>
                 </div>
-                <div class="col-4 col-md-2">
-                  <label class="form-label mb-1 small fw-semibold text-muted">SESSION</label>
-                  <select class="form-select form-select-sm" id="rHistSession" disabled></select>
+                <div class="filter-group">
+                  <span class="filter-group-label">Session</span>
+                  <select class="form-select" id="rHistSession" disabled></select>
                 </div>
-                <div class="col-4 col-md-2">
-                  <label class="form-label mb-1 small fw-semibold text-muted">SEMESTER</label>
-                  <select class="form-select form-select-sm" id="rHistSemester" disabled>
+                <div class="filter-group">
+                  <span class="filter-group-label">Semester</span>
+                  <select class="form-select" id="rHistSemester" disabled>
                     <option value="">Both</option>
                     <option value="1">Semester 1</option><option value="2">Semester 2</option>
                   </select>
                 </div>
-                <div class="col-12 col-md-2 d-flex align-items-end">
-                  <button class="btn btn-brand btn-sm w-100" id="loadHistoryBtn" disabled><i class="bi bi-search"></i> Load</button>
+                <div class="filter-group" style="flex:0 0 auto;min-width:unset;">
+                  <span class="filter-group-label">&nbsp;</span>
+                  <button class="btn btn-brand" id="loadHistoryBtn" disabled><i class="bi bi-search"></i> Load</button>
                 </div>
               </div>
             </div>

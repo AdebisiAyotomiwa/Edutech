@@ -4,72 +4,31 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Dashboard · Student Result Portal</title>
-
-    <!-- Bootstrap 5 -->
-    <link
-      href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.3/css/bootstrap.min.css"
-      rel="stylesheet"
-    />
-    <!-- Bootstrap Icons -->
-    <link
-      href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.11.3/font/bootstrap-icons.min.css"
-      rel="stylesheet"
-    />
-    <!-- Fonts -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.3/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.11.3/font/bootstrap-icons.min.css" rel="stylesheet" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;600;700&family=Inter:wght@400;500;600;700&display=swap"
-      rel="stylesheet"
-    />
-
-    <!-- <link rel="stylesheet" href="/assets/css/dashboard-layout.css" /> -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="/assets/css/shared.css" />
     <link rel="stylesheet" href="/assets/css/dashboard.css" />
-    <link rel="stylesheet" href="/assets/css/shared.css">
   </head>
   <body class="app-shell">
-    <!-- ===== Sidebar ===== -->
+
+    <!-- ═══════════════════════════════════════════════════
+         SIDEBAR
+    ═══════════════════════════════════════════════════ -->
     <aside class="app-sidebar" id="appSidebar">
       <a href="/assets/pages/dashboard.html" class="brand-lockup">
         <span class="brand-mark"><i class="bi bi-mortarboard-fill"></i></span>
         <span class="brand-name">Edutech</span>
       </a>
 
+      <span class="sidebar-section-label">Menu</span>
       <nav class="app-sidebar-nav">
-        <a
-          href="/assets/pages/dashboard.html"
-          class="app-sidebar-link active"
-          data-page="dashboard"
-        >
-          <i class="bi bi-grid-1x2-fill"></i> Dashboard
-        </a>
-        <a
-          href="/assets/pages/results.html"
-          class="app-sidebar-link"
-          data-page="results"
-        >
-          <i class="bi bi-bar-chart-fill"></i> Results
-        </a>
-        <a
-          href="/assets/pages/courses.html"
-          class="app-sidebar-link"
-          data-page="courses"
-        >
-          <i class="bi bi-bookmark-fill"></i> Courses
-        </a>
-        <a
-          href="/assets/pages/transcript.html"
-          class="app-sidebar-link"
-          data-page="transcript"
-        >
-          <i class="bi bi-file-earmark-text-fill"></i> Transcript
-        </a>
-        <a
-          href="/assets/pages/profile.html"
-          class="app-sidebar-link"
-          data-page="profile"
-        >
-          <i class="bi bi-person-fill"></i> Profile
-        </a>
+        <a href="/assets/pages/dashboard.html"  class="app-sidebar-link active"><i class="bi bi-grid-1x2-fill"></i> Dashboard</a>
+        <a href="/assets/pages/results.html"    class="app-sidebar-link"><i class="bi bi-bar-chart-fill"></i> Results</a>
+        <a href="/assets/pages/courses.html"    class="app-sidebar-link"><i class="bi bi-bookmark-fill"></i> Courses</a>
+        <a href="/assets/pages/transcript.html" class="app-sidebar-link"><i class="bi bi-file-earmark-text-fill"></i> Transcript</a>
+        <a href="/assets/pages/profile.html"    class="app-sidebar-link"><i class="bi bi-person-fill"></i> Profile</a>
       </nav>
 
       <div class="app-sidebar-footer">
@@ -88,125 +47,188 @@
         </button>
       </div>
     </aside>
-
     <div class="app-sidebar-scrim" id="appSidebarScrim"></div>
 
-    <!-- ===== Main column ===== -->
+    <!-- ═══════════════════════════════════════════════════
+         MAIN
+    ═══════════════════════════════════════════════════ -->
     <div class="app-main">
+
+      <!-- Topbar -->
       <header class="app-topbar">
-        <button
-          class="app-sidebar-toggle"
-          id="sidebarToggleBtn"
-          aria-label="Open menu"
-          aria-expanded="false"
-        >
+        <button class="app-sidebar-toggle" id="sidebarToggleBtn" aria-label="Open menu" aria-expanded="false">
           <i class="bi bi-list"></i>
         </button>
-        <h1 class="app-topbar-title">Dashboard</h1>
+
+        <span class="app-topbar-title">Dashboard</span>
+
+        <div class="app-topbar-search input-group d-none d-md-flex">
+          <span class="input-group-text"><i class="bi bi-search"></i></span>
+          <input type="text" class="form-control" id="topbarSearch" placeholder="Search courses, results…" />
+        </div>
+
+        <div class="topbar-actions">
+          <a href="/assets/pages/results.html" class="topbar-icon-btn" title="Results">
+            <i class="bi bi-bar-chart"></i>
+          </a>
+          <a href="/assets/pages/transcript.html" class="topbar-icon-btn" title="Transcript">
+            <i class="bi bi-file-earmark-text"></i>
+          </a>
+          <div class="topbar-user-chip">
+            <div class="topbar-user-avatar" id="topbarAvatar">
+              <img src="" alt="" id="topbarAvatarImg" class="d-none" />
+              <span id="topbarAvatarInitials"></span>
+            </div>
+            <div class="topbar-user-info d-none d-sm-block">
+              <div class="topbar-user-name" id="topbarUserName">&nbsp;</div>
+              <div class="topbar-user-sub" id="topbarUserSub">&nbsp;</div>
+            </div>
+          </div>
+        </div>
       </header>
 
+      <!-- Content -->
       <div class="app-content">
-        <div class="dashboard-greeting">
-          <h2>Welcome back, <span id="greetingName">Student</span> 👋</h2>
-          <p>Here's an overview of your academic progress.</p>
+
+        <!-- Loading state -->
+        <div class="dashboard-state" id="dashboardLoading">
+          <div class="spinner-border text-success mb-3" style="width:2rem;height:2rem;" role="status"></div>
+          <div>Loading your dashboard…</div>
         </div>
 
-        <!-- Populated by dashboard.js — see .dashboard-state for loading/error states -->
-        <div id="dashboardBody">
-          <div class="dashboard-state" id="dashboardLoading">
-            Loading your dashboard…
+        <!-- Dashboard body (hidden until data loads) -->
+        <div id="dashboardContent" class="d-none">
+
+          <!-- Page header -->
+          <div class="page-header">
+            <div class="page-header-text">
+              <h1>Dashboard</h1>
+              <p id="dashboardSubtitle">Track your academic progress at a glance.</p>
+            </div>
+            <div class="page-header-actions">
+              <a href="/assets/pages/transcript.html" class="btn btn-secondary-outline btn-sm">
+                <i class="bi bi-file-earmark-text"></i> View Transcript
+              </a>
+              <a href="/assets/pages/results.html" class="btn btn-brand btn-sm">
+                <i class="bi bi-bar-chart-fill"></i> My Results
+              </a>
+            </div>
           </div>
 
-          <div id="dashboardContent" class="d-none">
-            <!-- Stat Cards -->
-            <div class="row g-3 mb-4">
-              <div class="col-6 col-lg-3">
-                <div class="stat-card stat-card--green">
-                  <span class="stat-card-label">CGPA</span>
-                  <span class="stat-card-value" id="statCgpa">--</span>
-                </div>
+          <!-- ── Stat cards ── -->
+          <div class="stat-grid">
+            <!-- Hero card -->
+            <div class="stat-card stat-card--hero">
+              <span class="stat-card-label">Cumulative GPA</span>
+              <span class="stat-card-value" id="statCgpa">—</span>
+              <span class="stat-card-trend" id="statCgpaTrend">
+                <i class="bi bi-graph-up-arrow"></i> Current standing
+              </span>
+              <button class="stat-arrow-btn" aria-hidden="true"><i class="bi bi-arrow-up-right"></i></button>
+            </div>
+            <div class="stat-card">
+              <span class="stat-card-label">Credits Earned</span>
+              <span class="stat-card-value" id="statCredits">—</span>
+              <span class="stat-card-trend"><i class="bi bi-patch-check"></i> Completed units</span>
+              <button class="stat-arrow-btn" aria-hidden="true"><i class="bi bi-arrow-up-right"></i></button>
+            </div>
+            <div class="stat-card">
+              <span class="stat-card-label">Current Semester Courses</span>
+              <span class="stat-card-value" id="statCourses">—</span>
+              <span class="stat-card-trend"><i class="bi bi-journal-bookmark"></i> Registered courses</span>
+              <button class="stat-arrow-btn" aria-hidden="true"><i class="bi bi-arrow-up-right"></i></button>
+            </div>
+            <div class="stat-card">
+              <span class="stat-card-label">Outstanding</span>
+              <span class="stat-card-value" id="statOutstanding">—</span>
+              <span class="stat-card-trend down" id="statOutstandingTrend"><i class="bi bi-exclamation-circle"></i> Courses to retake</span>
+              <button class="stat-arrow-btn" aria-hidden="true"><i class="bi bi-arrow-up-right"></i></button>
+            </div>
+          </div>
+
+          <!-- ── Main panels row ── -->
+          <div class="dashboard-panels">
+
+            <!-- CGPA Trend chart -->
+            <div class="panel">
+              <div class="panel-header">
+                <h2 class="panel-title">CGPA Trend</h2>
+                <a href="/assets/pages/results.html" class="panel-action-btn">
+                  <i class="bi bi-arrow-up-right"></i> Full Results
+                </a>
               </div>
-              <div class="col-6 col-lg-3">
-                <div class="stat-card stat-card--blue">
-                  <span class="stat-card-label">Credits Earned</span>
-                  <span class="stat-card-value" id="statCredits">--</span>
-                </div>
-              </div>
-              <div class="col-6 col-lg-3">
-                <div class="stat-card stat-card--amber">
-                  <span class="stat-card-label">Current Semester Courses</span>
-                  <span class="stat-card-value" id="statCourses">--</span>
-                </div>
-              </div>
-              <div class="col-6 col-lg-3">
-                <div class="stat-card stat-card--red">
-                  <span class="stat-card-label">Outstanding</span>
-                  <span class="stat-card-value" id="statOutstanding">--</span>
+              <div class="panel-body">
+                <div class="chart-wrap">
+                  <canvas id="gpaChart"></canvas>
                 </div>
               </div>
             </div>
 
-            <div class="row g-4">
-              <!-- CGPA Trend -->
-              <div class="col-lg-8">
-                <div class="card shadow-sm h-100">
-                  <div class="card-header fw-semibold">CGPA Trend</div>
-                  <div class="card-body">
-                    <canvas id="gpaChart" height="220"></canvas>
-                  </div>
-                </div>
+            <!-- Academic summary / outstanding -->
+            <div class="panel">
+              <div class="panel-header">
+                <h2 class="panel-title">Academic Summary</h2>
               </div>
+              <div id="academicSummary" class="panel-body">
+                <!-- filled by JS -->
+              </div>
+            </div>
 
-              <!-- Academic Summary (replaces Upcoming/Overdue) -->
-              <div class="col-lg-4">
-                <div class="card shadow-sm h-100">
-                  <div class="card-header fw-semibold">Academic Summary</div>
-                  <div class="card-body" id="academicSummary">
-                    <!-- filled by JS -->
-                  </div>
+          </div>
+
+          <!-- ── Bottom panels row ── -->
+          <div class="dashboard-panels">
+
+            <!-- Current semester registered courses -->
+            <div class="panel">
+              <div class="panel-header">
+                <h2 class="panel-title">Current Semester Courses</h2>
+                <a href="/assets/pages/courses.html" class="panel-action-btn">
+                  <i class="bi bi-arrow-up-right"></i> All Courses
+                </a>
+              </div>
+              <div class="panel-body--flush">
+                <div class="activity-list" id="currentCoursesList">
+                  <!-- filled by JS -->
                 </div>
               </div>
             </div>
 
-        </div>
-      </div>
-    </div>
+            <!-- Outstanding courses -->
+            <div class="panel">
+              <div class="panel-header">
+                <h2 class="panel-title">Outstanding Courses</h2>
+              </div>
+              <div class="panel-body--flush">
+                <div class="activity-list" id="outstandingList">
+                  <!-- filled by JS -->
+                </div>
+              </div>
+            </div>
 
-    <div
-      class="modal fade"
-      id="logoutConfirmModal"
-      tabindex="-1"
-      aria-hidden="true"
-    >
+          </div>
+
+        </div><!-- /dashboardContent -->
+      </div><!-- /app-content -->
+    </div><!-- /app-main -->
+
+    <!-- Logout modal -->
+    <div class="modal fade" id="logoutConfirmModal" tabindex="-1" aria-hidden="true">
       <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
           <div class="modal-body text-center py-4">
             <i class="bi bi-box-arrow-right fs-1 text-danger mb-3 d-block"></i>
             <h5 class="fw-semibold mb-2">Log out?</h5>
-            <p class="text-muted mb-4">
-              Are you sure you want to log out of your account?
-            </p>
+            <p class="text-muted mb-4">Are you sure you want to log out of your account?</p>
             <div class="d-flex gap-2 justify-content-center">
-              <button
-                type="button"
-                class="btn btn-secondary-outline"
-                data-bs-dismiss="modal"
-              >
-                Cancel
-              </button>
-              <button
-                type="button"
-                class="btn btn-danger-soft"
-                id="confirmLogoutBtn"
-              >
-                Yes, log out
-              </button>
+              <button type="button" class="btn btn-secondary-outline" data-bs-dismiss="modal">Cancel</button>
+              <button type="button" class="btn btn-danger-soft" id="confirmLogoutBtn">Yes, log out</button>
             </div>
           </div>
         </div>
       </div>
     </div>
-    <!-- Chart.js -->
+
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.3/js/bootstrap.bundle.min.js"></script>
     <script type="module" src="/assets/js/dashboard.js"></script>

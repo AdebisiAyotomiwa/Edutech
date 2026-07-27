@@ -249,3 +249,136 @@ a:hover{ color:var(--brand-900); }
   display:inline-block; font-size:.7rem; font-weight:700; color:var(--danger);
   background:var(--danger-100); padding:.1em .5em; border-radius:5px; margin-left:.4rem; vertical-align:middle;
 }
+
+/* =========================================================
+   UNIFORM FILTER CARD — used across all admin pages
+   ========================================================= */
+.filter-card {
+  background: #fff;
+  border: 1px solid var(--line-200);
+  border-radius: var(--radius-md);
+  box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+  padding: 1rem 1.25rem;
+  margin-bottom: 1.25rem;
+}
+.filter-card-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  align-items: flex-end;
+}
+.filter-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  min-width: 140px;
+  flex: 1 1 140px;
+}
+.filter-group-label {
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ink-400);
+}
+.filter-group .form-select,
+.filter-group .form-control {
+  font-size: 0.88rem;
+  padding: 0.5rem 0.85rem;
+  border-radius: 10px;
+  border: 1px solid var(--line-200);
+  background: #fff;
+  cursor: pointer;
+  transition: border-color 0.15s ease, background 0.15s ease;
+}
+.filter-group .form-select:hover,
+.filter-group .form-control:hover {
+  border-color: var(--brand-500);
+  background: var(--brand-100);
+}
+.filter-group .form-select:focus,
+.filter-group .form-control:focus {
+  border-color: var(--brand-500);
+  background: #fff;
+  box-shadow: 0 0 0 3px var(--brand-100);
+}
+
+/* Active filter — green left border + checkmark indicator */
+.filter-group .form-select.is-active {
+  border-color: var(--brand-500);
+  border-left: 3px solid var(--brand-500);
+  background: var(--brand-100);
+  color: var(--brand-900);
+  font-weight: 600;
+}
+
+/* Dropdown option hover (where browser supports it) */
+.filter-group .form-select option:hover,
+.filter-group .form-select option:checked {
+  background: var(--brand-100);
+  color: var(--brand-900);
+}
+
+/* ── Metrics bar ─────────────────────────────────────────── */
+.metrics-bar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  margin-bottom: 1.25rem;
+}
+.metric-chip {
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+  background: #fff;
+  border: 1px solid var(--line-200);
+  border-radius: 12px;
+  padding: 0.55rem 1rem;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+  flex: 1 1 130px;
+  min-width: 120px;
+}
+.metric-chip-icon {
+  width: 34px;
+  height: 34px;
+  border-radius: 9px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.9rem;
+  flex-shrink: 0;
+}
+.metric-chip-icon--green  { background: var(--success-100); color: var(--success); }
+.metric-chip-icon--blue   { background: var(--info-100);    color: var(--info); }
+.metric-chip-icon--amber  { background: var(--warn-100);    color: var(--warn); }
+.metric-chip-icon--red    { background: var(--danger-100);  color: var(--danger); }
+.metric-chip-icon--purple { background: #ede9fe; color: #7c3aed; }
+.metric-chip-icon--teal   { background: var(--brand-100);   color: var(--brand-700); }
+.metric-chip-body { line-height: 1.2; min-width: 0; }
+.metric-chip-value {
+  font-family: var(--font-display);
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: var(--ink-900);
+}
+.metric-chip-label {
+  font-size: 0.73rem;
+  color: var(--ink-400);
+  font-weight: 500;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* ── Green remember-me checkbox ─────────────────────────── */
+.form-check-input:checked {
+  background-color: var(--brand-500);
+  border-color: var(--brand-500);
+}
+.form-check-input:focus {
+  border-color: var(--brand-500);
+  box-shadow: 0 0 0 0.2rem rgba(31, 122, 92, 0.25);
+}
+.form-check-input:checked[type="checkbox"] {
+  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20'%3e%3cpath fill='none' stroke='%23fff' stroke-linecap='round' stroke-linejoin='round' stroke-width='3' d='m6 10 3 3 6-6'/%3e%3c/svg%3e");
+}

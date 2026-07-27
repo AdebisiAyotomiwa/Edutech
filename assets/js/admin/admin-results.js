@@ -49,6 +49,8 @@ async function init() {
     bindTabs();
     bindCurrentTab();
     bindHistoryTab();
+    /* Auto-load students for current semester immediately */
+    renderCurrStudents();
   } catch (err) {
     console.error(err);
     pageState.innerHTML = `<div class="alert alert-danger mb-0">Failed to load results.</div>`;
@@ -117,22 +119,59 @@ function bindTabs() {
 /* ── Faculty/session selects ────────────────────────────── */
 function populateFacultySelects() {
   const opts = faculties.map(f => `<option value="${f.name}">${f.name}</option>`).join("");
-  document.getElementById("rCurrFaculty").innerHTML = `<option value="">Select Faculty</option>` + opts;
-  document.getElementById("rHistFaculty").innerHTML = `<option value="">Select Faculty</option>` + opts;
+  const deptOpts = `<option value="">All Departments</option>` +
+    departments.map(d => `<option value="${d.id}">${d.name}</option>`).join("");
+
+  document.getElementById("rCurrFaculty").innerHTML = `<option value="">All Faculties</option>` + opts;
+  document.getElementById("rHistFaculty").innerHTML = `<option value="">All Faculties</option>` + opts;
+  document.getElementById("rCurrDept").innerHTML    = deptOpts;
+  document.getElementById("rHistDept").innerHTML    = deptOpts;
 
   /* Current tab: locked to current session/semester */
-  const currSessEl  = document.getElementById("rCurrSession");
-  const currSemEl   = document.getElementById("rCurrSemester");
+  const currSessEl = document.getElementById("rCurrSession");
+  const currSemEl  = document.getElementById("rCurrSemester");
   currSessEl.innerHTML = `<option value="${calendar.currentSession}">${calendar.currentSession}</option>`;
   currSessEl.value     = calendar.currentSession;
-  currSessEl.disabled  = true;   /* always locked — current tab is for current session only */
+  currSessEl.disabled  = true;
   currSemEl.innerHTML  = `<option value="${calendar.currentSemester}">Semester ${calendar.currentSemester}</option>`;
   currSemEl.value      = String(calendar.currentSemester);
   currSemEl.disabled   = true;
 
-  /* History tab: past sessions only */
+  /* History tab: all sessions */
   const histSessOpts = allSessions.map(s => `<option value="${s}">${s}</option>`).join("");
   document.getElementById("rHistSession").innerHTML = `<option value="">All Sessions</option>` + histSessOpts;
+
+  /* Render current semester metrics */
+  renderResultsMetrics();
+}
+
+function renderResultsMetrics() {
+  const session  = calendar.currentSession;
+  const semester = Number(calendar.currentSemester);
+  const currRegs = registrations.filter(r => r.session === session && Number(r.semester) === semester);
+  const regStudentIds = new Set(currRegs.map(r => String(r.studentId)));
+  const published = results.filter(r => r.session === session && Number(r.semester) === semester && r.published !== false);
+  const drafts    = results.filter(r => r.session === session && Number(r.semester) === semester && r.published === false);
+  const pending   = currRegs.filter(reg =>
+    !results.some(r =>
+      String(r.studentId) === String(reg.studentId) &&
+      String(r.courseId)  === String(reg.courseId) &&
+      r.session === session && Number(r.semester) === semester && r.published !== false
+    )
+  ).length;
+  const el = (id) => document.getElementById(id);
+  if (el("rmRegistered")) el("rmRegistered").textContent = regStudentIds.size;
+  if (el("rmPublished"))  el("rmPublished").textContent  = published.length;
+  if (el("rmDrafts"))     el("rmDrafts").textContent     = drafts.length;
+  if (el("rmPending"))    el("rmPending").textContent    = pending;
+}
+
+function syncActiveFilters() {
+  ["rCurrFaculty","rCurrDept","rCurrLevel",
+   "rHistFaculty","rHistDept","rHistLevel","rHistSession","rHistSemester"].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.classList.toggle("is-active", !!el.value);
+  });
 }
 
 /* ════════════════════════════════════════════════════════
@@ -153,24 +192,19 @@ function bindCurrentTab() {
 function onCurrFacultyChange() {
   const faculty = document.getElementById("rCurrFaculty").value;
   const deptSel = document.getElementById("rCurrDept");
-  deptSel.innerHTML = `<option value="">Select Department</option>` +
+  deptSel.innerHTML = `<option value="">All Departments</option>` +
     departments.filter(d => !faculty || d.faculty === faculty)
       .map(d => `<option value="${d.id}">${d.name}</option>`).join("");
-  deptSel.disabled = !faculty;
-  document.getElementById("rCurrLevel").disabled = true;
-  document.getElementById("currStudentArea").classList.add("d-none");
-  document.getElementById("scoreEntryPanel").classList.add("d-none");
-  document.getElementById("currFilterPrompt").classList.remove("d-none");
+  deptSel.disabled = false;
+  document.getElementById("rCurrLevel").disabled = false;
+  syncActiveFilters();
+  renderCurrStudents();
 }
 
 function onCurrDeptChange() {
-  const hasDept = !!document.getElementById("rCurrDept").value;
-  document.getElementById("rCurrLevel").disabled = !hasDept;
-  if (hasDept) renderCurrStudents();
-  else {
-    document.getElementById("currStudentArea").classList.add("d-none");
-    document.getElementById("currFilterPrompt").classList.remove("d-none");
-  }
+  document.getElementById("rCurrLevel").disabled = false;
+  syncActiveFilters();
+  renderCurrStudents();
 }
 
 function getCurrFilters() {
@@ -184,14 +218,15 @@ function getCurrFilters() {
 
 function renderCurrStudents() {
   const { deptId, level, session, semester } = getCurrFilters();
-  if (!deptId) return;
 
   document.getElementById("scoreEntryPanel").classList.add("d-none");
   document.getElementById("currFilterPrompt").classList.add("d-none");
   document.getElementById("currStudentArea").classList.remove("d-none");
 
-  let deptStudents = students.filter(s => String(s.departmentId) === String(deptId));
-  if (level) deptStudents = deptStudents.filter(s => Number(s.level) === Number(level));
+  let deptStudents = students.filter(s =>
+    (!deptId || String(s.departmentId) === String(deptId)) &&
+    (!level  || Number(s.level) === Number(level))
+  );
 
   /* Only students registered in current session/semester */
   deptStudents = deptStudents.filter(s =>

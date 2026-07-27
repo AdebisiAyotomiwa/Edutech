@@ -107,16 +107,42 @@ function bindTabs() {
 
 /* ── Faculty selects ────────────────────────────────────── */
 function populateFacultySelects() {
-  const opts = faculties.map(f => `<option value="${f.name}">${f.name}</option>`).join("");
-  document.getElementById("rCurrFaculty").innerHTML = `<option value="">Select Faculty</option>` + opts;
-  document.getElementById("rHistFaculty").innerHTML = `<option value="">Select Faculty</option>` + opts;
-
+  const opts    = faculties.map(f => `<option value="${f.name}">${f.name}</option>`).join("");
+  const deptOpts = `<option value="">All Departments</option>` +
+    departments.map(d => `<option value="${d.id}">${d.name}</option>`).join("");
   const sessOpts = allSessions.map(s => `<option value="${s}">${s}</option>`).join("");
+
+  document.getElementById("rCurrFaculty").innerHTML = `<option value="">All Faculties</option>` + opts;
+  document.getElementById("rCurrDept").innerHTML    = deptOpts;
   document.getElementById("rCurrSession").innerHTML = sessOpts;
+  document.getElementById("rCurrSession").value     = calendar.currentSession;
+  document.getElementById("rCurrSemester").value    = String(calendar.currentSemester);
+
+  document.getElementById("rHistFaculty").innerHTML = `<option value="">All Faculties</option>` + opts;
+  document.getElementById("rHistDept").innerHTML    = deptOpts;
   document.getElementById("rHistSession").innerHTML = `<option value="">All Sessions</option>` + sessOpts;
 
-  document.getElementById("rCurrSession").value  = calendar.currentSession;
-  document.getElementById("rCurrSemester").value = String(calendar.currentSemester);
+  document.getElementById("loadHistoryBtn").disabled = false;
+
+  /* Render metrics for current semester */
+  renderRegMetrics();
+}
+
+function renderRegMetrics() {
+  const session  = calendar.currentSession;
+  const semester = Number(calendar.currentSemester);
+  const currRegs = registrations.filter(
+    r => r.session === session && Number(r.semester) === semester
+  );
+  const regStudentIds  = new Set(currRegs.map(r => String(r.studentId)));
+  const carryoverCount = currRegs.filter(r => r.type === "carry-over").length;
+  const uniqueCourses  = new Set(currRegs.map(r => String(r.courseId))).size;
+
+  const el = id => document.getElementById(id);
+  if (el("regmTotal"))     el("regmTotal").textContent    = currRegs.length;
+  if (el("regmStudents"))  el("regmStudents").textContent = regStudentIds.size;
+  if (el("regmCarryover")) el("regmCarryover").textContent = carryoverCount;
+  if (el("regmCourses"))   el("regmCourses").textContent  = uniqueCourses;
 }
 
 /* ════════════════════════════════════════════════════════

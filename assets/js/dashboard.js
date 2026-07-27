@@ -1,304 +1,336 @@
 import { requireAuth, getCurrentStudent, logout } from "./auth.js";
 import { getResults, getCourses, getDepartmentById, getRegistrations, getAcademicCalendar } from "./api.js";
-import { calculateGPA, getStudentDisplayName, scoreToGrade } from "./utils.js";
+import { calculateGPA, scoreToGrade } from "./utils.js";
 
-/* Normalise a profile image path to absolute so it resolves correctly
-   from any sub-folder page (e.g. /assets/pages/dashboard.html). */
 function resolveImagePath(raw) {
   if (!raw || !raw.trim()) return "";
   if (raw.startsWith("/") || raw.startsWith("http")) return raw;
   return "/" + raw;
 }
 
-/* ========================================================
-   Protect Dashboard
-======================================================== */
 requireAuth();
 
-/* ========================================================
-   Global State
-======================================================== */
+/* ── State ──────────────────────────────────────────────── */
 let student = null;
-let department = null;
 let resultsWithCourses = [];
 let allCourses = [];
 let allRegistrations = [];
-let academicCalendar = null;
+let calendar = null;
 
-/* ========================================================
-   DOM Elements
-======================================================== */
-const dashboardLoading = document.getElementById("dashboardLoading");
-const dashboardContent = document.getElementById("dashboardContent");
-const greetingName = document.getElementById("greetingName");
+/* ── Boot ───────────────────────────────────────────────── */
+document.addEventListener("DOMContentLoaded", init);
 
-const sidebarUserName = document.getElementById("sidebarUserName");
-const sidebarUserMeta = document.getElementById("sidebarUserMeta");
-const sidebarAvatarImg = document.getElementById("sidebarAvatarImg");
-const sidebarAvatarInitials = document.getElementById("sidebarAvatarInitials");
-
-const sidebarToggleBtn = document.getElementById("sidebarToggleBtn");
-const appSidebar = document.getElementById("appSidebar");
-const appSidebarScrim = document.getElementById("appSidebarScrim");
-
-const logoutBtn = document.getElementById("logoutBtn");
-
-/* ========================================================
-   Start
-======================================================== */
-document.addEventListener("DOMContentLoaded", initDashboard);
-
-async function initDashboard() {
+async function init() {
   try {
     student = getCurrentStudent();
-
-    if (!student) {
-      window.location.href = "/assets/pages/login.html";
-      return;
-    }
+    if (!student) { window.location.href = "/assets/pages/login.html"; return; }
 
     initialiseSidebar();
     initialiseLogout();
+    await loadData();
 
-    await loadStudentData();
-
-    dashboardLoading.classList.add("d-none");
-    dashboardContent.classList.remove("d-none");
+    document.getElementById("dashboardLoading").classList.add("d-none");
+    document.getElementById("dashboardContent").classList.remove("d-none");
 
     renderStatCards();
+    renderGpaChart();
     renderAcademicSummary();
-    renderChart();
-  } catch (error) {
-    console.error(error);
-    dashboardLoading.innerHTML = `
-      <div class="alert alert-danger mb-0">Failed to load dashboard.</div>
-    `;
+    renderCurrentCourses();
+    renderOutstandingList();
+  } catch (err) {
+    console.error(err);
+    document.getElementById("dashboardLoading").innerHTML =
+      `<div class="alert alert-danger mb-0">Failed to load dashboard. Please refresh.</div>`;
   }
 }
 
-/* ========================================================
-   Load Data
-======================================================== */
-async function loadStudentData() {
-  // Fetch all results then filter client-side. This guards against the
-  // json-server type-coercion quirk where records created by the admin
-  // panel store studentId as a string while seeded records use a number —
-  // a server-side ?studentId= query can miss one type or the other.
-  const [allResults, courses, dept, registrations, calendar] = await Promise.all([
-    getResults(),
+/* ── Data ───────────────────────────────────────────────── */
+async function loadData() {
+  const [results, courses, registrations, cal] = await Promise.all([
+    getResults({ studentId: student.id }),
     getCourses(),
-    getDepartmentById(student.departmentId),
     getRegistrations({ studentId: student.id }),
     getAcademicCalendar(),
   ]);
 
-  allCourses = courses;
-  department = dept;
+  allCourses       = courses;
   allRegistrations = registrations;
-  academicCalendar = calendar;
+  calendar         = cal;
 
-  resultsWithCourses = allResults
-    .filter(r =>
-      String(r.studentId) === String(student.id) && // match regardless of stored type
-      r.published !== false                          // only published results visible to students
-    )
-    .map((result) => {
-    const course = allCourses.find((c) => Number(c.id) === Number(result.courseId));
-
-    if (!course) {
-      console.warn("Course not found for result:", result);
-      return { ...result, courseCode: "N/A", courseTitle: "Unknown Course", creditUnit: 0 };
-    }
-
-    return {
-      ...result,
-      courseCode: course.courseCode,
-      courseTitle: course.courseTitle,
-      creditUnit: course.creditUnit,
-    };
-  });
+  resultsWithCourses = results
+    .filter(r => r.published !== false)
+    .map(r => {
+      const course = allCourses.find(c => Number(c.id) === Number(r.courseId));
+      return { ...r, course };
+    })
+    .filter(r => r.course);
 }
 
-/* ========================================================
-   Sidebar
-======================================================== */
+/* ── Sidebar ────────────────────────────────────────────── */
 function initialiseSidebar() {
-  greetingName.textContent = getStudentDisplayName(student);
-  sidebarUserName.textContent = `${student.firstName} ${student.lastName}`;
-  sidebarUserMeta.textContent = student.matricNumber;
+  const name     = `${student.firstName} ${student.lastName}`;
+  const initials = (student.firstName[0] + student.lastName[0]).toUpperCase();
+  const metaText = student.matricNumber;
 
-  const initials = student.firstName.charAt(0) + student.lastName.charAt(0);
+  /* Sidebar */
+  document.getElementById("sidebarUserName").textContent = name;
+  document.getElementById("sidebarUserMeta").textContent = metaText;
+  const sidebarImg = document.getElementById("sidebarAvatarImg");
+  const sidebarIni = document.getElementById("sidebarAvatarInitials");
+  if (student.profileImage?.trim()) {
+    sidebarImg.src = resolveImagePath(student.profileImage);
+    sidebarImg.onerror = () => { sidebarImg.classList.add("d-none"); sidebarIni.style.display = "flex"; sidebarIni.textContent = initials; };
+    sidebarImg.classList.remove("d-none"); sidebarIni.style.display = "none";
+  } else { sidebarIni.style.display = "flex"; sidebarIni.textContent = initials; }
 
-  if (student.profileImage && student.profileImage.trim() !== "") {
-    sidebarAvatarImg.src = resolveImagePath(student.profileImage);
-    sidebarAvatarImg.onerror = () => {
-      sidebarAvatarImg.classList.add("d-none");
-      sidebarAvatarInitials.style.display = "flex";
-      sidebarAvatarInitials.textContent = initials;
-    };
-    sidebarAvatarImg.classList.remove("d-none");
-    sidebarAvatarInitials.style.display = "none";
-  } else {
-    sidebarAvatarInitials.style.display = "flex";
-    sidebarAvatarInitials.textContent = initials;
-  }
+  /* Topbar user chip */
+  document.getElementById("topbarUserName").textContent = name;
+  document.getElementById("topbarUserSub").textContent  = metaText;
+  const topbarImg = document.getElementById("topbarAvatarImg");
+  const topbarIni = document.getElementById("topbarAvatarInitials");
+  if (student.profileImage?.trim()) {
+    topbarImg.src = resolveImagePath(student.profileImage);
+    topbarImg.onerror = () => { topbarImg.classList.add("d-none"); topbarIni.textContent = initials; };
+    topbarImg.classList.remove("d-none"); topbarIni.style.display = "none";
+  } else { topbarIni.textContent = initials; }
 
-  sidebarToggleBtn.addEventListener("click", () => {
-    const isOpen = appSidebar.classList.toggle("is-open");
-    appSidebarScrim.classList.toggle("is-open");
-    sidebarToggleBtn.setAttribute("aria-expanded", isOpen);
+  /* Greeting subtitle */
+  document.getElementById("dashboardSubtitle").textContent =
+    `Welcome back, ${student.firstName}. Here's your academic overview.`;
+
+  /* Sidebar toggle */
+  const toggle = document.getElementById("sidebarToggleBtn");
+  const sidebar = document.getElementById("appSidebar");
+  const scrim   = document.getElementById("appSidebarScrim");
+  toggle.addEventListener("click", () => {
+    const open = sidebar.classList.toggle("is-open");
+    scrim.classList.toggle("is-open");
+    toggle.setAttribute("aria-expanded", open);
   });
-
-  appSidebarScrim.addEventListener("click", () => {
-    appSidebar.classList.remove("is-open");
-    appSidebarScrim.classList.remove("is-open");
-    sidebarToggleBtn.setAttribute("aria-expanded", "false");
+  scrim.addEventListener("click", () => {
+    sidebar.classList.remove("is-open");
+    scrim.classList.remove("is-open");
+    toggle.setAttribute("aria-expanded", "false");
   });
 }
 
 function initialiseLogout() {
-  const logoutModalEl = document.getElementById("logoutConfirmModal");
-  const logoutModal = new bootstrap.Modal(logoutModalEl);
-  const confirmLogoutBtn = document.getElementById("confirmLogoutBtn");
-
-  logoutBtn.addEventListener("click", () => logoutModal.show());
-
-  confirmLogoutBtn.addEventListener("click", () => {
-    logout();
-    window.location.href = "/assets/pages/login.html";
+  const modal = new bootstrap.Modal(document.getElementById("logoutConfirmModal"));
+  document.getElementById("logoutBtn").addEventListener("click", () => modal.show());
+  document.getElementById("confirmLogoutBtn").addEventListener("click", () => {
+    logout(); window.location.href = "/assets/pages/login.html";
   });
 }
 
-/* ========================================================
-   Stat Cards
-======================================================== */
-function renderStatCards() {
-  const cgpa = resultsWithCourses.length ? calculateGPA(resultsWithCourses) : "0.00";
-
-  const totalCreditsPassed = getCreditsEarned();
-  const currentSemesterCourseCount = getCurrentSemesterRegistrations().length;
-  const outstandingCount = getOutstandingCourses().length;
-
-  document.getElementById("statCgpa").textContent = cgpa;
-  document.getElementById("statCredits").textContent = totalCreditsPassed;
-  document.getElementById("statCourses").textContent = currentSemesterCourseCount;
-  document.getElementById("statOutstanding").textContent = outstandingCount;
-}
-
-/**
- * Credits Earned = sum of creditUnit for every result the student has
- * PASSED (grade E or above). A failed course's units don't count toward
- * what's been "earned," even though the score still affects CGPA.
- */
-function getCreditsEarned() {
-  return resultsWithCourses
-    .filter((r) => scoreToGrade(r.score).grade !== "F")
-    .reduce((sum, r) => sum + r.creditUnit, 0);
-}
-
-/**
- * Current Semester Courses = every registration matching the academic
- * calendar's current session/semester. Includes carry-over registrations
- * alongside regular ones — both are genuinely "courses this semester."
- */
-function getCurrentSemesterRegistrations() {
-  return allRegistrations.filter(
-    (r) =>
-      r.session === academicCalendar.currentSession &&
-      Number(r.semester) === Number(academicCalendar.currentSemester)
+/* ── Helpers ─────────────────────────────────────────────── */
+function getCurrentSemesterRegs() {
+  return allRegistrations.filter(r =>
+    r.session === calendar.currentSession &&
+    Number(r.semester) === Number(calendar.currentSemester)
   );
 }
 
-/**
- * Outstanding = distinct courses the student has ever failed that do NOT
- * have a later passing result for that same course. A fail with a
- * subsequent pass (a resolved carry-over) is no longer outstanding.
- */
 function getOutstandingCourses() {
-  const fails = resultsWithCourses.filter((r) => scoreToGrade(r.score).grade === "F");
-
-  return fails.filter((fail) => {
-    const laterPass = resultsWithCourses.some(
-      (r) =>
-        r.courseId === fail.courseId &&
-        scoreToGrade(r.score).grade !== "F" &&
-        isLater(r.session, r.semester, fail.session, fail.semester)
-    );
-    return !laterPass;
-  });
+  /* Outstanding = score < 40 in any published result */
+  return resultsWithCourses.filter(r => r.score < 40);
 }
 
-/**
- * Session strings are formatted "YYYY/YYYY", so string comparison
- * sorts them correctly in chronological order.
- */
-function isLater(sessionA, semesterA, sessionB, semesterB) {
-  if (sessionA !== sessionB) return sessionA > sessionB;
-  return Number(semesterA) > Number(semesterB);
+function getCreditsEarned() {
+  /* Credits for courses with score >= 40 */
+  return resultsWithCourses
+    .filter(r => r.score >= 40)
+    .reduce((sum, r) => sum + (r.course?.creditUnit ?? 0), 0);
 }
 
-/* ========================================================
-   Academic Summary
-======================================================== */
-function renderAcademicSummary() {
-  const summary = document.getElementById("academicSummary");
+/* ── Stat cards ──────────────────────────────────────────── */
+function renderStatCards() {
+  const cgpa       = resultsWithCourses.length ? calculateGPA(resultsWithCourses) : "0.00";
+  const credits    = getCreditsEarned();
+  const currCourses = getCurrentSemesterRegs().length;
+  const outstanding = getOutstandingCourses().length;
 
-  summary.innerHTML = `
-    <p><strong>Name:</strong><br>${student.firstName} ${student.lastName}</p>
-    <p><strong>Matric No:</strong><br>${student.matricNumber}</p>
-    <p><strong>Department:</strong><br>${department?.name ?? "N/A"}</p>
-    <p><strong>Programme:</strong><br>${student.programme}</p>
-    <p class="mb-0"><strong>Current Level:</strong><br>${student.level} Level</p>
-  `;
-}
+  document.getElementById("statCgpa").textContent        = cgpa;
+  document.getElementById("statCredits").textContent     = credits;
+  document.getElementById("statCourses").textContent     = currCourses;
+  document.getElementById("statOutstanding").textContent = outstanding;
 
-/* ========================================================
-   GPA Trend Chart
-======================================================== */
-function renderChart() {
-  const canvas = document.getElementById("gpaChart");
-  if (!canvas || typeof Chart === "undefined") return;
-
-  if (window.gpaChart instanceof Chart) {
-    window.gpaChart.destroy();
+  /* Colour trend on outstanding */
+  const outTrend = document.getElementById("statOutstandingTrend");
+  if (outstanding === 0) {
+    outTrend.classList.remove("down");
+    outTrend.innerHTML = `<i class="bi bi-check-circle"></i> None — great work!`;
   }
+}
 
-  const grouped = {};
-  resultsWithCourses.forEach((result) => {
-    const key = `${result.session} - Sem ${result.semester}`;
-    if (!grouped[key]) grouped[key] = [];
-    grouped[key].push(result);
+/* ── CGPA Trend chart ────────────────────────────────────── */
+function renderGpaChart() {
+  /* Build session/semester groups */
+  const groups = new Map();
+  resultsWithCourses.forEach(r => {
+    const key = `${r.session} S${r.semester}`;
+    if (!groups.has(key)) groups.set(key, []);
+    groups.get(key).push(r);
   });
 
-  const labels = [];
-  const values = [];
-  Object.entries(grouped).forEach(([label, records]) => {
-    labels.push(label);
-    values.push(Number(calculateGPA(records)));
-  });
+  const labels = Array.from(groups.keys());
+  const gpas   = labels.map(k => parseFloat(calculateGPA(groups.get(k))));
 
-  window.gpaChart = new Chart(canvas, {
+  const canvas  = document.getElementById("gpaChart");
+  const ctx     = canvas.getContext("2d");
+  const grad    = ctx.createLinearGradient(0, 0, 0, 240);
+  grad.addColorStop(0, "rgba(31,122,92,0.25)");
+  grad.addColorStop(1, "rgba(31,122,92,0)");
+
+  new Chart(canvas, {
     type: "line",
     data: {
       labels,
-      datasets: [
-        {
-          label: "GPA",
-          data: values,
-          borderColor: "#1f9d55",
-          backgroundColor: "#1f9d55",
-          borderWidth: 3,
-          tension: 0.35,
-          fill: false,
-          pointRadius: 4,
-        },
-      ],
+      datasets: [{
+        label: "GPA",
+        data: gpas,
+        borderColor: "#1F7A5C",
+        backgroundColor: grad,
+        borderWidth: 2.5,
+        pointBackgroundColor: "#1F7A5C",
+        pointBorderColor: "#fff",
+        pointBorderWidth: 2,
+        pointRadius: 5,
+        tension: 0.4,
+        fill: true,
+      }],
     },
     options: {
       responsive: true,
       maintainAspectRatio: false,
-      plugins: { legend: { display: false } },
-      scales: { y: { beginAtZero: true, max: 5 } },
+      plugins: {
+        legend: { display: false },
+        tooltip: {
+          callbacks: {
+            label: ctx => ` GPA: ${ctx.parsed.y.toFixed(2)}`,
+          },
+        },
+      },
+      scales: {
+        y: {
+          min: 0, max: 5,
+          ticks: { stepSize: 1, font: { size: 11 } },
+          grid: { color: "rgba(0,0,0,0.05)" },
+        },
+        x: {
+          ticks: { font: { size: 11 } },
+          grid: { display: false },
+        },
+      },
     },
   });
+}
+
+/* ── Academic Summary panel ──────────────────────────────── */
+function renderAcademicSummary() {
+  const dept    = student.programme || "N/A";
+  const level   = student.level ? `${student.level} Level` : "N/A";
+  const session = `${calendar.currentSession}, Semester ${calendar.currentSemester}`;
+  const cgpa    = resultsWithCourses.length ? calculateGPA(resultsWithCourses) : "0.00";
+  const credits = getCreditsEarned();
+
+  /* Grade distribution */
+  const gradeCounts = { A: 0, B: 0, C: 0, D: 0, E: 0, F: 0 };
+  resultsWithCourses.forEach(r => {
+    const { grade } = scoreToGrade(r.score);
+    gradeCounts[grade] = (gradeCounts[grade] || 0) + 1;
+  });
+
+  const gradeColors = { A: "#1F7A5C", B: "#2B6CB0", C: "#C79A3B", D: "#A6741A", E: "#d97706", F: "#B3402E" };
+
+  document.getElementById("academicSummary").innerHTML = `
+    <div style="display:flex;flex-direction:column;gap:1rem;">
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.6rem;">
+        ${summaryField("Programme", dept)}
+        ${summaryField("Level", level)}
+        ${summaryField("Session", session)}
+        ${summaryField("CGPA", cgpa)}
+        ${summaryField("Credits Earned", String(credits))}
+        ${summaryField("Total Results", String(resultsWithCourses.length))}
+      </div>
+      <div>
+        <div style="font-size:0.78rem;font-weight:700;color:var(--ink-400);text-transform:uppercase;letter-spacing:.04em;margin-bottom:0.5rem;">Grade Distribution</div>
+        <div style="display:flex;gap:0.35rem;flex-wrap:wrap;">
+          ${Object.entries(gradeCounts).map(([g, n]) =>
+            `<span style="font-size:0.75rem;font-weight:700;padding:.25em .6em;border-radius:6px;background:${gradeColors[g]}20;color:${gradeColors[g]}">${g}: ${n}</span>`
+          ).join("")}
+        </div>
+      </div>
+    </div>`;
+}
+
+function summaryField(label, value) {
+  return `<div>
+    <div style="font-size:0.71rem;font-weight:700;color:var(--ink-400);text-transform:uppercase;letter-spacing:.04em;">${label}</div>
+    <div style="font-size:0.9rem;font-weight:600;color:var(--ink-900);">${value}</div>
+  </div>`;
+}
+
+/* ── Current courses list ────────────────────────────────── */
+function renderCurrentCourses() {
+  const regs     = getCurrentSemesterRegs();
+  const list     = document.getElementById("currentCoursesList");
+
+  if (regs.length === 0) {
+    list.innerHTML = `<div class="activity-item"><div class="activity-body">
+      <div class="activity-title">No courses registered</div>
+      <div class="activity-meta">Registration for this semester is not yet open</div>
+    </div></div>`;
+    return;
+  }
+
+  list.innerHTML = regs.map(reg => {
+    const course = allCourses.find(c => Number(c.id) === Number(reg.courseId));
+    if (!course) return "";
+    const result = resultsWithCourses.find(r =>
+      Number(r.courseId) === Number(reg.courseId) &&
+      r.session === reg.session && Number(r.semester) === Number(reg.semester)
+    );
+    const hasResult  = !!result;
+    const { grade }  = hasResult ? scoreToGrade(result.score) : { grade: "—" };
+    const statusHtml = hasResult
+      ? `<span class="activity-badge" style="background:var(--success-100);color:var(--success);">Grade ${grade}</span>`
+      : `<span class="activity-badge" style="background:var(--warn-100);color:var(--warn);">Pending</span>`;
+    const iconCls = hasResult ? "activity-icon--green" : "activity-icon--amber";
+    return `<div class="activity-item">
+      <div class="activity-icon ${iconCls}"><i class="bi bi-journal-text"></i></div>
+      <div class="activity-body">
+        <div class="activity-title">${course.courseCode} — ${course.courseTitle}</div>
+        <div class="activity-meta">${course.creditUnit} credit unit${course.creditUnit === 1 ? "" : "s"}</div>
+      </div>
+      ${statusHtml}
+    </div>`;
+  }).join("");
+}
+
+/* ── Outstanding list ────────────────────────────────────── */
+function renderOutstandingList() {
+  const outstanding = getOutstandingCourses();
+  const list        = document.getElementById("outstandingList");
+
+  if (outstanding.length === 0) {
+    list.innerHTML = `<div class="activity-item"><div class="activity-body">
+      <div class="activity-title" style="color:var(--success);">
+        <i class="bi bi-check-circle-fill me-1"></i> No outstanding courses
+      </div>
+      <div class="activity-meta">Keep up the great work!</div>
+    </div></div>`;
+    return;
+  }
+
+  list.innerHTML = outstanding.map(r => {
+    const { grade } = scoreToGrade(r.score);
+    return `<div class="activity-item">
+      <div class="activity-icon activity-icon--red"><i class="bi bi-exclamation-circle"></i></div>
+      <div class="activity-body">
+        <div class="activity-title">${r.course.courseCode} — ${r.course.courseTitle}</div>
+        <div class="activity-meta">${r.session}, Semester ${r.semester} · Score: ${r.score}</div>
+      </div>
+      <span class="activity-badge" style="background:var(--danger-100);color:var(--danger);">Grade ${grade}</span>
+    </div>`;
+  }).join("");
 }

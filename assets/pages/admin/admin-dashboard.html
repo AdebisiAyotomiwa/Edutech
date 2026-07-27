@@ -4,166 +4,219 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Admin Dashboard · Edutech</title>
-
     <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.3/css/bootstrap.min.css" rel="stylesheet" />
     <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.11.3/font/bootstrap-icons.min.css" rel="stylesheet" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
-
-    <link rel="stylesheet" href="/assets/css/dashboard.css" />
     <link rel="stylesheet" href="/assets/css/shared.css" />
+    <link rel="stylesheet" href="/assets/css/dashboard.css" />
     <link rel="stylesheet" href="/assets/css/admin.css" />
   </head>
   <body class="app-shell">
-    <!-- ===== Sidebar ===== -->
+
+    <!-- ═══════════════════════════════════ SIDEBAR ═══════════════════════════════════ -->
     <aside class="app-sidebar app-sidebar--admin" id="appSidebar">
       <a href="/assets/pages/admin/admin-dashboard.html" class="brand-lockup">
         <span class="brand-mark"><i class="bi bi-mortarboard-fill"></i></span>
-        <span class="brand-name">Edutech<span class="admin-role-tag">Admin</span></span>
+        <span class="brand-name">Edutech <span class="admin-role-tag">Admin</span></span>
       </a>
 
+      <span class="sidebar-section-label">Menu</span>
       <nav class="app-sidebar-nav">
-        <a href="/assets/pages/admin/admin-dashboard.html" class="app-sidebar-link active" data-page="dashboard">
-          <i class="bi bi-grid-1x2-fill"></i> Dashboard
-        </a>
-        <a href="/assets/pages/admin/admin-students.html" class="app-sidebar-link" data-page="students">
-          <i class="bi bi-people-fill"></i> Students
-        </a>
-        <a href="/assets/pages/admin/admin-courses.html" class="app-sidebar-link" data-page="courses">
-          <i class="bi bi-bookmark-fill"></i> Courses &amp; Depts
-        </a>
-        <a href="/assets/pages/admin/admin-results.html" class="app-sidebar-link" data-page="results">
-          <i class="bi bi-bar-chart-fill"></i> Results
-        </a>
-        <a href="/assets/pages/admin/admin-registrations.html" class="app-sidebar-link" data-page="registrations">
-          <i class="bi bi-journal-check"></i> Registrations
-        </a>
+        <a href="/assets/pages/admin/admin-dashboard.html"    class="app-sidebar-link active"><i class="bi bi-grid-1x2-fill"></i> Dashboard</a>
+        <a href="/assets/pages/admin/admin-students.html"     class="app-sidebar-link"><i class="bi bi-people-fill"></i> Students</a>
+        <a href="/assets/pages/admin/admin-courses.html"      class="app-sidebar-link"><i class="bi bi-bookmark-fill"></i> Courses &amp; Depts</a>
+        <a href="/assets/pages/admin/admin-results.html"      class="app-sidebar-link"><i class="bi bi-bar-chart-fill"></i> Results</a>
+        <a href="/assets/pages/admin/admin-registrations.html" class="app-sidebar-link"><i class="bi bi-journal-check"></i> Registrations</a>
       </nav>
 
       <div class="app-sidebar-footer">
         <div class="app-sidebar-user">
-          <span class="app-sidebar-user-avatar">
-            <span id="sidebarAvatarInitials"></span>
-          </span>
+          <span class="app-sidebar-user-avatar"><span id="sidebarAvatarInitials"></span></span>
           <div class="app-sidebar-user-info">
             <div class="app-sidebar-user-name" id="sidebarUserName">&nbsp;</div>
             <div class="app-sidebar-user-meta" id="sidebarUserMeta">&nbsp;</div>
           </div>
         </div>
-        <button class="app-sidebar-logout" id="logoutBtn">
-          <i class="bi bi-box-arrow-right"></i> Logout
-        </button>
+        <button class="app-sidebar-logout" id="logoutBtn"><i class="bi bi-box-arrow-right"></i> Logout</button>
       </div>
     </aside>
-
     <div class="app-sidebar-scrim" id="appSidebarScrim"></div>
 
-    <!-- ===== Main column ===== -->
+    <!-- ═══════════════════════════════════ MAIN ═══════════════════════════════════ -->
     <div class="app-main">
+
+      <!-- Topbar -->
       <header class="app-topbar">
         <button class="app-sidebar-toggle" id="sidebarToggleBtn" aria-label="Open menu" aria-expanded="false">
           <i class="bi bi-list"></i>
         </button>
-        <h1 class="app-topbar-title">Admin Dashboard</h1>
-      </header>
-
-      <div class="app-content">
-        <div class="dashboard-greeting">
-          <h2>Welcome back, <span id="greetingName">Admin</span> 👋</h2>
-          <p>Here's what's happening across the portal.</p>
-        </div>
-
-        <div id="dashboardBody">
-          <div class="dashboard-state" id="dashboardLoading">Loading dashboard…</div>
-
-          <div id="dashboardContent" class="d-none">
-            <!-- Stat Cards -->
-            <div class="row g-3 mb-4">
-              <div class="col-6 col-lg-3">
-                <div class="stat-card stat-card--green">
-                  <span class="stat-card-label">Total Students</span>
-                  <span class="stat-card-value" id="statStudents">--</span>
-                </div>
-              </div>
-              <div class="col-6 col-lg-3">
-                <div class="stat-card stat-card--blue">
-                  <span class="stat-card-label">Total Courses</span>
-                  <span class="stat-card-value" id="statCourses">--</span>
-                </div>
-              </div>
-              <div class="col-6 col-lg-3">
-                <div class="stat-card stat-card--amber">
-                  <span class="stat-card-label">Departments</span>
-                  <span class="stat-card-value" id="statDepartments">--</span>
-                </div>
-              </div>
-              <div class="col-6 col-lg-3">
-                <div class="stat-card stat-card--red">
-                  <span class="stat-card-label">Results Recorded</span>
-                  <span class="stat-card-value" id="statResults">--</span>
-                </div>
-              </div>
+        <span class="app-topbar-title">Admin Dashboard</span>
+        <div class="topbar-actions">
+          <a href="/assets/pages/admin/admin-students.html" class="topbar-icon-btn" title="Students"><i class="bi bi-people"></i></a>
+          <a href="/assets/pages/admin/admin-results.html"  class="topbar-icon-btn" title="Results"><i class="bi bi-bar-chart"></i></a>
+          <div class="topbar-user-chip">
+            <div class="topbar-user-avatar" style="background:var(--brand-100);color:var(--brand-900);">
+              <span id="topbarAvatarInitials"></span>
             </div>
-
-            <div class="row g-4 mb-4">
-              <div class="col-lg-6">
-                <div class="card shadow-sm h-100">
-                  <div class="card-header fw-semibold">Students per Department</div>
-                  <div class="card-body">
-                    <canvas id="deptChart" height="220"></canvas>
-                  </div>
-                </div>
-              </div>
-              <div class="col-lg-6">
-                <div class="card shadow-sm h-100">
-                  <div class="card-header d-flex align-items-center gap-2 flex-wrap">
-                    <span class="fw-semibold me-auto">Grade Distribution</span>
-                    <select id="gradeFilterDept" class="form-select form-select-sm" style="width:auto;min-width:140px;">
-                      <option value="">All Departments</option>
-                    </select>
-                    <select id="gradeFilterLevel" class="form-select form-select-sm" style="width:auto;min-width:120px;">
-                      <option value="">All Levels</option>
-                    </select>
-                  </div>
-                  <div class="card-body">
-                    <canvas id="gradeChart" height="220"></canvas>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <div class="card shadow-sm">
-              <div class="card-header fw-semibold">Quick Actions</div>
-              <div class="card-body">
-                <div class="row g-3">
-                  <div class="col-sm-6 col-lg-3">
-                    <a href="/assets/pages/admin/admin-students.html" class="btn btn-secondary-outline w-100">
-                      <i class="bi bi-person-plus"></i> Add Student
-                    </a>
-                  </div>
-                  <div class="col-sm-6 col-lg-3">
-                    <a href="/assets/pages/admin/admin-courses.html" class="btn btn-secondary-outline w-100">
-                      <i class="bi bi-journal-plus"></i> Add Course
-                    </a>
-                  </div>
-                  <div class="col-sm-6 col-lg-3">
-                    <a href="/assets/pages/admin/admin-results.html" class="btn btn-secondary-outline w-100">
-                      <i class="bi bi-pencil-square"></i> Enter Results
-                    </a>
-                  </div>
-                  <div class="col-sm-6 col-lg-3">
-                    <a href="/assets/pages/admin/admin-registrations.html" class="btn btn-secondary-outline w-100">
-                      <i class="bi bi-journal-check"></i> Registrations
-                    </a>
-                  </div>
-                </div>
-              </div>
+            <div class="topbar-user-info d-none d-sm-block">
+              <div class="topbar-user-name" id="topbarUserName">&nbsp;</div>
+              <div class="topbar-user-sub">Administrator</div>
             </div>
           </div>
         </div>
+      </header>
+
+      <!-- Content -->
+      <div class="app-content">
+        <div class="dashboard-state" id="dashboardLoading">
+          <div class="spinner-border text-success mb-3" style="width:2rem;height:2rem;" role="status"></div>
+          <div>Loading dashboard…</div>
+        </div>
+
+        <div id="dashboardContent" class="d-none">
+
+          <!-- Page header -->
+          <div class="page-header">
+            <div class="page-header-text">
+              <h1 id="greetingName">Dashboard</h1>
+              <p>Here's what's happening across the portal today.</p>
+            </div>
+            <div class="page-header-actions">
+              <a href="/assets/pages/admin/admin-students.html" class="btn btn-secondary-outline btn-sm">
+                <i class="bi bi-person-plus"></i> Add Student
+              </a>
+              <a href="/assets/pages/admin/admin-results.html" class="btn btn-brand btn-sm">
+                <i class="bi bi-pencil-square"></i> Enter Results
+              </a>
+            </div>
+          </div>
+
+          <!-- ── Primary stat cards ── -->
+          <div class="stat-grid" style="margin-bottom:1.25rem;">
+            <div class="stat-card stat-card--hero">
+              <span class="stat-card-label">Total Students</span>
+              <span class="stat-card-value" id="statStudents">—</span>
+              <span class="stat-card-trend"><i class="bi bi-people-fill"></i> Enrolled</span>
+              <button class="stat-arrow-btn" aria-hidden="true"><i class="bi bi-arrow-up-right"></i></button>
+            </div>
+            <div class="stat-card">
+              <span class="stat-card-label">Total Courses</span>
+              <span class="stat-card-value" id="statCourses">—</span>
+              <span class="stat-card-trend"><i class="bi bi-bookmark-fill"></i> Active courses</span>
+              <button class="stat-arrow-btn" aria-hidden="true"><i class="bi bi-arrow-up-right"></i></button>
+            </div>
+            <div class="stat-card">
+              <span class="stat-card-label">Departments</span>
+              <span class="stat-card-value" id="statDepartments">—</span>
+              <span class="stat-card-trend"><i class="bi bi-building"></i> Across faculties</span>
+              <button class="stat-arrow-btn" aria-hidden="true"><i class="bi bi-arrow-up-right"></i></button>
+            </div>
+            <div class="stat-card">
+              <span class="stat-card-label">Results Published</span>
+              <span class="stat-card-value" id="statResults">—</span>
+              <span class="stat-card-trend"><i class="bi bi-bar-chart-fill"></i> Records</span>
+              <button class="stat-arrow-btn" aria-hidden="true"><i class="bi bi-arrow-up-right"></i></button>
+            </div>
+          </div>
+
+          <!-- ── Secondary stat cards ── -->
+          <div class="stat-grid" style="margin-bottom:1.5rem;">
+            <div class="stat-card">
+              <span class="stat-card-label">Pending Results</span>
+              <span class="stat-card-value" id="statPending">—</span>
+              <span class="stat-card-trend down"><i class="bi bi-hourglass-split"></i> Awaiting entry</span>
+              <button class="stat-arrow-btn" aria-hidden="true"><i class="bi bi-arrow-up-right"></i></button>
+            </div>
+            <div class="stat-card">
+              <span class="stat-card-label">Draft Results</span>
+              <span class="stat-card-value" id="statDrafts">—</span>
+              <span class="stat-card-trend"><i class="bi bi-floppy"></i> Saved, unpublished</span>
+              <button class="stat-arrow-btn" aria-hidden="true"><i class="bi bi-arrow-up-right"></i></button>
+            </div>
+            <div class="stat-card">
+              <span class="stat-card-label">Registered (Current Sem)</span>
+              <span class="stat-card-value" id="statRegs">—</span>
+              <span class="stat-card-trend"><i class="bi bi-journal-check"></i> Course registrations</span>
+              <button class="stat-arrow-btn" aria-hidden="true"><i class="bi bi-arrow-up-right"></i></button>
+            </div>
+            <div class="stat-card">
+              <span class="stat-card-label">Faculties</span>
+              <span class="stat-card-value" id="statFaculties">—</span>
+              <span class="stat-card-trend"><i class="bi bi-bank"></i> Active faculties</span>
+              <button class="stat-arrow-btn" aria-hidden="true"><i class="bi bi-arrow-up-right"></i></button>
+            </div>
+          </div>
+
+          <!-- ── Charts row ── -->
+          <div class="dashboard-panels" style="margin-bottom:1.25rem;">
+            <!-- Students per department -->
+            <div class="panel">
+              <div class="panel-header">
+                <h2 class="panel-title">Students per Department</h2>
+              </div>
+              <div class="panel-body">
+                <div class="chart-wrap"><canvas id="deptChart"></canvas></div>
+              </div>
+            </div>
+
+            <!-- Grade distribution (filterable) -->
+            <div class="panel">
+              <div class="panel-header" style="flex-wrap:wrap;gap:0.5rem;">
+                <h2 class="panel-title" style="flex:none;">Grade Distribution</h2>
+                <div style="display:flex;gap:0.4rem;margin-left:auto;flex-wrap:wrap;">
+                  <select id="gradeFilterDept" class="form-select form-select-sm" style="width:auto;min-width:130px;font-size:0.8rem;">
+                    <option value="">All Departments</option>
+                  </select>
+                  <select id="gradeFilterLevel" class="form-select form-select-sm" style="width:auto;min-width:110px;font-size:0.8rem;">
+                    <option value="">All Levels</option>
+                  </select>
+                </div>
+              </div>
+              <div class="panel-body">
+                <div class="chart-wrap"><canvas id="gradeChart"></canvas></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- ── Bottom row: Recent activity + Quick actions ── -->
+          <div class="dashboard-panels">
+
+            <!-- Recent registrations activity -->
+            <div class="panel">
+              <div class="panel-header">
+                <h2 class="panel-title">Recent Registrations</h2>
+                <a href="/assets/pages/admin/admin-registrations.html" class="panel-action-btn">
+                  <i class="bi bi-arrow-up-right"></i> View All
+                </a>
+              </div>
+              <div class="panel-body--flush">
+                <div class="activity-list" id="recentRegsList">
+                  <!-- filled by JS -->
+                </div>
+              </div>
+            </div>
+
+            <!-- Quick actions -->
+            <div class="panel">
+              <div class="panel-header">
+                <h2 class="panel-title">Quick Actions</h2>
+              </div>
+              <div class="panel-body" style="display:flex;flex-direction:column;gap:0.6rem;">
+                <a href="/assets/pages/admin/admin-students.html"      class="btn btn-secondary-outline w-100 text-start"><i class="bi bi-person-plus me-2"></i>Add Student</a>
+                <a href="/assets/pages/admin/admin-courses.html"       class="btn btn-secondary-outline w-100 text-start"><i class="bi bi-journal-plus me-2"></i>Add Course</a>
+                <a href="/assets/pages/admin/admin-results.html"       class="btn btn-secondary-outline w-100 text-start"><i class="bi bi-pencil-square me-2"></i>Enter Results</a>
+                <a href="/assets/pages/admin/admin-registrations.html" class="btn btn-secondary-outline w-100 text-start"><i class="bi bi-journal-check me-2"></i>Manage Registrations</a>
+                <a href="/assets/pages/admin/admin-courses.html"       class="btn btn-brand w-100 text-start"><i class="bi bi-building me-2"></i>Manage Departments</a>
+              </div>
+            </div>
+          </div>
+
+        </div><!-- /dashboardContent -->
       </div>
     </div>
 
+    <!-- Logout modal -->
     <div class="modal fade" id="logoutConfirmModal" tabindex="-1" aria-hidden="true">
       <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
