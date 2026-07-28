@@ -1,5 +1,6 @@
 import { requireAuth, getCurrentStudent, logout } from "./auth.js";
 import { getCourses, getRegistrations, getResults, getAcademicCalendar } from "./api.js";
+import { initTopbar } from "./topbar.js";
 
 function resolveImagePath(raw) {
   if (!raw || !raw.trim()) return "";
@@ -97,31 +98,12 @@ function initialiseSidebar() {
   sidebarUserName.textContent = `${student.firstName} ${student.lastName}`;
   sidebarUserMeta.textContent = student.matricNumber;
   const initials = student.firstName[0] + student.lastName[0];
-
   if (student.profileImage && student.profileImage.trim()) {
     sidebarAvatarImg.src = resolveImagePath(student.profileImage);
-    sidebarAvatarImg.onerror = () => {
-      sidebarAvatarImg.classList.add("d-none");
-      sidebarAvatarInitials.style.display = "flex";
-      sidebarAvatarInitials.textContent = initials;
-    };
-    sidebarAvatarImg.classList.remove("d-none");
-    sidebarAvatarInitials.style.display = "none";
-  } else {
-    sidebarAvatarInitials.style.display = "flex";
-    sidebarAvatarInitials.textContent = initials;
-  }
-
-  sidebarToggleBtn.addEventListener("click", () => {
-    const open = appSidebar.classList.toggle("is-open");
-    appSidebarScrim.classList.toggle("is-open");
-    sidebarToggleBtn.setAttribute("aria-expanded", open);
-  });
-  appSidebarScrim.addEventListener("click", () => {
-    appSidebar.classList.remove("is-open");
-    appSidebarScrim.classList.remove("is-open");
-    sidebarToggleBtn.setAttribute("aria-expanded", "false");
-  });
+    sidebarAvatarImg.onerror = () => { sidebarAvatarImg.classList.add("d-none"); sidebarAvatarInitials.style.display = "flex"; sidebarAvatarInitials.textContent = initials; };
+    sidebarAvatarImg.classList.remove("d-none"); sidebarAvatarInitials.style.display = "none";
+  } else { sidebarAvatarInitials.style.display = "flex"; sidebarAvatarInitials.textContent = initials; }
+  initTopbar(student);
 }
 
 function initialiseLogout() {
@@ -190,7 +172,7 @@ function renderRegisteredTab() {
   const { currentSession, currentSemester } = academicCalendar;
 
   currentSemesterLabel.textContent =
-    `${currentSession}, ${SEMESTER_LABELS[currentSemester] ?? `Semester ${currentSemester}`}`;
+    `${currentSession}, ${SEMESTER_LABELS[currentSemester] ?? `Semester ${currentSemester}`} · ${student.level} Level`;
 
   const currentRegs = allRegistrations.filter(
     r => r.session === currentSession && Number(r.semester) === Number(currentSemester)
@@ -219,9 +201,12 @@ function renderRegisteredTab() {
     const completed = hasResult(reg);
     const carryTag  = reg.type === "carry-over"
       ? ` <span class="carryover-tag">Carry-over</span>` : "";
+    const typeTag   = course.courseType === "elective"
+      ? `<span title="Elective" style="font-size:.68rem;font-weight:700;padding:.1em .4em;border-radius:4px;background:var(--info-100);color:var(--info);">E</span>`
+      : `<span title="Core/Compulsory" style="font-size:.68rem;font-weight:700;padding:.1em .4em;border-radius:4px;background:var(--brand-100);color:var(--brand-900);">C</span>`;
     return `<tr>
       <td>${course.courseCode}</td>
-      <td>${course.courseTitle}${carryTag}</td>
+      <td>${typeTag} ${course.courseTitle}${carryTag}</td>
       <td>${course.creditUnit}</td>
       <td>${statusBadge(completed)}</td>
     </tr>`;
@@ -243,6 +228,10 @@ function renderAllCoursesTab() {
     return;
   }
   allEmpty.classList.add("d-none");
+
+  /* Sub-heading showing current level */
+  const levelHeading = document.getElementById("allCoursesLevelLabel");
+  if (levelHeading) levelHeading.textContent = `Full Registration History — ${student.level} Level`;
 
   /* Build ordered groups */
   const groups = [];
@@ -277,9 +266,12 @@ function renderAllGroupHtml(group) {
     const completed = hasResult(reg);
     const carryTag  = reg.type === "carry-over"
       ? ` <span class="carryover-tag">Carry-over</span>` : "";
+    const typeTag   = course.courseType === "elective"
+      ? `<span title="Elective" style="font-size:.68rem;font-weight:700;padding:.1em .4em;border-radius:4px;background:var(--info-100);color:var(--info);">E</span>`
+      : `<span title="Core/Compulsory" style="font-size:.68rem;font-weight:700;padding:.1em .4em;border-radius:4px;background:var(--brand-100);color:var(--brand-900);">C</span>`;
     return `<tr>
       <td>${course.courseCode}</td>
-      <td>${course.courseTitle}${carryTag}</td>
+      <td>${typeTag} ${course.courseTitle}${carryTag}</td>
       <td>${course.creditUnit}</td>
       <td>${statusBadge(completed)}</td>
     </tr>`;

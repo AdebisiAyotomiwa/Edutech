@@ -26,6 +26,7 @@
         <a href="/assets/pages/dashboard.html"  class="app-sidebar-link"><i class="bi bi-grid-1x2-fill"></i> Dashboard</a>
         <a href="/assets/pages/results.html"    class="app-sidebar-link"><i class="bi bi-bar-chart-fill"></i> Results</a>
         <a href="/assets/pages/courses.html"    class="app-sidebar-link active"><i class="bi bi-bookmark-fill"></i> Courses</a>
+        <a href="/assets/pages/confirm-registration.html" class="app-sidebar-link"><i class="bi bi-clipboard2-check-fill"></i> Confirm Registration</a>
         <a href="/assets/pages/transcript.html" class="app-sidebar-link"><i class="bi bi-file-earmark-text-fill"></i> Transcript</a>
         <a href="/assets/pages/profile.html"    class="app-sidebar-link"><i class="bi bi-person-fill"></i> Profile</a>
       </nav>
@@ -56,6 +57,23 @@
           <i class="bi bi-list"></i>
         </button>
         <h1 class="app-topbar-title">Courses</h1>
+        <div class="topbar-profile-wrap" id="topbarProfileWrap">
+          <button class="topbar-profile-btn" id="topbarProfileBtn" aria-haspopup="true" aria-expanded="false">
+            <div class="topbar-profile-avatar" id="topbarAvatar">
+              <img src="" alt="" id="topbarAvatarImg" class="d-none" />
+              <span id="topbarAvatarInitials"></span>
+            </div>
+            <div class="topbar-profile-info d-none d-sm-block">
+              <div class="topbar-profile-name" id="topbarUserName">&nbsp;</div>
+              <div class="topbar-profile-sub" id="topbarUserSub">&nbsp;</div>
+            </div>
+          </button>
+          <div class="topbar-profile-dropdown" id="topbarProfileDropdown">
+            <a href="/assets/pages/profile.html"><i class="bi bi-person-circle"></i> My Profile</a>
+            <div class="dropdown-divider"></div>
+            <button class="dropdown-logout" id="logoutDropdownBtn"><i class="bi bi-box-arrow-right"></i> Log out</button>
+          </div>
+        </div>
       </header>
 
       <div class="app-content">
@@ -103,9 +121,9 @@
                   <table class="table table-hover align-middle mb-0">
                     <thead>
                       <tr>
-                        <th>Course Code</th>
-                        <th>Course Title</th>
-                        <th>Credit Unit</th>
+                        <th>Code</th>
+                        <th>Title</th>
+                        <th>Credits</th>
                         <th>Status</th>
                       </tr>
                     </thead>
@@ -121,7 +139,9 @@
 
             <!-- All Courses panel -->
             <div class="card shadow-sm courses-panel d-none" id="allPanel" role="tabpanel">
-              <div class="card-header fw-semibold">Full Registration History</div>
+              <div class="card-header fw-semibold d-flex align-items-center justify-content-between gap-2">
+                <span id="allCoursesLevelLabel">Full Registration History</span>
+              </div>
               <div class="card-body p-0">
                 <div id="allGroups"></div>
                 <div class="results-empty d-none" id="allEmpty">

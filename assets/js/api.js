@@ -20,7 +20,7 @@ import { API_BASE_URL } from "./config.js";
 /* =========================================================
    Generic Request Function
    ========================================================= */
-   
+
 
 export async function request(path, options = {}) {
   let response;
@@ -208,12 +208,28 @@ export function getRegistrations(filters = {}) {
   return request(`/registrations${query ? `?${query}` : ""}`);
 }
 
-export function createRegistration(data) {
-  return request("/registrations", {
+export async function createRegistration(data, actor = null) {
+  const created = await request("/registrations", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(data),
   });
+
+  if (actor) {
+    await createAuditLogEntry({
+      entityType: "registration",
+      entityId: created.id,
+      action: "added",
+      actorId: actor.actorId,
+      actorRole: actor.actorRole || "admin",
+      timestamp: new Date().toISOString(),
+      previousValue: null,
+      newValue: { courseId: data.courseId, type: data.type, session: data.session, semester: data.semester },
+      note: actor.note || "Course added to registration.",
+    });
+  }
+
+  return created;
 }
 
 export function updateRegistration(id, data) {
@@ -224,10 +240,71 @@ export function updateRegistration(id, data) {
   });
 }
 
-export function deleteRegistration(id) {
-  return request(`/registrations/${id}`, { method: "DELETE" });
+export async function deleteRegistration(id, actor = null) {
+  const result = await request(`/registrations/${id}`, { method: "DELETE" });
+
+  if (actor) {
+    await createAuditLogEntry({
+      entityType: "registration",
+      entityId: id,
+      action: "removed",
+      actorId: actor.actorId,
+      actorRole: actor.actorRole || "admin",
+      timestamp: new Date().toISOString(),
+      previousValue: actor.previousValue || null,
+      newValue: null,
+      note: actor.note || "Course removed from registration.",
+    });
+  }
+
+  return result;
 }
 
+/* =========================================================
+   Append to api.js
+   ========================================================= */
+
+/* =========================================================
+   UNIT LOAD POLICY
+   ========================================================= */
+
+export function getUnitLoadPolicy() {
+  return request("/unitLoadPolicy");
+}
+
+/* =========================================================
+   GRADUATION REQUIREMENTS
+   ========================================================= */
+
+export function getGraduationRequirements() {
+  return request("/graduationRequirements");
+}
+
+/* =========================================================
+   AUDIT LOG
+   ========================================================= */
+
+export function getAuditLog(filters = {}) {
+  const params = new URLSearchParams();
+
+  Object.entries(filters).forEach(([key, value]) => {
+    if (value !== undefined && value !== null) {
+      params.append(key, value);
+    }
+  });
+
+  const query = params.toString();
+
+  return request(`/auditLog${query ? `?${query}` : ""}`);
+}
+
+export function createAuditLogEntry(data) {
+  return request("/auditLog", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(data),
+  });
+}
 /* =========================================================
    ADMINS
    ========================================================= */
@@ -439,20 +516,50 @@ export function getResultSubmissionById(id) {
   return request(`/resultSubmissions/${id}`);
 }
 
-export function createResultSubmission(data) {
-  return request("/resultSubmissions", {
+export async function createResultSubmission(data) {
+  const created = await request("/resultSubmissions", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(data),
   });
+
+  await createAuditLogEntry({
+    entityType: "resultSubmission",
+    entityId: created.id,
+    action: "submitted",
+    actorId: data.lecturerId,
+    actorRole: "lecturer",
+    timestamp: new Date().toISOString(),
+    previousValue: null,
+    newValue: { courseId: data.courseId, session: data.session, semester: data.semester, version: data.version },
+    note: `Submitted results for review (v${data.version ?? 1}).`,
+  });
+
+  return created;
 }
 
-export function updateResultSubmission(id, data) {
-  return request(`/resultSubmissions/${id}`, {
+export async function updateResultSubmission(id, data, actor = {}) {
+  const updated = await request(`/resultSubmissions/${id}`, {
     method: "PATCH",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(data),
   });
+
+  if (actor.actorId) {
+    await createAuditLogEntry({
+      entityType: "resultSubmission",
+      entityId: id,
+      action: data.status === "pending" ? "resubmitted" : "updated",
+      actorId: actor.actorId,
+      actorRole: actor.actorRole || "lecturer",
+      timestamp: new Date().toISOString(),
+      previousValue: null,
+      newValue: { status: data.status, version: data.version },
+      note: actor.note || `Resubmitted batch (v${data.version ?? "?"}).`,
+    });
+  }
+
+  return updated;
 }
 
 /* =========================================================
@@ -504,7 +611,7 @@ export async function approveSubmission(submissionId, resultIds, adminId) {
   );
 
   // Step 2: mark the submission as approved.
-  return request(`/resultSubmissions/${submissionId}`, {
+  const updated = await request(`/resultSubmissions/${submissionId}`, {
     method: "PATCH",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({
@@ -514,6 +621,20 @@ export async function approveSubmission(submissionId, resultIds, adminId) {
       rejectionReason: null,
     }),
   });
+
+  await createAuditLogEntry({
+    entityType: "resultSubmission",
+    entityId: submissionId,
+    action: "approved",
+    actorId: adminId,
+    actorRole: "admin",
+    timestamp: new Date().toISOString(),
+    previousValue: { status: "pending" },
+    newValue: { status: "approved", resultsPublished: resultIds.length },
+    note: `Approved and published ${resultIds.length} result(s).`,
+  });
+
+  return updated;
 }
 
 /**
@@ -530,7 +651,7 @@ export async function approveSubmission(submissionId, resultIds, adminId) {
 export async function rejectSubmission(submissionId, adminId, rejectionReason) {
   // For rejection we only update the submission record.
   // Result rows already have published: false and stay that way.
-  return request(`/resultSubmissions/${submissionId}`, {
+  const updated = await request(`/resultSubmissions/${submissionId}`, {
     method: "PATCH",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({
@@ -540,4 +661,18 @@ export async function rejectSubmission(submissionId, adminId, rejectionReason) {
       rejectionReason,
     }),
   });
+
+  await createAuditLogEntry({
+    entityType: "resultSubmission",
+    entityId: submissionId,
+    action: "rejected",
+    actorId: adminId,
+    actorRole: "admin",
+    timestamp: new Date().toISOString(),
+    previousValue: { status: "pending" },
+    newValue: { status: "rejected" },
+    note: rejectionReason,
+  });
+
+  return updated;
 }

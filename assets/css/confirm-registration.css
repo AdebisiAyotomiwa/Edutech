@@ -1,0 +1,83 @@
+/* =========================================================
+   CONFIRM REGISTRATION — page-specific styles
+   Built entirely on shared.css tokens (--brand, --ink, --line,
+   --paper, --radius, --shadow). No new colors introduced.
+   ========================================================= */
+
+.reg-window-banner{
+  font-weight:700;
+  font-size:.8rem;
+  padding:.4em .85em;
+  border-radius:999px;
+  letter-spacing:.02em;
+}
+
+.reg-section{
+  background:var(--paper-0);
+  border:1px solid var(--line-200);
+  border-radius:var(--radius-md);
+  box-shadow:var(--shadow-card);
+  overflow:hidden;
+  margin-bottom:1.25rem;
+}
+
+.reg-section-header{
+  padding:.9rem 1.1rem;
+  border-bottom:1px solid var(--line-200);
+  font-family:var(--font-display);
+  font-weight:600;
+  font-size:.95rem;
+  color:var(--brand-900);
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:.5rem;
+}
+
+.reg-section-header small{
+  font-family:var(--font-body);
+  font-weight:500;
+  color:var(--ink-400);
+  font-size:.78rem;
+}
+
+.locked-row{ background:var(--paper-50); }
+.locked-row:last-child{ border-bottom:none !important; }
+.locked-row i{ font-size:.95rem; }
+
+.elective-row{ cursor:pointer; transition:background .12s ease; }
+.elective-row:last-child{ border-bottom:none !important; }
+.elective-row:hover{ background:var(--brand-100); }
+.elective-row input[type="checkbox"]{
+  width:1.05rem; height:1.05rem;
+  accent-color:var(--brand-700);
+  cursor:pointer;
+}
+
+.reg-unit-summary{
+  font-weight:700;
+  font-size:.85rem;
+  color:var(--brand-900);
+  background:var(--brand-100);
+  border-radius:8px;
+  padding:.4em .8em;
+}
+
+.reg-confirm-bar{
+  position:sticky;
+  bottom:0;
+  background:var(--paper-0);
+  border-top:1px solid var(--line-200);
+  padding:1rem 1.1rem;
+  border-radius:0 0 var(--radius-md) var(--radius-md);
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:1rem;
+  flex-wrap:wrap;
+}
+
+.reg-closed-note{
+  color:var(--ink-700);
+  font-size:.9rem;
+}

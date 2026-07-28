@@ -132,7 +132,7 @@ function populateDeptSelect() {
 function populateAssignmentSelects() {
   document.getElementById("aLecturer").innerHTML =
     `<option value="">Select lecturer…</option>` +
-    lecturers.map(l => `<option value="${l.id}">${l.name} (${l.staffId})</option>`).join("");
+    lecturers.map(l => `<option value="${l.id}">${l.title ? l.title + " " : ""}${l.name} (${l.staffId})</option>`).join("");
 
   document.getElementById("aCourse").innerHTML =
     `<option value="">Select course…</option>` +
@@ -143,8 +143,11 @@ function populateAssignmentSelects() {
 }
 
 /* ── Lecturers tab ───────────────────────────────────────── */
+const LECT_PAGE_SIZE = 15;
+let lectPage = 1;
+
 function bindLecturerEvents() {
-  document.getElementById("lecturerSearch").addEventListener("input", renderLecturers);
+  document.getElementById("lecturerSearch").addEventListener("input", () => { lectPage = 1; renderLecturers(); });
   document.getElementById("addLecturerBtn").addEventListener("click", openAddLecturerModal);
   document.getElementById("lecturerForm").addEventListener("submit", handleLecturerFormSubmit);
   document.getElementById("confirmDeleteBtn").addEventListener("click", handleConfirmedDelete);
@@ -153,24 +156,36 @@ function bindLecturerEvents() {
 function renderLecturers() {
   const q = document.getElementById("lecturerSearch").value.trim().toLowerCase();
   const filtered = lecturers.filter(l =>
-    !q || l.name.toLowerCase().includes(q) || l.staffId.toLowerCase().includes(q) || l.email.toLowerCase().includes(q)
+    !q || l.name.toLowerCase().includes(q) || (l.title || "").toLowerCase().includes(q) ||
+    l.staffId.toLowerCase().includes(q) || l.email.toLowerCase().includes(q)
   );
+
+  const totalPages = Math.max(1, Math.ceil(filtered.length / LECT_PAGE_SIZE));
+  if (lectPage > totalPages) lectPage = totalPages;
+  const start  = (lectPage - 1) * LECT_PAGE_SIZE;
+  const paged  = filtered.slice(start, start + LECT_PAGE_SIZE);
+
+  const info = document.getElementById("lecturerPaginationInfo");
+  if (info) info.textContent = filtered.length
+    ? `Showing ${start + 1}–${Math.min(start + LECT_PAGE_SIZE, filtered.length)} of ${filtered.length}`
+    : "";
 
   const tbody = document.getElementById("lecturersTbody");
   const empty = document.getElementById("lecturersEmpty");
 
-  if (filtered.length === 0) { tbody.innerHTML = ""; empty.classList.remove("d-none"); return; }
+  if (paged.length === 0) { tbody.innerHTML = ""; empty.classList.remove("d-none"); renderLectPagination(0); return; }
   empty.classList.add("d-none");
 
-  tbody.innerHTML = filtered.map(l => {
-    const dept  = departments.find(d => String(d.id) === String(l.departmentId));
-    const count = assignments.filter(a => String(a.lecturerId) === String(l.id)).length;
+  tbody.innerHTML = paged.map(l => {
+    const dept     = departments.find(d => String(d.id) === String(l.departmentId));
+    const count    = assignments.filter(a => String(a.lecturerId) === String(l.id)).length;
     const initials = l.name.split(" ").map(p => p[0]).join("").slice(0, 2).toUpperCase();
+    const displayName = `${l.title ? l.title + " " : ""}${l.name}`;
     return `<tr>
       <td>
         <div class="d-flex align-items-center gap-2">
           <span class="student-avatar-mini">${initials}</span>
-          <span class="fw-semibold">${l.name}</span>
+          <span class="fw-semibold">${displayName}</span>
         </div>
       </td>
       <td class="text-muted-cell">${l.staffId}</td>
@@ -192,6 +207,26 @@ function renderLecturers() {
       if (btn.dataset.action === "delete") confirmDeleteLecturer(btn.dataset.id);
     });
   });
+
+  renderLectPagination(totalPages);
+}
+
+function renderLectPagination(totalPages) {
+  const list = document.getElementById("lecturerPaginationList");
+  if (!list) return;
+  if (totalPages <= 1) { list.innerHTML = ""; return; }
+  let html = `<li class="page-item${lectPage===1?" disabled":""}"><button class="page-link" data-page="${lectPage-1}">&lsaquo;</button></li>`;
+  for (let i = 1; i <= totalPages; i++) {
+    if (totalPages > 7 && Math.abs(i - lectPage) > 2 && i !== 1 && i !== totalPages) {
+      if (i === 2 || i === totalPages - 1) html += `<li class="page-item disabled"><span class="page-link">…</span></li>`;
+      continue;
+    }
+    html += `<li class="page-item${i===lectPage?" active":""}"><button class="page-link" data-page="${i}">${i}</button></li>`;
+  }
+  html += `<li class="page-item${lectPage===totalPages?" disabled":""}"><button class="page-link" data-page="${lectPage+1}">&rsaquo;</button></li>`;
+  list.innerHTML = html;
+  list.querySelectorAll("[data-page]").forEach(btn =>
+    btn.addEventListener("click", () => { lectPage = Number(btn.dataset.page); renderLecturers(); }));
 }
 
 function openAddLecturerModal() {
@@ -208,9 +243,11 @@ function openEditLecturerModal(id) {
   const l = lecturers.find(lec => String(lec.id) === String(id));
   if (!l) return;
   editingLecturerId = id;
-  document.getElementById("lecturerModalTitle").textContent = `Edit — ${l.name}`;
+  document.getElementById("lecturerModalTitle").textContent = `Edit — ${l.title ? l.title + " " : ""}${l.name}`;
+  document.getElementById("lTitle").value      = l.title || "";
   document.getElementById("lName").value       = l.name;
   document.getElementById("lStaffId").value    = l.staffId;
+  document.getElementById("lPhone").value      = l.phone || "";
   document.getElementById("lEmail").value      = l.email;
   document.getElementById("lDepartment").value = l.departmentId;
   document.getElementById("lPasswordWrap").classList.remove("d-none");
@@ -410,3 +447,131 @@ async function handleConfirmedDelete() {
 /* ── Helpers ────────────────────────────────────────────── */
 function showAlert(id, msg) { const el = document.getElementById(id); el.textContent = msg; el.classList.remove("d-none"); }
 function hideAlert(id)      { const el = document.getElementById(id); el.textContent = "";  el.classList.add("d-none"); }
+
+/* ── Override: handleLecturerFormSubmit with title + phone ─ */
+async function handleLecturerFormSubmit(e) {
+  e.preventDefault();
+  hideAlert("lecturerFormAlert");
+
+  const title    = document.getElementById("lTitle")?.value.trim() || "";
+  const name     = document.getElementById("lName").value.trim();
+  const staffId  = document.getElementById("lStaffId").value.trim().toUpperCase();
+  const phone    = document.getElementById("lPhone")?.value.trim() || "";
+  const email    = document.getElementById("lEmail").value.trim();
+  const deptId   = document.getElementById("lDepartment").value;
+  const password = document.getElementById("lPassword").value.trim();
+
+  if (!title || !name || !staffId || !email || !deptId) {
+    showAlert("lecturerFormAlert", "Please fill in all required fields."); return;
+  }
+
+  const dupStaff = lecturers.find(l =>
+    l.staffId.toUpperCase() === staffId && String(l.id) !== String(editingLecturerId));
+  if (dupStaff) { showAlert("lecturerFormAlert", `Staff ID "${staffId}" already exists.`); return; }
+
+  const dupEmail = lecturers.find(l =>
+    l.email.toLowerCase() === email.toLowerCase() && String(l.id) !== String(editingLecturerId));
+  if (dupEmail) { showAlert("lecturerFormAlert", "A lecturer with this email already exists."); return; }
+
+  const data = { title, name, staffId, phone, email, departmentId: deptId, role: "lecturer" };
+
+  if (editingLecturerId === null) {
+    if (!password || password.length < 6) {
+      showAlert("lecturerFormAlert", "Password must be at least 6 characters."); return;
+    }
+    data.password = password;
+  } else if (password) {
+    data.password = password;
+  }
+
+  try {
+    if (editingLecturerId === null) {
+      const created = await createLecturer(data);
+      lecturers.push(created);
+    } else {
+      const updated = await updateLecturer(editingLecturerId, data);
+      const idx = lecturers.findIndex(l => String(l.id) === String(editingLecturerId));
+      lecturers[idx] = { ...lecturers[idx], ...updated };
+    }
+    lecturerModal.hide();
+    populateAssignmentSelects();
+    renderLecturers();
+    renderAssignments();
+  } catch (err) {
+    console.error(err);
+    showAlert("lecturerFormAlert", "Failed to save. Please try again.");
+  }
+}
+
+/* ── Override: renderAssignments as per-lecturer accordion ─ */
+function renderAssignments() {
+  const container = document.getElementById("assignmentsAccordion");
+  const empty     = document.getElementById("assignmentsEmpty");
+  if (!container) return;
+
+  if (lecturers.length === 0) { container.innerHTML = ""; empty.classList.remove("d-none"); return; }
+  empty.classList.add("d-none");
+
+  container.innerHTML = lecturers.map((lec, idx) => {
+    const lecAssignments = assignments.filter(a => String(a.lecturerId) === String(lec.id));
+    const initials       = lec.name.split(" ").map(p => p[0]).join("").slice(0, 2).toUpperCase();
+    const displayName    = `${lec.title ? lec.title + " " : ""}${lec.name}`;
+    const dept           = departments.find(d => String(d.id) === String(lec.departmentId));
+    const collapseId     = `asnCol_${lec.id}`;
+
+    const rowsHtml = lecAssignments.length === 0
+      ? `<tr><td colspan="5" class="text-muted text-center py-3 small">No courses assigned yet</td></tr>`
+      : lecAssignments.map(a => {
+          const course = courses.find(c => String(c.id) === String(a.courseId));
+          return `<tr>
+            <td class="fw-semibold">${course?.courseCode ?? "—"}</td>
+            <td>${course?.courseTitle ?? "Unknown"}</td>
+            <td>${a.session}</td>
+            <td>Sem ${a.semester}</td>
+            <td class="text-end">
+              <button class="btn btn-danger-soft btn-sm" data-del-asn="${a.id}" title="Remove"><i class="bi bi-trash"></i></button>
+            </td>
+          </tr>`;
+        }).join("");
+
+    return `<div class="hist-student-card mb-2">
+      <button class="hist-student-header" type="button"
+        data-bs-toggle="collapse" data-bs-target="#${collapseId}"
+        aria-expanded="${idx === 0 ? "true" : "false"}">
+        <span class="d-flex align-items-center gap-2">
+          <span class="student-avatar-mini">${initials}</span>
+          <span>
+            <span class="fw-semibold">${displayName}</span>
+            <span class="text-muted-cell ms-2 small">${dept?.name ?? "—"} · ${lec.staffId}</span>
+          </span>
+        </span>
+        <span class="hist-student-meta">
+          <button class="btn btn-brand btn-sm me-2" data-add-asn="${lec.id}" onclick="event.stopPropagation()">
+            <i class="bi bi-plus-lg"></i> Add
+          </button>
+          <span class="badge bg-secondary">${lecAssignments.length}</span>
+          <i class="bi bi-chevron-down hist-chevron ms-2"></i>
+        </span>
+      </button>
+      <div class="collapse ${idx === 0 ? "show" : ""}" id="${collapseId}">
+        <div class="hist-student-body p-0">
+          <table class="table table-sm admin-table mb-0">
+            <thead><tr><th>Code</th><th>Title</th><th>Session</th><th>Semester</th><th class="text-end">Action</th></tr></thead>
+            <tbody>${rowsHtml}</tbody>
+          </table>
+        </div>
+      </div>
+    </div>`;
+  }).join("");
+
+  /* Wire remove buttons */
+  container.querySelectorAll("[data-del-asn]").forEach(btn =>
+    btn.addEventListener("click", () => confirmDeleteAssignment(btn.dataset.delAsn)));
+
+  /* Wire add buttons — pre-fill lecturer in assignment modal */
+  container.querySelectorAll("[data-add-asn]").forEach(btn =>
+    btn.addEventListener("click", () => {
+      openAddAssignmentModal();
+      document.getElementById("aLecturer").value = btn.dataset.addAsn;
+    }));
+}

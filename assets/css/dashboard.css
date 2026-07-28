@@ -39,9 +39,14 @@
   top: 0;
   height: 100vh;
   overflow-y: auto;
+  overflow-x: hidden;
   z-index: 40;
   transition: transform var(--transition-fast);
+  /* Ensure footer stays accessible without clipping nav links */
+  scrollbar-width: none;        /* Firefox — hide scrollbar but keep scroll */
+  -ms-overflow-style: none;     /* IE/Edge */
 }
+.app-sidebar::-webkit-scrollbar { display: none; } /* Chrome/Safari */
 
 /* Brand lockup */
 .app-sidebar .brand-lockup {
@@ -87,7 +92,11 @@
   flex-direction: column;
   gap: 0.15rem;
   padding: 0 0.75rem;
+  flex: 1;              /* take all available vertical space */
+  overflow-y: auto;     /* scroll if nav items overflow */
+  scrollbar-width: none;
 }
+.app-sidebar-nav::-webkit-scrollbar { display: none; }
 
 .app-sidebar-link {
   display: flex;
@@ -109,24 +118,16 @@
   text-align: center;
 }
 .app-sidebar-link:hover {
-  background: rgba(255,255,255,0.08);
+  background: rgba(255,255,255,0.07);
   color: #fff;
 }
 .app-sidebar-link.active {
-  background: var(--brand-500);
+  background: rgba(255,255,255,0.13);
   color: #fff;
   font-weight: 600;
 }
 .app-sidebar-link.active::before {
-  content: '';
-  position: absolute;
-  left: 0;
-  top: 50%;
-  transform: translateY(-50%);
-  width: 3px;
-  height: 60%;
-  background: var(--gold-500);
-  border-radius: 0 3px 3px 0;
+  display: none;   /* remove gold left bar — use the fill style only */
 }
 
 /* Badge on nav item */
@@ -147,6 +148,7 @@
   margin-top: auto;
   padding: 0.85rem 0.75rem 1rem;
   border-top: 1px solid rgba(255,255,255,0.1);
+  flex-shrink: 0;       /* never compress — always fully visible */
 }
 .app-sidebar-user {
   display: flex;
@@ -210,10 +212,8 @@
 }
 .app-sidebar-logout:hover { background: rgba(255,255,255,0.08); color: #fff; }
 
-/* Admin sidebar override — dark background */
-.app-sidebar--admin { background: #111827; }
-.app-sidebar--admin .app-sidebar-link.active { background: rgba(31,122,92,0.5); }
-.app-sidebar--admin .app-sidebar-link.active::before { background: var(--brand-500); }
+/* Admin sidebar override — uniform brand-900 */
+.app-sidebar--admin { background: var(--brand-900); }
 .admin-role-tag {
   display: inline-block;
   font-size: 0.65rem;
@@ -695,4 +695,121 @@
 @media (max-width: 479.98px) {
   .stat-grid { grid-template-columns: 1fr; }
   .stat-card-value { font-size: 1.8rem; }
+}
+
+/* =========================================================
+   TOPBAR PROFILE DROPDOWN — student portal
+   ========================================================= */
+.topbar-profile-wrap {
+  position: relative;
+  margin-left: auto;
+}
+
+.topbar-profile-btn {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.28rem 0.75rem 0.28rem 0.28rem;
+  border-radius: 24px;
+  border: 1px solid var(--line-200);
+  background: #fff;
+  cursor: pointer;
+  transition: background var(--transition-fast), border-color var(--transition-fast);
+}
+.topbar-profile-btn:hover {
+  background: var(--paper-100);
+  border-color: var(--brand-500);
+}
+
+.topbar-profile-avatar {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: var(--brand-100);
+  color: var(--brand-900);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.75rem;
+  font-weight: 700;
+  font-family: var(--font-display);
+  overflow: hidden;
+  flex-shrink: 0;
+}
+.topbar-profile-avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.topbar-profile-info {
+  line-height: 1.2;
+  text-align: left;
+}
+.topbar-profile-name {
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--ink-900);
+  white-space: nowrap;
+}
+.topbar-profile-sub {
+  font-size: 0.72rem;
+  color: var(--ink-400);
+  white-space: nowrap;
+}
+
+/* Dropdown menu */
+.topbar-profile-dropdown {
+  position: absolute;
+  top: calc(100% + 0.5rem);
+  right: 0;
+  min-width: 180px;
+  background: #fff;
+  border: 1px solid var(--line-200);
+  border-radius: 12px;
+  box-shadow: var(--shadow-pop);
+  overflow: hidden;
+  z-index: 200;
+  /* Hidden by default */
+  opacity: 0;
+  pointer-events: none;
+  transform: translateY(-6px);
+  transition: opacity 0.15s ease, transform 0.15s ease;
+}
+.topbar-profile-dropdown.is-open {
+  opacity: 1;
+  pointer-events: auto;
+  transform: translateY(0);
+}
+.topbar-profile-dropdown a,
+.topbar-profile-dropdown button {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  width: 100%;
+  padding: 0.72rem 1.1rem;
+  font-size: 0.88rem;
+  font-weight: 500;
+  color: var(--ink-900);
+  text-decoration: none;
+  background: none;
+  border: none;
+  cursor: pointer;
+  transition: background var(--transition-fast);
+  text-align: left;
+}
+.topbar-profile-dropdown a:hover,
+.topbar-profile-dropdown button:hover {
+  background: var(--paper-100);
+}
+.topbar-profile-dropdown .dropdown-divider {
+  height: 1px;
+  background: var(--line-200);
+  margin: 0;
+}
+.topbar-profile-dropdown .dropdown-logout {
+  color: var(--danger);
+}
+.topbar-profile-dropdown .dropdown-logout:hover {
+  background: var(--danger-100);
 }

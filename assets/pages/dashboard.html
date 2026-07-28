@@ -27,6 +27,7 @@
         <a href="/assets/pages/dashboard.html"  class="app-sidebar-link active"><i class="bi bi-grid-1x2-fill"></i> Dashboard</a>
         <a href="/assets/pages/results.html"    class="app-sidebar-link"><i class="bi bi-bar-chart-fill"></i> Results</a>
         <a href="/assets/pages/courses.html"    class="app-sidebar-link"><i class="bi bi-bookmark-fill"></i> Courses</a>
+        <a href="/assets/pages/confirm-registration.html" class="app-sidebar-link"><i class="bi bi-clipboard2-check-fill"></i> Confirm Registration</a>
         <a href="/assets/pages/transcript.html" class="app-sidebar-link"><i class="bi bi-file-earmark-text-fill"></i> Transcript</a>
         <a href="/assets/pages/profile.html"    class="app-sidebar-link"><i class="bi bi-person-fill"></i> Profile</a>
       </nav>
@@ -62,27 +63,22 @@
 
         <span class="app-topbar-title">Dashboard</span>
 
-        <div class="app-topbar-search input-group d-none d-md-flex">
-          <span class="input-group-text"><i class="bi bi-search"></i></span>
-          <input type="text" class="form-control" id="topbarSearch" placeholder="Search courses, results…" />
-        </div>
-
-        <div class="topbar-actions">
-          <a href="/assets/pages/results.html" class="topbar-icon-btn" title="Results">
-            <i class="bi bi-bar-chart"></i>
-          </a>
-          <a href="/assets/pages/transcript.html" class="topbar-icon-btn" title="Transcript">
-            <i class="bi bi-file-earmark-text"></i>
-          </a>
-          <div class="topbar-user-chip">
-            <div class="topbar-user-avatar" id="topbarAvatar">
+        <!-- Profile dropdown (replaces search + icon buttons) -->
+        <div class="topbar-profile-wrap" id="topbarProfileWrap">
+          <button class="topbar-profile-btn" id="topbarProfileBtn" aria-haspopup="true" aria-expanded="false">
+            <div class="topbar-profile-avatar" id="topbarAvatar">
               <img src="" alt="" id="topbarAvatarImg" class="d-none" />
               <span id="topbarAvatarInitials"></span>
             </div>
-            <div class="topbar-user-info d-none d-sm-block">
-              <div class="topbar-user-name" id="topbarUserName">&nbsp;</div>
-              <div class="topbar-user-sub" id="topbarUserSub">&nbsp;</div>
+            <div class="topbar-profile-info d-none d-sm-block">
+              <div class="topbar-profile-name" id="topbarUserName">&nbsp;</div>
+              <div class="topbar-profile-sub" id="topbarUserSub">&nbsp;</div>
             </div>
+          </button>
+          <div class="topbar-profile-dropdown" id="topbarProfileDropdown">
+            <a href="/assets/pages/profile.html"><i class="bi bi-person-circle"></i> My Profile</a>
+            <div class="dropdown-divider"></div>
+            <button class="dropdown-logout" id="logoutDropdownBtn"><i class="bi bi-box-arrow-right"></i> Log out</button>
           </div>
         </div>
       </header>
@@ -133,15 +129,15 @@
               <button class="stat-arrow-btn" aria-hidden="true"><i class="bi bi-arrow-up-right"></i></button>
             </div>
             <div class="stat-card">
-              <span class="stat-card-label">Current Semester Courses</span>
-              <span class="stat-card-value" id="statCourses">—</span>
-              <span class="stat-card-trend"><i class="bi bi-journal-bookmark"></i> Registered courses</span>
-              <button class="stat-arrow-btn" aria-hidden="true"><i class="bi bi-arrow-up-right"></i></button>
-            </div>
-            <div class="stat-card">
               <span class="stat-card-label">Outstanding</span>
               <span class="stat-card-value" id="statOutstanding">—</span>
               <span class="stat-card-trend down" id="statOutstandingTrend"><i class="bi bi-exclamation-circle"></i> Courses to retake</span>
+              <button class="stat-arrow-btn" aria-hidden="true"><i class="bi bi-arrow-up-right"></i></button>
+            </div>
+            <div class="stat-card">
+              <span class="stat-card-label">Registered This Semester</span>
+              <span class="stat-card-value" id="statCourses">—</span>
+              <span class="stat-card-trend"><i class="bi bi-journal-bookmark"></i> Courses registered</span>
               <button class="stat-arrow-btn" aria-hidden="true"><i class="bi bi-arrow-up-right"></i></button>
             </div>
           </div>
@@ -179,31 +175,22 @@
           <!-- ── Bottom panels row ── -->
           <div class="dashboard-panels">
 
-            <!-- Current semester registered courses -->
-            <div class="panel">
-              <div class="panel-header">
-                <h2 class="panel-title">Current Semester Courses</h2>
-                <a href="/assets/pages/courses.html" class="panel-action-btn">
-                  <i class="bi bi-arrow-up-right"></i> All Courses
-                </a>
-              </div>
-              <div class="panel-body--flush">
-                <div class="activity-list" id="currentCoursesList">
-                  <!-- filled by JS -->
-                </div>
-              </div>
-            </div>
-
             <!-- Outstanding courses -->
             <div class="panel">
               <div class="panel-header">
                 <h2 class="panel-title">Outstanding Courses</h2>
               </div>
               <div class="panel-body--flush">
-                <div class="activity-list" id="outstandingList">
-                  <!-- filled by JS -->
-                </div>
+                <div class="activity-list" id="outstandingList"></div>
               </div>
+            </div>
+
+            <!-- Graduation progress -->
+            <div class="panel">
+              <div class="panel-header">
+                <h2 class="panel-title">Graduation Progress</h2>
+              </div>
+              <div id="graduationProgress" class="panel-body"></div>
             </div>
 
           </div>

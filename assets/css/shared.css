@@ -58,6 +58,7 @@ a:hover{ color:var(--brand-900); }
   display:inline-flex; align-items:center; justify-content:center; gap:.5rem;
 }
 .btn-brand:hover{ background:var(--brand-700); border-color:var(--brand-700); color:#fff; }
+.btn-brand:active{ background:var(--brand-900); border-color:var(--brand-900); color:#fff; }
 .btn-brand:focus-visible, .btn:focus-visible{ outline:3px solid var(--gold-500); outline-offset:2px; }
 .btn-brand:disabled{ opacity:.65; }
 .btn-secondary-outline{ background:#fff; border:1px solid var(--line-200); color:var(--brand-900); }
@@ -160,6 +161,9 @@ a:hover{ color:var(--brand-900); }
 .status-badge{ font-weight:700; font-size:.78rem; padding:.35em .65em; border-radius:6px; }
 .status-badge--completed{ background:var(--success-100); color:var(--success); }
 .status-badge--pending{ background:var(--warn-100); color:var(--warn); }
+.status-badge--eligible{ background:var(--success-100); color:var(--success); }
+.status-badge--short{ background:var(--warn-100); color:var(--warn); }
+.status-badge--critical{ background:var(--danger-100); color:var(--danger); }
 
 .carryover-tag{
   display:inline-block; font-size:.7rem; font-weight:700; color:var(--danger);
@@ -297,4 +301,49 @@ a:hover{ color:var(--brand-900); }
 }
 .form-check-input:checked[type="checkbox"] {
   background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20'%3e%3cpath fill='none' stroke='%23fff' stroke-linecap='round' stroke-linejoin='round' stroke-width='3' d='m6 10 3 3 6-6'/%3e%3c/svg%3e");
+}
+
+/* =========================================================
+   HISTORY COMPONENT (reusable expandable audit trail)
+   ========================================================= */
+.history-panel{
+  background:var(--paper-0);
+  border:1px solid var(--line-200);
+  border-radius:var(--radius-md);
+  overflow:hidden;
+}
+.history-toggle{
+  width:100%;
+  display:flex;
+  align-items:center;
+  gap:.6rem;
+  background:var(--paper-50);
+  border:none;
+  padding:.75rem 1rem;
+  font-weight:600;
+  font-size:.88rem;
+  color:var(--brand-900);
+  cursor:pointer;
+  text-align:left;
+}
+.history-toggle:hover{ background:var(--brand-100); }
+.history-toggle .history-chevron{ margin-left:auto; transition:transform .15s ease; color:var(--ink-400); }
+.history-toggle.is-open .history-chevron{ transform:rotate(180deg); }
+.history-body{ border-top:1px solid var(--line-200); max-height:320px; overflow-y:auto; }
+.history-row{
+  display:flex;
+  align-items:flex-start;
+  gap:.7rem;
+  padding:.7rem 1rem;
+  border-bottom:1px solid var(--line-200);
+}
+.history-row:last-child{ border-bottom:none; }
+.history-row-icon{ color:var(--brand-700); margin-top:.15rem; font-size:.95rem; }
+.history-row-title{ font-size:.85rem; }
+.history-row-note{ font-size:.82rem; color:var(--ink-700); margin-top:.15rem; }
+.history-row-time{ white-space:nowrap; font-size:.78rem; }
+
+/* ── Lecturer table responsive sizing (mirrors admin.css) ── */
+@media (max-width: 767.98px) {
+  .admin-table { font-size: 0.8rem; }
 }

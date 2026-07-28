@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Profile · Student Result Portal</title>
+    <title>Confirm Registration · Student Result Portal</title>
 
     <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.3/css/bootstrap.min.css" rel="stylesheet" />
     <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.11.3/font/bootstrap-icons.min.css" rel="stylesheet" />
@@ -12,7 +12,7 @@
 
     <link rel="stylesheet" href="/assets/css/shared.css">
     <link rel="stylesheet" href="/assets/css/dashboard.css">
-    <link rel="stylesheet" href="/assets/css/profile.css">
+    <link rel="stylesheet" href="/assets/css/confirm-registration.css">
   </head>
   <body class="app-shell">
     <aside class="app-sidebar" id="appSidebar">
@@ -26,9 +26,9 @@
         <a href="/assets/pages/dashboard.html"  class="app-sidebar-link"><i class="bi bi-grid-1x2-fill"></i> Dashboard</a>
         <a href="/assets/pages/results.html"    class="app-sidebar-link"><i class="bi bi-bar-chart-fill"></i> Results</a>
         <a href="/assets/pages/courses.html"    class="app-sidebar-link"><i class="bi bi-bookmark-fill"></i> Courses</a>
-        <a href="/assets/pages/confirm-registration.html" class="app-sidebar-link"><i class="bi bi-clipboard2-check-fill"></i> Confirm Registration</a>
+        <a href="/assets/pages/confirm-registration.html" class="app-sidebar-link active"><i class="bi bi-clipboard2-check-fill"></i> Confirm Registration</a>
         <a href="/assets/pages/transcript.html" class="app-sidebar-link"><i class="bi bi-file-earmark-text-fill"></i> Transcript</a>
-        <a href="/assets/pages/profile.html"    class="app-sidebar-link active"><i class="bi bi-person-fill"></i> Profile</a>
+        <a href="/assets/pages/profile.html"    class="app-sidebar-link"><i class="bi bi-person-fill"></i> Profile</a>
       </nav>
 
       <div class="app-sidebar-footer">
@@ -56,7 +56,7 @@
         <button class="app-sidebar-toggle" id="sidebarToggleBtn" aria-label="Open menu" aria-expanded="false">
           <i class="bi bi-list"></i>
         </button>
-        <h1 class="app-topbar-title">Profile</h1>
+        <h1 class="app-topbar-title">Confirm Registration</h1>
         <div class="topbar-profile-wrap" id="topbarProfileWrap">
           <button class="topbar-profile-btn" id="topbarProfileBtn" aria-haspopup="true" aria-expanded="false">
             <div class="topbar-profile-avatar" id="topbarAvatar">
@@ -77,65 +77,50 @@
       </header>
 
       <div class="app-content">
-        <div id="profileBody">
-          <div class="dashboard-state" id="profileLoading">Loading your profile…</div>
+        <div id="regLoading" class="dashboard-state">Loading your registration…</div>
 
-          <div id="profileContent" class="d-none">
-            <div class="card shadow-sm profile-card">
-              <div class="card-body">
-                <div class="profile-header">
-                  <span class="profile-avatar">
-                    <img src="" alt="" id="profileAvatarImg" class="d-none" />
-                    <span id="profileAvatarInitials"></span>
-                  </span>
-                  <div class="profile-header-text">
-                    <h2 id="profileFullName"></h2>
-                    <p id="profileMatric"></p>
-                  </div>
-                </div>
+        <div id="regContent" class="d-none">
+          <div class="d-flex align-items-center justify-content-between flex-wrap gap-2 mb-3">
+            <p class="text-muted small mb-0">
+              Core and carry-over courses are auto-registered by the admin. Select your electives below, then confirm.
+            </p>
+            <span class="reg-window-banner" id="windowBanner">—</span>
+          </div>
 
-                <div class="profile-divider"></div>
+          <div class="alert alert-danger d-none" id="regWarning" role="alert"></div>
 
-                <div class="profile-details">
-                  <div class="profile-detail">
-                    <span class="profile-detail-label">Email</span>
-                    <span class="profile-detail-value" id="profileEmail"></span>
-                  </div>
-                  <div class="profile-detail">
-                    <span class="profile-detail-label">Phone Number</span>
-                    <span class="profile-detail-value" id="profilePhone"></span>
-                  </div>
-                  <div class="profile-detail">
-                    <span class="profile-detail-label">Gender</span>
-                    <span class="profile-detail-value" id="profileGender"></span>
-                  </div>
-                  <div class="profile-detail">
-                    <span class="profile-detail-label">Department</span>
-                    <span class="profile-detail-value" id="profileDepartment"></span>
-                  </div>
-                  <div class="profile-detail">
-                    <span class="profile-detail-label">Programme</span>
-                    <span class="profile-detail-value" id="profileProgramme"></span>
-                  </div>
-                  <div class="profile-detail">
-                    <span class="profile-detail-label">Current Level</span>
-                    <span class="profile-detail-value" id="profileLevel"></span>
-                  </div>
-                  <div class="profile-detail">
-                    <span class="profile-detail-label">Admission Year</span>
-                    <span class="profile-detail-value" id="profileAdmissionYear"></span>
-                  </div>
-                  <div class="profile-detail">
-                    <span class="profile-detail-label">Status</span>
-                    <span class="profile-detail-value" id="profileStatus"></span>
-                  </div>
-                </div>
+          <!-- Locked: core courses -->
+          <div class="reg-section">
+            <div class="reg-section-header">
+              Core Courses
+              <small>Auto-registered · locked</small>
+            </div>
+            <div id="lockedList"></div>
+          </div>
 
-                <p class="profile-note">
-                  <i class="bi bi-info-circle"></i>
-                  Profile information is managed by the school. Contact the registrar's office for corrections.
-                </p>
-              </div>
+          <!-- Locked: carry-overs -->
+          <div class="reg-section carryover-section">
+            <div class="reg-section-header">
+              Carry-over Courses
+              <small>Auto-registered · locked</small>
+            </div>
+            <div id="carryList"></div>
+          </div>
+
+          <!-- Electives -->
+          <div class="reg-section">
+            <div class="reg-section-header">
+              Elective Courses
+              <span class="reg-unit-summary" id="unitSummary">—</span>
+            </div>
+            <div id="electiveList"></div>
+            <div class="reg-confirm-bar">
+              <span class="reg-closed-note d-none" id="regClosedNote">
+                <i class="bi bi-lock-fill me-1"></i>Registration is closed.
+              </span>
+              <button type="button" class="btn btn-brand ms-auto" id="confirmBtn" disabled>
+                <i class="bi bi-check2-circle me-1"></i>Confirm registration
+              </button>
             </div>
           </div>
         </div>
@@ -159,6 +144,6 @@
     </div>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.3/js/bootstrap.bundle.min.js"></script>
-    <script type="module" src="/assets/js/profile.js"></script>
+    <script type="module" src="/assets/js/confirm-registration.js"></script>
   </body>
 </html>

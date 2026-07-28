@@ -31,6 +31,7 @@
           <span class="sidebar-badge" id="sidebarPendingBadge" style="display:none;"></span>
         </a>
         <a href="/assets/pages/admin/admin-lecturers.html" class="app-sidebar-link"><i class="bi bi-person-badge-fill"></i> Lecturers</a>
+        <a href="/assets/pages/admin/admin-eligibility.html" class="app-sidebar-link"><i class="bi bi-mortarboard-fill"></i> Eligibility</a>
       </nav>
       <div class="app-sidebar-footer">
         <div class="app-sidebar-user">
@@ -113,15 +114,23 @@
                     <option value="300">300</option><option value="400">400</option><option value="500">500</option>
                   </select>
                 </div>
-                <div class="filter-group" style="flex:0 0 auto;min-width:unset;">
-                  <span class="filter-group-label">Session</span>
-                  <select class="form-select" id="rCurrSession"></select>
+              </div>
+              <!-- Current session/semester lock label + generation controls -->
+              <div class="d-flex align-items-center justify-content-between mt-3 pt-3 border-top flex-wrap gap-2">
+                <div class="d-flex align-items-center gap-2 flex-wrap">
+                  <span class="text-muted small">Current period:</span>
+                  <span class="fw-semibold small" id="currSessionLabel">—</span>
+                  <span class="status-badge status-badge--completed" id="currGenBadge" style="display:none;">
+                    <i class="bi bi-check-circle-fill me-1"></i>Registration Generated
+                  </span>
                 </div>
-                <div class="filter-group" style="flex:0 0 auto;min-width:unset;">
-                  <span class="filter-group-label">Semester</span>
-                  <select class="form-select" id="rCurrSemester">
-                    <option value="1">Semester 1</option><option value="2">Semester 2</option>
-                  </select>
+                <div class="d-flex gap-2 flex-wrap">
+                  <button type="button" class="btn btn-secondary-outline btn-sm" id="generateRegBtn" disabled>
+                    <i class="bi bi-magic me-1"></i>Generate Current Semester
+                  </button>
+                  <button type="button" class="btn btn-brand btn-sm" id="generateNextSemBtn" disabled>
+                    <i class="bi bi-arrow-right-circle me-1"></i>Generate Next Semester
+                  </button>
                 </div>
               </div>
             </div>
@@ -245,12 +254,12 @@
               </div>
             </div>
 
-            <div id="histFilterPrompt" class="admin-empty-state">
+            <div id="histFilterPrompt" class="admin-empty-state d-none">
               <i class="bi bi-clock-history"></i>
-              <p class="mt-2 mb-0">Select Faculty → Department, then click Load to view registration history.</p>
+              <p class="mt-2 mb-0">Use filters above to narrow results.</p>
             </div>
 
-            <div id="histResultsArea" class="d-none">
+            <div id="histResultsArea">
               <div class="d-flex align-items-center gap-2 mb-3 flex-wrap">
                 <div class="input-group" style="max-width:280px;">
                   <span class="input-group-text bg-white"><i class="bi bi-search text-muted"></i></span>
@@ -259,15 +268,8 @@
                 <span class="text-muted small ms-auto" id="rHistCount"></span>
               </div>
               <div class="alert alert-info py-2 px-3 mb-3 small"><i class="bi bi-lock me-1"></i>Historical registrations are read-only and cannot be modified.</div>
-              <div class="admin-table-card">
-                <div class="table-responsive">
-                  <table class="table admin-table">
-                    <thead><tr><th>Student</th><th>Matric No.</th><th>Course</th><th>Session</th><th>Sem</th><th>Type</th></tr></thead>
-                    <tbody id="histRegsTbody"></tbody>
-                  </table>
-                </div>
-                <div class="admin-empty-state d-none" id="histRegsEmpty"><i class="bi bi-journal-check"></i><p class="mt-2 mb-0">No registrations match your filters.</p></div>
-              </div>
+              <div id="histAccordion"></div>
+              <div class="admin-empty-state d-none" id="histRegsEmpty"><i class="bi bi-journal-check"></i><p class="mt-2 mb-0">No registrations match your filters.</p></div>
               <div class="d-flex justify-content-between align-items-center flex-wrap gap-2 mt-3">
                 <div class="text-muted small" id="histPaginationInfo"></div>
                 <ul class="pagination pagination-sm mb-0" id="histPaginationList"></ul>
@@ -276,6 +278,25 @@
           </div>
 
         </div><!-- /pageContent -->
+      </div>
+    </div>
+
+    <!-- ══ GENERATE REGISTRATIONS (BATCH) ══ -->
+    <div class="modal fade" id="generateRegModal" tabindex="-1" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title fw-semibold" id="generateRegModalTitle"><i class="bi bi-magic me-2"></i>Generate registrations</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body" id="generateRegModalBody">
+            <div class="text-center py-4"><div class="spinner-border text-success"></div></div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary-outline" data-bs-dismiss="modal">Cancel</button>
+            <button type="button" class="btn btn-brand" id="confirmGenerateBtn" disabled>Generate</button>
+          </div>
+        </div>
       </div>
     </div>
 

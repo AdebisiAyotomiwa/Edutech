@@ -1,6 +1,7 @@
 import { requireAuth, getCurrentStudent, logout } from "./auth.js";
-import { getResults, getCourses, getDepartmentById, getRegistrations, getAcademicCalendar } from "./api.js";
-import { calculateGPA, scoreToGrade } from "./utils.js";
+import { getResults, getCourses, getDepartmentById, getRegistrations, getAcademicCalendar, getGraduationRequirements } from "./api.js";
+import { calculateGPA, scoreToGrade, computeGraduationEligibility } from "./utils.js";
+import { initTopbar } from "./topbar.js";
 
 function resolveImagePath(raw) {
   if (!raw || !raw.trim()) return "";
@@ -16,6 +17,9 @@ let resultsWithCourses = [];
 let allCourses = [];
 let allRegistrations = [];
 let calendar = null;
+let allResultsRaw = [];
+let department = null;
+let graduationRequirements = [];
 
 /* ── Boot ───────────────────────────────────────────────── */
 document.addEventListener("DOMContentLoaded", init);
@@ -28,15 +32,14 @@ async function init() {
     initialiseSidebar();
     initialiseLogout();
     await loadData();
-
     document.getElementById("dashboardLoading").classList.add("d-none");
     document.getElementById("dashboardContent").classList.remove("d-none");
 
     renderStatCards();
     renderGpaChart();
     renderAcademicSummary();
-    renderCurrentCourses();
     renderOutstandingList();
+    renderGraduationProgress();
   } catch (err) {
     console.error(err);
     document.getElementById("dashboardLoading").innerHTML =
@@ -46,18 +49,25 @@ async function init() {
 
 /* ── Data ───────────────────────────────────────────────── */
 async function loadData() {
-  const [results, courses, registrations, cal] = await Promise.all([
-    getResults({ studentId: student.id }),
+  const [results, courses, registrations, cal, dept, gradReqs] = await Promise.all([
+    getResults(),
     getCourses(),
     getRegistrations({ studentId: student.id }),
     getAcademicCalendar(),
+    getDepartmentById(student.departmentId),
+    getGraduationRequirements(),
   ]);
 
   allCourses       = courses;
   allRegistrations = registrations;
   calendar         = cal;
+  department       = dept;
+  graduationRequirements = gradReqs;
 
-  resultsWithCourses = results
+  // Filter client-side to avoid json-server type mismatch on studentId
+  allResultsRaw = results.filter(r => String(r.studentId) === String(student.id));
+
+  resultsWithCourses = allResultsRaw
     .filter(r => r.published !== false)
     .map(r => {
       const course = allCourses.find(c => Number(c.id) === Number(r.courseId));
@@ -76,11 +86,10 @@ async function loadData() {
 function initialiseSidebar() {
   const name     = `${student.firstName} ${student.lastName}`;
   const initials = (student.firstName[0] + student.lastName[0]).toUpperCase();
-  const metaText = student.matricNumber;
 
-  /* Sidebar */
+  /* Sidebar user info */
   document.getElementById("sidebarUserName").textContent = name;
-  document.getElementById("sidebarUserMeta").textContent = metaText;
+  document.getElementById("sidebarUserMeta").textContent = student.matricNumber;
   const sidebarImg = document.getElementById("sidebarAvatarImg");
   const sidebarIni = document.getElementById("sidebarAvatarInitials");
   if (student.profileImage?.trim()) {
@@ -89,38 +98,16 @@ function initialiseSidebar() {
     sidebarImg.classList.remove("d-none"); sidebarIni.style.display = "none";
   } else { sidebarIni.style.display = "flex"; sidebarIni.textContent = initials; }
 
-  /* Topbar user chip */
-  document.getElementById("topbarUserName").textContent = name;
-  document.getElementById("topbarUserSub").textContent  = metaText;
-  const topbarImg = document.getElementById("topbarAvatarImg");
-  const topbarIni = document.getElementById("topbarAvatarInitials");
-  if (student.profileImage?.trim()) {
-    topbarImg.src = resolveImagePath(student.profileImage);
-    topbarImg.onerror = () => { topbarImg.classList.add("d-none"); topbarIni.textContent = initials; };
-    topbarImg.classList.remove("d-none"); topbarIni.style.display = "none";
-  } else { topbarIni.textContent = initials; }
-
   /* Greeting subtitle */
   document.getElementById("dashboardSubtitle").textContent =
     `Welcome back, ${student.firstName}. Here's your academic overview.`;
 
-  /* Sidebar toggle */
-  const toggle = document.getElementById("sidebarToggleBtn");
-  const sidebar = document.getElementById("appSidebar");
-  const scrim   = document.getElementById("appSidebarScrim");
-  toggle.addEventListener("click", () => {
-    const open = sidebar.classList.toggle("is-open");
-    scrim.classList.toggle("is-open");
-    toggle.setAttribute("aria-expanded", open);
-  });
-  scrim.addEventListener("click", () => {
-    sidebar.classList.remove("is-open");
-    scrim.classList.remove("is-open");
-    toggle.setAttribute("aria-expanded", "false");
-  });
+  /* Topbar profile dropdown + sidebar toggle via shared helper */
+  initTopbar(student);
 }
 
 function initialiseLogout() {
+  /* Sidebar logout button → modal */
   const modal = new bootstrap.Modal(document.getElementById("logoutConfirmModal"));
   document.getElementById("logoutBtn").addEventListener("click", () => modal.show());
   document.getElementById("confirmLogoutBtn").addEventListener("click", () => {
@@ -150,8 +137,8 @@ function getCreditsEarned() {
 
 /* ── Stat cards ──────────────────────────────────────────── */
 function renderStatCards() {
-  const cgpa       = resultsWithCourses.length ? calculateGPA(resultsWithCourses) : "0.00";
-  const credits    = getCreditsEarned();
+  const cgpa        = resultsWithCourses.length ? calculateGPA(resultsWithCourses) : "0.00";
+  const credits     = getCreditsEarned();
   const currCourses = getCurrentSemesterRegs().length;
   const outstanding = getOutstandingCourses().length;
 
@@ -160,7 +147,6 @@ function renderStatCards() {
   document.getElementById("statCourses").textContent     = currCourses;
   document.getElementById("statOutstanding").textContent = outstanding;
 
-  /* Colour trend on outstanding */
   const outTrend = document.getElementById("statOutstandingTrend");
   if (outstanding === 0) {
     outTrend.classList.remove("down");
@@ -276,43 +262,6 @@ function summaryField(label, value) {
   </div>`;
 }
 
-/* ── Current courses list ────────────────────────────────── */
-function renderCurrentCourses() {
-  const regs     = getCurrentSemesterRegs();
-  const list     = document.getElementById("currentCoursesList");
-
-  if (regs.length === 0) {
-    list.innerHTML = `<div class="activity-item"><div class="activity-body">
-      <div class="activity-title">No courses registered</div>
-      <div class="activity-meta">Registration for this semester is not yet open</div>
-    </div></div>`;
-    return;
-  }
-
-  list.innerHTML = regs.map(reg => {
-    const course = allCourses.find(c => Number(c.id) === Number(reg.courseId));
-    if (!course) return "";
-    const result = resultsWithCourses.find(r =>
-      Number(r.courseId) === Number(reg.courseId) &&
-      r.session === reg.session && Number(r.semester) === Number(reg.semester)
-    );
-    const hasResult  = !!result;
-    const { grade }  = hasResult ? scoreToGrade(result.score) : { grade: "—" };
-    const statusHtml = hasResult
-      ? `<span class="activity-badge" style="background:var(--success-100);color:var(--success);">Grade ${grade}</span>`
-      : `<span class="activity-badge" style="background:var(--warn-100);color:var(--warn);">Pending</span>`;
-    const iconCls = hasResult ? "activity-icon--green" : "activity-icon--amber";
-    return `<div class="activity-item">
-      <div class="activity-icon ${iconCls}"><i class="bi bi-journal-text"></i></div>
-      <div class="activity-body">
-        <div class="activity-title">${course.courseCode} — ${course.courseTitle}</div>
-        <div class="activity-meta">${course.creditUnit} credit unit${course.creditUnit === 1 ? "" : "s"}</div>
-      </div>
-      ${statusHtml}
-    </div>`;
-  }).join("");
-}
-
 /* ── Outstanding list ────────────────────────────────────── */
 function renderOutstandingList() {
   const outstanding = getOutstandingCourses();
@@ -339,4 +288,56 @@ function renderOutstandingList() {
       <span class="activity-badge" style="background:var(--danger-100);color:var(--danger);">Grade ${grade}</span>
     </div>`;
   }).join("");
+}
+
+/* ── Graduation progress (Step 5.2) ─────────────────────── */
+function renderGraduationProgress() {
+  const container = document.getElementById("graduationProgress");
+  if (!container) return;
+
+  const eligibility = computeGraduationEligibility(
+    student, allResultsRaw, allCourses, department, graduationRequirements
+  );
+
+  if (!eligibility) {
+    container.innerHTML = `<div class="activity-meta">Graduation requirements aren't configured for your programme yet.</div>`;
+    return;
+  }
+
+  const totalPct = Math.min(100, Math.round((eligibility.totalUnits / eligibility.minTotalUnits) * 100));
+  const corePct  = Math.min(100, Math.round((eligibility.coreUnits / eligibility.minCoreUnits) * 100));
+
+  let message;
+  if (eligibility.status === "eligible") {
+    message = `<span style="color:var(--success);"><i class="bi bi-check-circle-fill me-1"></i>You meet the unit requirements so far.</span>`;
+  } else {
+    const parts = [];
+    if (eligibility.unitsShort > 0) parts.push(`${eligibility.unitsShort} more total unit${eligibility.unitsShort === 1 ? "" : "s"}`);
+    if (eligibility.coreShort > 0) parts.push(`${eligibility.coreShort} more core unit${eligibility.coreShort === 1 ? "" : "s"}`);
+    message = `You need ${parts.join(" and ")} to graduate.`;
+  }
+
+  container.innerHTML = `
+    <div style="display:flex;flex-direction:column;gap:1rem;">
+      <div>
+        <div class="d-flex justify-content-between mb-1">
+          <span class="activity-meta">Total units</span>
+          <span class="activity-meta">${eligibility.totalUnits} / ${eligibility.minTotalUnits}</span>
+        </div>
+        <div class="progress" style="height:8px;">
+          <div class="progress-bar" role="progressbar" style="width:${totalPct}%;background:var(--brand-700);"></div>
+        </div>
+      </div>
+      <div>
+        <div class="d-flex justify-content-between mb-1">
+          <span class="activity-meta">Core units</span>
+          <span class="activity-meta">${eligibility.coreUnits} / ${eligibility.minCoreUnits}</span>
+        </div>
+        <div class="progress" style="height:8px;">
+          <div class="progress-bar" role="progressbar" style="width:${corePct}%;background:var(--brand-500);"></div>
+        </div>
+      </div>
+      <div class="activity-title" style="font-size:.85rem;">${message}</div>
+    </div>
+  `;
 }

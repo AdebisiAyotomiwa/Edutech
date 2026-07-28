@@ -37,6 +37,7 @@
         <a href="/assets/pages/dashboard.html"  class="app-sidebar-link"><i class="bi bi-grid-1x2-fill"></i> Dashboard</a>
         <a href="/assets/pages/results.html"    class="app-sidebar-link active"><i class="bi bi-bar-chart-fill"></i> Results</a>
         <a href="/assets/pages/courses.html"    class="app-sidebar-link"><i class="bi bi-bookmark-fill"></i> Courses</a>
+        <a href="/assets/pages/confirm-registration.html" class="app-sidebar-link"><i class="bi bi-clipboard2-check-fill"></i> Confirm Registration</a>
         <a href="/assets/pages/transcript.html" class="app-sidebar-link"><i class="bi bi-file-earmark-text-fill"></i> Transcript</a>
         <a href="/assets/pages/profile.html"    class="app-sidebar-link"><i class="bi bi-person-fill"></i> Profile</a>
       </nav>
@@ -63,15 +64,27 @@
     <!-- ===== Main column ===== -->
     <div class="app-main">
       <header class="app-topbar">
-        <button
-          class="app-sidebar-toggle"
-          id="sidebarToggleBtn"
-          aria-label="Open menu"
-          aria-expanded="false"
-        >
+        <button class="app-sidebar-toggle" id="sidebarToggleBtn" aria-label="Open menu" aria-expanded="false">
           <i class="bi bi-list"></i>
         </button>
         <h1 class="app-topbar-title">Results</h1>
+        <div class="topbar-profile-wrap" id="topbarProfileWrap">
+          <button class="topbar-profile-btn" id="topbarProfileBtn" aria-haspopup="true" aria-expanded="false">
+            <div class="topbar-profile-avatar" id="topbarAvatar">
+              <img src="" alt="" id="topbarAvatarImg" class="d-none" />
+              <span id="topbarAvatarInitials"></span>
+            </div>
+            <div class="topbar-profile-info d-none d-sm-block">
+              <div class="topbar-profile-name" id="topbarUserName">&nbsp;</div>
+              <div class="topbar-profile-sub" id="topbarUserSub">&nbsp;</div>
+            </div>
+          </button>
+          <div class="topbar-profile-dropdown" id="topbarProfileDropdown">
+            <a href="/assets/pages/profile.html"><i class="bi bi-person-circle"></i> My Profile</a>
+            <div class="dropdown-divider"></div>
+            <button class="dropdown-logout" id="logoutDropdownBtn"><i class="bi bi-box-arrow-right"></i> Log out</button>
+          </div>
+        </div>
       </header>
 
       <div class="app-content">
@@ -133,6 +146,7 @@
                         <th>Credit Unit</th>
                         <th>Score</th>
                         <th>Grade</th>
+                        <th class="text-end">History</th>
                       </tr>
                     </thead>
                     <tbody id="resultsTable"></tbody>
@@ -159,6 +173,19 @@
         </div>
       </div>
     </div>
+    <!-- History modal -->
+    <div class="modal fade" id="historyModal" tabindex="-1" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title fw-semibold"><i class="bi bi-clock-history me-2"></i>Result history</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body p-0" id="historyModalBody"></div>
+        </div>
+      </div>
+    </div>
+
     <div id="printArea">
       <div class="print-header">
         <div class="print-brand">

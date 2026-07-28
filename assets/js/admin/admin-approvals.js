@@ -5,6 +5,7 @@ import {
   approveSubmission, rejectSubmission,
 } from "../api.js";
 import { scoreToGrade } from "../utils.js";
+import { renderHistory } from "../historyComponent.js";
 
 requireAdminAuth();
 
@@ -268,6 +269,12 @@ function openDetail(submissionId) {
   // Show detail, hide queue
   document.getElementById("queuePanel").classList.add("d-none");
   document.getElementById("detailPanel").classList.remove("d-none");
+
+  renderHistory(document.getElementById("historyContainer"), {
+    entityType: "resultSubmission",
+    entityId: sub.id,
+    title: "Submission history",
+  });
 
   // Back button
   document.getElementById("backToQueueBtn").onclick = () => {

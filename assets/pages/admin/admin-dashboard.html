@@ -33,6 +33,7 @@
           <span class="sidebar-badge" id="sidebarPendingBadge" style="display:none;"></span>
         </a>
         <a href="/assets/pages/admin/admin-lecturers.html"    class="app-sidebar-link"><i class="bi bi-person-badge-fill"></i> Lecturers</a>
+        <a href="/assets/pages/admin/admin-eligibility.html" class="app-sidebar-link"><i class="bi bi-mortarboard-fill"></i> Eligibility</a>
       </nav>
 
       <div class="app-sidebar-footer">
@@ -56,7 +57,7 @@
         <button class="app-sidebar-toggle" id="sidebarToggleBtn" aria-label="Open menu" aria-expanded="false">
           <i class="bi bi-list"></i>
         </button>
-        <span class="app-topbar-title">Dashboard</span>
+        <span class="app-topbar-title"> Dashboard</span>
         <div class="topbar-actions">
           <a href="/assets/pages/admin/admin-students.html" class="topbar-icon-btn" title="Students"><i class="bi bi-people"></i></a>
           <a href="/assets/pages/admin/admin-results.html"  class="topbar-icon-btn" title="Results"><i class="bi bi-bar-chart"></i></a>
@@ -184,19 +185,19 @@
             </div>
           </div>
 
-          <!-- ── Bottom row: Recent activity + Quick actions ── -->
+          <!-- ── Bottom row: Pending Approvals + Quick actions ── -->
           <div class="dashboard-panels">
 
-            <!-- Recent registrations activity -->
+            <!-- Pending approvals activity -->
             <div class="panel">
               <div class="panel-header">
-                <h2 class="panel-title">Recent Registrations</h2>
-                <a href="/assets/pages/admin/admin-registrations.html" class="panel-action-btn">
+                <h2 class="panel-title">Pending Approvals</h2>
+                <a href="/assets/pages/admin/admin-approvals.html" class="panel-action-btn">
                   <i class="bi bi-arrow-up-right"></i> View All
                 </a>
               </div>
               <div class="panel-body--flush">
-                <div class="activity-list" id="recentRegsList">
+                <div class="activity-list" id="pendingApprovalsList">
                   <!-- filled by JS -->
                 </div>
               </div>
@@ -212,8 +213,6 @@
                 <a href="/assets/pages/admin/admin-courses.html"       class="btn btn-secondary-outline w-100 text-start"><i class="bi bi-journal-plus me-2"></i>Add Course</a>
                 <a href="/assets/pages/admin/admin-results.html"       class="btn btn-secondary-outline w-100 text-start"><i class="bi bi-pencil-square me-2"></i>Enter Results</a>
                 <a href="/assets/pages/admin/admin-registrations.html" class="btn btn-secondary-outline w-100 text-start"><i class="bi bi-journal-check me-2"></i>Manage Registrations</a>
-                <a href="/assets/pages/admin/admin-approvals.html"     class="btn btn-secondary-outline w-100 text-start"><i class="bi bi-shield-check me-2"></i>Pending Approvals</a>
-                <a href="/assets/pages/admin/admin-lecturers.html"     class="btn btn-secondary-outline w-100 text-start"><i class="bi bi-person-badge me-2"></i>Manage Lecturers</a>
                 <a href="/assets/pages/admin/admin-courses.html"       class="btn btn-brand w-100 text-start"><i class="bi bi-building me-2"></i>Manage Departments</a>
               </div>
             </div>

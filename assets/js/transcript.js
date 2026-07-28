@@ -1,6 +1,7 @@
 import { requireAuth, getCurrentStudent, logout } from "./auth.js";
 import { getResults, getCourses, getDepartmentById } from "./api.js";
 import { calculateGPA, scoreToGrade } from "./utils.js";
+import { initTopbar } from "./topbar.js";
 
 function resolveImagePath(raw) {
   if (!raw || !raw.trim()) return "";
@@ -89,7 +90,7 @@ async function initTranscriptPage() {
 ======================================================== */
 async function loadStudentData() {
   const [results, courses, dept] = await Promise.all([
-    getResults({ studentId: student.id }),
+    getResults(),
     getCourses(),
     getDepartmentById(student.departmentId),
   ]);
@@ -97,8 +98,9 @@ async function loadStudentData() {
   allCourses = courses;
   department = dept;
 
+  // Filter client-side to avoid json-server type mismatch on studentId
   resultsWithCourses = results
-    .filter(r => r.published !== false)   // only published results visible to students
+    .filter(r => String(r.studentId) === String(student.id) && r.published !== false)
     .map((result) => {
     const course = allCourses.find((c) => Number(c.id) === Number(result.courseId));
 
@@ -129,47 +131,21 @@ async function loadStudentData() {
 function initialiseSidebar() {
   sidebarUserName.textContent = `${student.firstName} ${student.lastName}`;
   sidebarUserMeta.textContent = student.matricNumber;
-
   const initials = student.firstName.charAt(0) + student.lastName.charAt(0);
-
   if (student.profileImage && student.profileImage.trim() !== "") {
     sidebarAvatarImg.src = resolveImagePath(student.profileImage);
-    sidebarAvatarImg.onerror = () => {
-      sidebarAvatarImg.classList.add("d-none");
-      sidebarAvatarInitials.style.display = "flex";
-      sidebarAvatarInitials.textContent = initials;
-    };
-    sidebarAvatarImg.classList.remove("d-none");
-    sidebarAvatarInitials.style.display = "none";
-  } else {
-    sidebarAvatarInitials.style.display = "flex";
-    sidebarAvatarInitials.textContent = initials;
-  }
-
-  sidebarToggleBtn.addEventListener("click", () => {
-    const isOpen = appSidebar.classList.toggle("is-open");
-    appSidebarScrim.classList.toggle("is-open");
-    sidebarToggleBtn.setAttribute("aria-expanded", isOpen);
-  });
-
-  appSidebarScrim.addEventListener("click", () => {
-    appSidebar.classList.remove("is-open");
-    appSidebarScrim.classList.remove("is-open");
-    sidebarToggleBtn.setAttribute("aria-expanded", "false");
-  });
+    sidebarAvatarImg.onerror = () => { sidebarAvatarImg.classList.add("d-none"); sidebarAvatarInitials.style.display = "flex"; sidebarAvatarInitials.textContent = initials; };
+    sidebarAvatarImg.classList.remove("d-none"); sidebarAvatarInitials.style.display = "none";
+  } else { sidebarAvatarInitials.style.display = "flex"; sidebarAvatarInitials.textContent = initials; }
+  initTopbar(student);
 }
 
 function initialiseLogout() {
   const logoutModalEl = document.getElementById("logoutConfirmModal");
   const logoutModal = new bootstrap.Modal(logoutModalEl);
   const confirmLogoutBtn = document.getElementById("confirmLogoutBtn");
-
   logoutBtn.addEventListener("click", () => logoutModal.show());
-
-  confirmLogoutBtn.addEventListener("click", () => {
-    logout();
-    window.location.href = "/index.html";
-  });
+  confirmLogoutBtn.addEventListener("click", () => { logout(); window.location.href = "/index.html"; });
 }
 
 function initialiseListeners() {

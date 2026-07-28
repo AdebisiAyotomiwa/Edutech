@@ -124,14 +124,10 @@ function populateFilterSelects() {
 
 /* ── Metrics bar ────────────────────────────────────────── */
 function renderMetrics(src) {
-  const byLevel = (l) => src.filter(s => Number(s.level) === l).length;
   document.getElementById("mTotal").textContent  = src.length;
   document.getElementById("mMale").textContent   = src.filter(s => s.gender === "Male").length;
   document.getElementById("mFemale").textContent = src.filter(s => s.gender === "Female").length;
-  document.getElementById("m100").textContent    = byLevel(100);
-  document.getElementById("m200").textContent    = byLevel(200);
-  document.getElementById("m300").textContent    = byLevel(300);
-  document.getElementById("m400").textContent    = byLevel(400);
+  document.getElementById("mActive").textContent = src.filter(s => s.status === "Active").length;
 }
 
 /* ── Active filter indicator ────────────────────────────── */
@@ -490,3 +486,19 @@ async function handleDeleteConfirm() {
 /* ── Helpers ────────────────────────────────────────────── */
 function showAlert(id, msg) { const el = document.getElementById(id); el.textContent = msg; el.classList.remove("d-none"); }
 function hideAlert(id)      { const el = document.getElementById(id); el.textContent = "";  el.classList.add("d-none"); }
+
+/* ── Scroll shadow indicators ───────────────────────────── */
+function initScrollShadows() {
+  document.querySelectorAll(".table-scroll-wrap").forEach(wrap => {
+    const inner = wrap.querySelector(".table-responsive");
+    if (!inner) return;
+    const update = () => {
+      wrap.classList.toggle("show-left",  inner.scrollLeft > 4);
+      wrap.classList.toggle("show-right", inner.scrollLeft < inner.scrollWidth - inner.clientWidth - 4);
+    };
+    inner.addEventListener("scroll", update, { passive: true });
+    // Initial check after a tick so DOM is fully rendered
+    requestAnimationFrame(update);
+  });
+}
+document.addEventListener("DOMContentLoaded", () => setTimeout(initScrollShadows, 300));

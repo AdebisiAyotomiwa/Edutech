@@ -34,7 +34,7 @@ async function init() {
     renderDeptChart();
     buildGradeFilters();
     renderGradeChart();
-    renderRecentRegs();
+    renderPendingApprovals();
   } catch (err) {
     console.error(err);
     document.getElementById("dashboardLoading").innerHTML =
@@ -235,42 +235,38 @@ function renderGradeChart() {
   });
 }
 
-/* ── Recent registrations activity list ─────────────────── */
-function renderRecentRegs() {
-  const list = document.getElementById("recentRegsList");
+/* ── Pending approvals activity list ────────────────────── */
+function renderPendingApprovals() {
+  const list = document.getElementById("pendingApprovalsList");
+  const pending = submissions
+    .filter(s => s.status === "pending")
+    .sort((a, b) => new Date(b.submittedAt) - new Date(a.submittedAt))
+    .slice(0, 6);
 
-  /* Get the 8 most recent registrations by id (highest id = most recent) */
-  const recent = [...registrations]
-    .sort((a, b) => Number(b.id) - Number(a.id))
-    .slice(0, 8);
-
-  if (recent.length === 0) {
+  if (pending.length === 0) {
     list.innerHTML = `<div class="activity-item">
-      <div class="activity-body"><div class="activity-title">No registrations yet</div></div>
+      <div class="activity-body">
+        <div class="activity-title" style="color:var(--success);"><i class="bi bi-check-circle-fill me-1"></i>No pending approvals</div>
+        <div class="activity-meta">All submissions have been reviewed</div>
+      </div>
     </div>`;
     return;
   }
 
-  list.innerHTML = recent.map(reg => {
-    const student = students.find(s => String(s.id) === String(reg.studentId));
-    const course  = courses.find(c => String(c.id)  === String(reg.courseId));
-    const initials = student
-      ? (student.firstName[0] + student.lastName[0]).toUpperCase()
-      : "?";
-    const carryTag = reg.type === "carry-over"
-      ? `<span style="font-size:0.68rem;font-weight:700;color:var(--danger);background:var(--danger-100);padding:.1em .45em;border-radius:4px;margin-left:.3rem;">C/O</span>`
-      : "";
+  list.innerHTML = pending.map(sub => {
+    const course   = courses.find(c => String(c.id) === String(sub.courseId));
+    const lecturer = students.find(s => String(s.id) === String(sub.lecturerId)); // fallback if needed
+    // Try lecturers array first (may not be loaded on dashboard — use course code)
+    const date = new Date(sub.submittedAt).toLocaleDateString("en-GB", { day:"numeric", month:"short" });
     return `<div class="activity-item">
-      <div class="activity-icon activity-icon--green" style="font-size:0.78rem;font-weight:700;font-family:var(--font-display);">${initials}</div>
+      <div class="activity-icon activity-icon--amber"><i class="bi bi-hourglass-split"></i></div>
       <div class="activity-body">
-        <div class="activity-title">
-          ${student ? `${student.firstName} ${student.lastName}` : "Unknown"}${carryTag}
-        </div>
-        <div class="activity-meta">${course ? `${course.courseCode} · ` : ""}${reg.session} Sem ${reg.semester}</div>
+        <div class="activity-title">${course ? course.courseCode + " — " + course.courseTitle : "Unknown Course"}</div>
+        <div class="activity-meta">${sub.session} Sem ${sub.semester} · ${sub.level} Level · ${date}</div>
       </div>
-      <span class="activity-badge" style="background:var(--success-100);color:var(--success);font-size:0.7rem;font-weight:700;padding:.25em .6em;border-radius:6px;">
-        Registered
-      </span>
+      <a href="/assets/pages/admin/admin-approvals.html" class="activity-badge" style="background:var(--warn-100);color:var(--warn);font-size:0.7rem;font-weight:700;padding:.25em .6em;border-radius:6px;text-decoration:none;">
+        Review
+      </a>
     </div>`;
   }).join("");
 }

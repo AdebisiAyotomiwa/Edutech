@@ -1,0 +1,205 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Graduation Eligibility · Admin · Edutech</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.3/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.11.3/font/bootstrap-icons.min.css" rel="stylesheet" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="/assets/css/shared.css" />
+    <link rel="stylesheet" href="/assets/css/dashboard.css" />
+    <link rel="stylesheet" href="/assets/css/admin.css" />
+  </head>
+  <body class="app-shell">
+
+    <aside class="app-sidebar app-sidebar--admin" id="appSidebar">
+      <a href="/assets/pages/admin/admin-dashboard.html" class="brand-lockup">
+        <span class="brand-mark"><i class="bi bi-mortarboard-fill"></i></span>
+        <span class="brand-name">Edutech<span class="admin-role-tag">Admin</span></span>
+      </a>
+      <span class="sidebar-section-label">Menu</span>
+      <nav class="app-sidebar-nav">
+        <a href="/assets/pages/admin/admin-dashboard.html" class="app-sidebar-link"><i class="bi bi-grid-1x2-fill"></i> Dashboard</a>
+        <a href="/assets/pages/admin/admin-students.html" class="app-sidebar-link"><i class="bi bi-people-fill"></i> Students</a>
+        <a href="/assets/pages/admin/admin-courses.html" class="app-sidebar-link"><i class="bi bi-bookmark-fill"></i> Courses &amp; Depts</a>
+        <a href="/assets/pages/admin/admin-results.html" class="app-sidebar-link"><i class="bi bi-bar-chart-fill"></i> Results</a>
+        <a href="/assets/pages/admin/admin-registrations.html" class="app-sidebar-link"><i class="bi bi-journal-check"></i> Registrations</a>
+        <a href="/assets/pages/admin/admin-approvals.html" class="app-sidebar-link">
+          <i class="bi bi-shield-check"></i> Approvals
+          <span class="sidebar-badge" id="sidebarPendingBadge" style="display:none;"></span>
+        </a>
+        <a href="/assets/pages/admin/admin-lecturers.html" class="app-sidebar-link"><i class="bi bi-person-badge-fill"></i> Lecturers</a>
+        <a href="/assets/pages/admin/admin-eligibility.html" class="app-sidebar-link active"><i class="bi bi-mortarboard-fill"></i> Eligibility</a>
+      </nav>
+      <div class="app-sidebar-footer">
+        <div class="app-sidebar-user">
+          <span class="app-sidebar-user-avatar"><span id="sidebarAvatarInitials"></span></span>
+          <div class="app-sidebar-user-info">
+            <div class="app-sidebar-user-name" id="sidebarUserName">&nbsp;</div>
+            <div class="app-sidebar-user-meta" id="sidebarUserMeta">&nbsp;</div>
+          </div>
+        </div>
+        <button class="app-sidebar-logout" id="logoutBtn"><i class="bi bi-box-arrow-right"></i> Logout</button>
+      </div>
+    </aside>
+    <div class="app-sidebar-scrim" id="appSidebarScrim"></div>
+
+    <div class="app-main">
+      <header class="app-topbar">
+        <button class="app-sidebar-toggle" id="sidebarToggleBtn" aria-label="Open menu" aria-expanded="false"><i class="bi bi-list"></i></button>
+        <h1 class="app-topbar-title">Graduation Eligibility</h1>
+      </header>
+
+      <div class="app-content">
+        <div id="pageState" class="dashboard-state">Loading…</div>
+
+        <div id="pageContent" class="d-none">
+
+          <!-- Metrics bar -->
+          <div class="metrics-bar" id="eligMetricsBar">
+            <div class="metric-chip">
+              <div class="metric-chip-icon metric-chip-icon--teal"><i class="bi bi-people-fill"></i></div>
+              <div class="metric-chip-body">
+                <div class="metric-chip-value" id="mTotal">—</div>
+                <div class="metric-chip-label">Students Evaluated</div>
+              </div>
+            </div>
+            <div class="metric-chip">
+              <div class="metric-chip-icon metric-chip-icon--green"><i class="bi bi-check-circle-fill"></i></div>
+              <div class="metric-chip-body">
+                <div class="metric-chip-value" id="mEligible">—</div>
+                <div class="metric-chip-label">Eligible</div>
+              </div>
+            </div>
+            <div class="metric-chip">
+              <div class="metric-chip-icon metric-chip-icon--amber"><i class="bi bi-exclamation-triangle-fill"></i></div>
+              <div class="metric-chip-body">
+                <div class="metric-chip-value" id="mShort">—</div>
+                <div class="metric-chip-label">Short on Units</div>
+              </div>
+            </div>
+            <div class="metric-chip">
+              <div class="metric-chip-icon metric-chip-icon--red"><i class="bi bi-x-circle-fill"></i></div>
+              <div class="metric-chip-body">
+                <div class="metric-chip-value" id="mCoreShort">—</div>
+                <div class="metric-chip-label">Short on Core Units</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Filter card -->
+          <div class="filter-card">
+            <div class="filter-card-row">
+              <div class="filter-group">
+                <span class="filter-group-label">Department</span>
+                <select class="form-select" id="filterDept">
+                  <option value="">All Departments</option>
+                </select>
+              </div>
+              <div class="filter-group">
+                <span class="filter-group-label">Level</span>
+                <select class="form-select" id="filterLevel">
+                  <option value="">All Levels</option>
+                  <option value="100">100 Level</option>
+                  <option value="200">200 Level</option>
+                  <option value="300">300 Level</option>
+                  <option value="400">400 Level</option>
+                  <option value="500">500 Level</option>
+                </select>
+              </div>
+              <div class="filter-group">
+                <span class="filter-group-label">Eligibility</span>
+                <select class="form-select" id="filterStatus">
+                  <option value="">All Statuses</option>
+                  <option value="eligible">Eligible</option>
+                  <option value="short-total">Short on total units</option>
+                  <option value="short-core">Short on core units</option>
+                  <option value="short-both">Short on both</option>
+                </select>
+              </div>
+              <div class="filter-group" style="flex:0 0 auto;min-width:unset;">
+                <span class="filter-group-label">&nbsp;</span>
+                <button class="btn btn-secondary-outline" id="clearFiltersBtn" style="white-space:nowrap;">
+                  <i class="bi bi-x-circle"></i> Clear
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Search + count bar -->
+          <div class="d-flex align-items-center gap-2 mb-3 flex-wrap">
+            <div class="input-group" style="max-width:320px;">
+              <span class="input-group-text bg-white"><i class="bi bi-search text-muted"></i></span>
+              <input type="text" class="form-control border-start-0" id="searchInput" placeholder="Search name, matric…">
+            </div>
+            <span class="text-muted small ms-auto" id="resultCount"></span>
+          </div>
+
+          <div class="admin-table-card">
+            <div class="table-responsive">
+              <table class="table admin-table">
+                <thead>
+                  <tr>
+                    <th>Student</th>
+                    <th>Matric No.</th>
+                    <th>Programme</th>
+                    <th>Level</th>
+                    <th>Total Units</th>
+                    <th>Core Units</th>
+                    <th>Status</th>
+                    <th class="text-end">Action</th>
+                  </tr>
+                </thead>
+                <tbody id="eligTbody"></tbody>
+              </table>
+            </div>
+            <div class="admin-empty-state d-none" id="emptyState">
+              <i class="bi bi-mortarboard"></i>
+              <p class="mt-2 mb-0">No students match your search.</p>
+            </div>
+          </div>
+
+        </div><!-- /pageContent -->
+      </div>
+    </div>
+
+    <!-- ══ MARK ELIGIBLE CONFIRM ══ -->
+    <div class="modal fade" id="markEligibleModal" tabindex="-1" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+          <div class="modal-body text-center py-4">
+            <i class="bi bi-mortarboard fs-1 text-success mb-3 d-block"></i>
+            <h5 class="fw-semibold mb-2">Mark as Eligible for Graduation?</h5>
+            <p class="text-muted mb-4" id="markEligibleBody"></p>
+            <div class="d-flex gap-2 justify-content-center">
+              <button type="button" class="btn btn-secondary-outline" data-bs-dismiss="modal">Cancel</button>
+              <button type="button" class="btn btn-brand" id="confirmMarkEligibleBtn"><i class="bi bi-check2-circle"></i> Yes, Mark Eligible</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══ LOGOUT MODAL ══ -->
+    <div class="modal fade" id="logoutConfirmModal" tabindex="-1" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+          <div class="modal-body text-center py-4">
+            <i class="bi bi-box-arrow-right fs-1 text-danger mb-3 d-block"></i>
+            <h5 class="fw-semibold mb-2">Log out?</h5>
+            <p class="text-muted mb-4">Are you sure you want to log out?</p>
+            <div class="d-flex gap-2 justify-content-center">
+              <button type="button" class="btn btn-secondary-outline" data-bs-dismiss="modal">Cancel</button>
+              <button type="button" class="btn btn-danger-soft" id="confirmLogoutBtn">Yes, log out</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.3/js/bootstrap.bundle.min.js"></script>
+    <script type="module" src="/assets/js/admin/admin-eligibility.js"></script>
+  </body>
+</html>

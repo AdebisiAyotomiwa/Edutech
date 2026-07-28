@@ -112,7 +112,7 @@ function setupLogout() {
   });
 }
 
-/* ── Tabs ───────────────────────────────────────────────── */
+/* bindTabs wires up history auto-load when the tab is switched to */
 function bindTabs() {
   document.getElementById("mainTabs").querySelectorAll(".nav-link").forEach(btn => {
     btn.addEventListener("click", () => {
@@ -121,6 +121,12 @@ function bindTabs() {
       const tab = btn.dataset.tab;
       document.getElementById("currentTab").classList.toggle("d-none", tab !== "current");
       document.getElementById("historyTab").classList.toggle("d-none", tab !== "history");
+      /* Auto-load history data the first time the history tab is opened */
+      if (tab === "history") {
+        histPage = 1;
+        buildHistStudents();
+        renderHistAccordion();
+      }
     });
   });
 }
@@ -392,28 +398,36 @@ function showStudentList() {
 function bindHistoryTab() {
   document.getElementById("rHistFaculty").addEventListener("change", onHistFacultyChange);
   document.getElementById("rHistDept").addEventListener("change", onHistDeptChange);
-  document.getElementById("loadHistoryBtn").addEventListener("click", loadHistory);
-  document.getElementById("rHistSearch").addEventListener("input", () => { histPage = 1; renderHistAccordion(); });
+  document.getElementById("rHistLevel").addEventListener("change",   () => { histPage = 1; buildHistStudents(); renderHistAccordion(); });
+  document.getElementById("rHistSession").addEventListener("change", () => { histPage = 1; buildHistStudents(); renderHistAccordion(); });
+  document.getElementById("rHistSemester").addEventListener("change",() => { histPage = 1; buildHistStudents(); renderHistAccordion(); });
+  document.getElementById("rHistSearch").addEventListener("input",   () => { histPage = 1; renderHistAccordion(); });
   document.getElementById("editResultForm").addEventListener("submit", handleEditResultSubmit);
 }
 
 function onHistFacultyChange() {
   const faculty = document.getElementById("rHistFaculty").value;
   const deptSel = document.getElementById("rHistDept");
-  deptSel.innerHTML = `<option value="">Select Department</option>` +
+  deptSel.innerHTML = `<option value="">All Departments</option>` +
     departments.filter(d => !faculty || d.faculty === faculty)
       .map(d => `<option value="${d.id}">${d.name}</option>`).join("");
-  deptSel.disabled = !faculty;
-  ["rHistLevel","rHistSession","rHistSemester"].forEach(id => { document.getElementById(id).disabled = true; });
-  document.getElementById("loadHistoryBtn").disabled = true;
-  document.getElementById("histResultsArea").classList.add("d-none");
-  document.getElementById("histFilterPrompt").classList.remove("d-none");
+  /* Enable session/semester filters once a faculty is chosen */
+  const hasFaculty = !!faculty;
+  document.getElementById("rHistSession").disabled  = !hasFaculty;
+  document.getElementById("rHistSemester").disabled = !hasFaculty;
+  syncActiveFilters();
+  histPage = 1;
+  buildHistStudents();
+  renderHistAccordion();
 }
 
 function onHistDeptChange() {
-  const hasDept = !!document.getElementById("rHistDept").value;
-  ["rHistLevel","rHistSession","rHistSemester"].forEach(id => { document.getElementById(id).disabled = !hasDept; });
-  document.getElementById("loadHistoryBtn").disabled = !hasDept;
+  document.getElementById("rHistSession").disabled  = false;
+  document.getElementById("rHistSemester").disabled = false;
+  syncActiveFilters();
+  histPage = 1;
+  buildHistStudents();
+  renderHistAccordion();
 }
 
 function loadHistory() {

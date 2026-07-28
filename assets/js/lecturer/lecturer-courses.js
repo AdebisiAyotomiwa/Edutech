@@ -44,11 +44,11 @@ async function init() {
 /* ── Data ───────────────────────────────────────────────── */
 async function loadData() {
   [assignments, courses, calendar, registrations, submissions] = await Promise.all([
-    getCourseAssignments({ lecturerId: lecturer.id }),
+    getCourseAssignments({ lecturerId: Number(lecturer.id) }),
     getCourses(),
     getAcademicCalendar(),
     getRegistrations(),
-    getResultSubmissions({ lecturerId: lecturer.id }),
+    getResultSubmissions({ lecturerId: Number(lecturer.id) }),
   ]);
 }
 

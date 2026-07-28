@@ -1,4 +1,8 @@
-import { login } from "./auth.js";
+import { login, logout } from "./auth.js";
+
+/* Clear any stale session when the login page loads — ensures students
+   who had old @edutech.ng sessions are prompted to log in fresh */
+logout();
 
 /* =========================================================
    login.js

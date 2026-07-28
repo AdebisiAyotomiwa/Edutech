@@ -34,6 +34,9 @@
       <a href="/assets/pages/lecturer/lecturer-history.html" class="app-sidebar-link active">
         <i class="bi bi-clock-history"></i> Submission History
       </a>
+      <a href="/assets/pages/lecturer/lecturer-profile.html" class="app-sidebar-link">
+        <i class="bi bi-person-fill"></i> My Profile
+      </a>
     </nav>
     <div class="app-sidebar-footer">
       <div class="app-sidebar-user">
@@ -122,6 +125,19 @@
           </div>
         </div>
 
+      </div>
+    </div>
+  </div>
+
+  <!-- History modal -->
+  <div class="modal fade" id="historyModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title fw-semibold"><i class="bi bi-clock-history me-2"></i>Submission history</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body p-0" id="historyModalBody"></div>
       </div>
     </div>
   </div>

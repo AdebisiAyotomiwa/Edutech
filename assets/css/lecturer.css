@@ -4,17 +4,9 @@
    cards, the app shell layout, and stat cards.
    ========================================================= */
 
-/* ── Lecturer sidebar — teal-navy variant ─────────────── */
+/* ── Lecturer sidebar — uniform brand-900 ────────────────── */
 .app-sidebar--lecturer {
-  background: #1a2e44;   /* slightly different from both student & admin */
-}
-
-.app-sidebar--lecturer .app-sidebar-link.active {
-  background: var(--brand-500);
-  color: #fff;
-}
-.app-sidebar--lecturer .app-sidebar-link.active::before {
-  background: var(--gold-500);
+  background: var(--brand-900);
 }
 
 /* Role tag shown in sidebar brand name */

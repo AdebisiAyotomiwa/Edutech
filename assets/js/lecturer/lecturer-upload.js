@@ -72,12 +72,12 @@ async function init() {
 /* ── Data ───────────────────────────────────────────────── */
 async function loadData() {
   [assignments, courses, calendar, students, registrations, submissions, results] = await Promise.all([
-    getCourseAssignments({ lecturerId: lecturer.id }),
+    getCourseAssignments({ lecturerId: Number(lecturer.id) }),
     getCourses(),
     getAcademicCalendar(),
     getStudents(),
     getRegistrations(),
-    getResultSubmissions({ lecturerId: lecturer.id }),
+    getResultSubmissions({ lecturerId: Number(lecturer.id) }),
     getResults(),
   ]);
 }
@@ -405,6 +405,10 @@ async function handleSubmit() {
         reviewedAt:      null,
         rejectionReason: null,
         version:         newVersion,
+      }, {
+        actorId: lecturer.id,
+        actorRole: "lecturer",
+        note: `Resubmitted batch after rejection (v${newVersion}).`,
       });
     }
 

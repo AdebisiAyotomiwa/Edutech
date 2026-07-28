@@ -31,6 +31,7 @@
           <span class="sidebar-badge" id="sidebarPendingBadge" style="display:none;"></span>
         </a>
         <a href="/assets/pages/admin/admin-lecturers.html" class="app-sidebar-link"><i class="bi bi-person-badge-fill"></i> Lecturers</a>
+        <a href="/assets/pages/admin/admin-eligibility.html" class="app-sidebar-link"><i class="bi bi-mortarboard-fill"></i> Eligibility</a>
       </nav>
       <div class="app-sidebar-footer">
         <div class="app-sidebar-user">
@@ -222,19 +223,10 @@
                     <option value="1">Semester 1</option><option value="2">Semester 2</option>
                   </select>
                 </div>
-                <div class="filter-group" style="flex:0 0 auto;min-width:unset;">
-                  <span class="filter-group-label">&nbsp;</span>
-                  <button class="btn btn-brand" id="loadHistoryBtn" disabled><i class="bi bi-search"></i> Load</button>
-                </div>
               </div>
             </div>
 
-            <div id="histFilterPrompt" class="admin-empty-state">
-              <i class="bi bi-clock-history"></i>
-              <p class="mt-2 mb-0">Select Faculty → Department, then click Load to view result history.</p>
-            </div>
-
-            <div id="histResultsArea" class="d-none">
+            <div id="histResultsArea">
               <div class="d-flex align-items-center gap-2 mb-3 flex-wrap">
                 <div class="input-group" style="max-width:280px;">
                   <span class="input-group-text bg-white"><i class="bi bi-search text-muted"></i></span>

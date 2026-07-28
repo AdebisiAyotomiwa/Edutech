@@ -1,5 +1,6 @@
 import { requireAuth, getCurrentStudent, logout } from "./auth.js";
 import { getDepartmentById } from "./api.js";
+import { initTopbar } from "./topbar.js";
 
 /* Normalise a profile image path to an absolute URL so it resolves
    correctly regardless of which sub-folder the page lives in.
@@ -80,46 +81,20 @@ async function initProfilePage() {
 function initialiseSidebar() {
   sidebarUserName.textContent = `${student.firstName} ${student.lastName}`;
   sidebarUserMeta.textContent = student.matricNumber;
-
   const initials = student.firstName.charAt(0) + student.lastName.charAt(0);
-
   if (student.profileImage && student.profileImage.trim() !== "") {
     sidebarAvatarImg.src = resolveImagePath(student.profileImage);
-    sidebarAvatarImg.onerror = () => {
-      sidebarAvatarImg.classList.add("d-none");
-      sidebarAvatarInitials.style.display = "flex";
-      sidebarAvatarInitials.textContent = initials;
-    };
-    sidebarAvatarImg.classList.remove("d-none");
-    sidebarAvatarInitials.style.display = "none";
-  } else {
-    sidebarAvatarInitials.style.display = "flex";
-    sidebarAvatarInitials.textContent = initials;
-  }
-
-  sidebarToggleBtn.addEventListener("click", () => {
-    const isOpen = appSidebar.classList.toggle("is-open");
-    appSidebarScrim.classList.toggle("is-open");
-    sidebarToggleBtn.setAttribute("aria-expanded", isOpen);
-  });
-
-  appSidebarScrim.addEventListener("click", () => {
-    appSidebar.classList.remove("is-open");
-    appSidebarScrim.classList.remove("is-open");
-    sidebarToggleBtn.setAttribute("aria-expanded", "false");
-  });
+    sidebarAvatarImg.onerror = () => { sidebarAvatarImg.classList.add("d-none"); sidebarAvatarInitials.style.display = "flex"; sidebarAvatarInitials.textContent = initials; };
+    sidebarAvatarImg.classList.remove("d-none"); sidebarAvatarInitials.style.display = "none";
+  } else { sidebarAvatarInitials.style.display = "flex"; sidebarAvatarInitials.textContent = initials; }
+  initTopbar(student);
 }
 
 function initialiseLogout() {
-  const logoutModalEl = document.getElementById("logoutConfirmModal");
-  const logoutModal = new bootstrap.Modal(logoutModalEl);
-  const confirmLogoutBtn = document.getElementById("confirmLogoutBtn");
-
-  logoutBtn.addEventListener("click", () => logoutModal.show());
-
-  confirmLogoutBtn.addEventListener("click", () => {
-    logout();
-    window.location.href = "/index.html";
+  const modal = new bootstrap.Modal(document.getElementById("logoutConfirmModal"));
+  logoutBtn.addEventListener("click", () => modal.show());
+  document.getElementById("confirmLogoutBtn").addEventListener("click", () => {
+    logout(); window.location.href = "/index.html";
   });
 }
 

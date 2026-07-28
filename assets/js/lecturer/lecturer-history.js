@@ -1,5 +1,6 @@
 import { requireLecturerAuth, getCurrentLecturer, lecturerLogout } from "../lecturerAuth.js";
 import { getResultSubmissions, getCourses } from "../api.js";
+import { renderHistory } from "../historyComponent.js";
 
 requireLecturerAuth();
 
@@ -41,7 +42,7 @@ async function init() {
 /* ── Data ───────────────────────────────────────────────── */
 async function loadData() {
   [submissions, courses] = await Promise.all([
-    getResultSubmissions({ lecturerId: lecturer.id }),
+    getResultSubmissions({ lecturerId: Number(lecturer.id) }),
     getCourses(),
   ]);
   // Newest first
@@ -124,9 +125,33 @@ function renderTable() {
       <td style="max-width:200px;word-break:break-word;font-size:.82rem;">
         ${sub.rejectionReason ? `<span class="text-danger">${sub.rejectionReason}</span>` : "—"}
       </td>
-      <td class="text-end">${actionBtn}</td>
+      <td class="text-end">
+        ${actionBtn}
+        <button type="button" class="btn btn-sm btn-secondary-outline ms-1" data-action="history" data-id="${sub.id}" title="View history">
+          <i class="bi bi-clock-history"></i>
+        </button>
+      </td>
     </tr>`;
   }).join("");
+
+  tbody.querySelectorAll("[data-action='history']").forEach(btn =>
+    btn.addEventListener("click", () => openHistoryModal(btn.dataset.id))
+  );
+}
+
+/* ── History modal ──────────────────────────────────────── */
+function openHistoryModal(submissionId) {
+  const modal = new bootstrap.Modal(document.getElementById("historyModal"));
+  const body  = document.getElementById("historyModalBody");
+  body.innerHTML = "";
+  renderHistory(body, {
+    entityType: "resultSubmission",
+    entityId: submissionId,
+    title: "Submission history",
+  });
+  modal.show();
+  // Auto-expand since it's already inside a modal the user opened intentionally
+  body.querySelector(".history-toggle")?.click();
 }
 
 /* ── Sidebar ────────────────────────────────────────────── */

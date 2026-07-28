@@ -7,7 +7,7 @@
 /* Admin sidebar uses a slightly different ink so it never
    gets mistaken for the student portal at a glance. */
 .app-sidebar--admin {
-  background: var(--ink-900);
+  background: #0B3D2E;
 }
 .app-sidebar--admin .app-sidebar-link.active {
   background: rgba(255, 255, 255, 0.12);
@@ -468,4 +468,125 @@
 .stat-card.stat-card--hero .stat-card-trend {
   color: rgba(255,255,255,0.8) !important;
   background: rgba(255,255,255,0.14) !important;
+}
+
+/* =========================================================
+   ENTERPRISE TABLE IMPROVEMENTS
+   — Sticky first column + sticky Actions column
+   — Horizontal scroll with left/right shadow indicators
+   — Responsive font sizes
+   ========================================================= */
+
+/* ── Scroll wrapper with shadow indicators ─────────────── */
+.table-scroll-wrap {
+  position: relative;
+  overflow: hidden;
+}
+
+.table-scroll-wrap::before,
+.table-scroll-wrap::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 28px;
+  pointer-events: none;
+  z-index: 3;
+  transition: opacity 0.2s ease;
+  opacity: 0;
+}
+
+.table-scroll-wrap::before {
+  left: 0;
+  background: linear-gradient(to right, rgba(11,61,46,0.08), transparent);
+}
+
+.table-scroll-wrap::after {
+  right: 0;
+  background: linear-gradient(to left, rgba(11,61,46,0.08), transparent);
+}
+
+.table-scroll-wrap.show-left::before  { opacity: 1; }
+.table-scroll-wrap.show-right::after  { opacity: 1; }
+
+.table-scroll-wrap .table-responsive {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: thin;
+  scrollbar-color: var(--line-200) transparent;
+}
+
+.table-scroll-wrap .table-responsive::-webkit-scrollbar {
+  height: 5px;
+}
+.table-scroll-wrap .table-responsive::-webkit-scrollbar-track {
+  background: transparent;
+}
+.table-scroll-wrap .table-responsive::-webkit-scrollbar-thumb {
+  background: var(--line-200);
+  border-radius: 3px;
+}
+
+/* ── Sticky first column ONLY ───────────────────────────── */
+.admin-table.table-sticky-first thead th:first-child,
+.admin-table.table-sticky-first tbody td:first-child {
+  position: sticky;
+  left: 0;
+  z-index: 2;
+  background: #fff;
+}
+.admin-table.table-sticky-first thead th:first-child {
+  background: var(--paper-100);
+}
+.admin-table.table-sticky-first tbody tr:hover td:first-child {
+  background: var(--paper-50);
+}
+
+/* ── Sticky SECOND column (Matric No.) — students page ─── */
+/* Use class table-sticky-matric on the table */
+.admin-table.table-sticky-matric thead th:nth-child(2),
+.admin-table.table-sticky-matric tbody td:nth-child(2) {
+  position: sticky;
+  left: 0;
+  z-index: 2;
+  background: #fff;
+  box-shadow: 2px 0 4px rgba(0,0,0,0.06);
+}
+.admin-table.table-sticky-matric thead th:nth-child(2) {
+  background: var(--paper-100);
+}
+.admin-table.table-sticky-matric tbody tr:hover td:nth-child(2) {
+  background: var(--paper-50);
+}
+
+/* ── NO sticky last column ──────────────────────────────── */
+/* (removed table-sticky-last — Actions column scrolls normally) */
+
+/* ── Min-widths to prevent header wrapping ──────────────── */
+.admin-table th { white-space: nowrap; }
+.admin-table td { white-space: nowrap; }
+
+/* Allow title/name cells to wrap on small screens */
+.admin-table td.cell-wrap { white-space: normal; min-width: 160px; }
+
+/* ── Responsive font sizes ──────────────────────────────── */
+.admin-table {
+  font-size: 0.875rem;
+}
+
+@media (max-width: 1199.98px) {
+  .admin-table { font-size: 0.845rem; }
+  .admin-table th { font-size: 0.72rem; }
+}
+
+@media (max-width: 767.98px) {
+  .admin-table { font-size: 0.8rem; }
+  .admin-table th { font-size: 0.68rem; }
+  .admin-table td { padding: 0.6rem 0.75rem; }
+  .admin-table thead th { padding: 0.65rem 0.75rem; }
+}
+
+@media (max-width: 575.98px) {
+  .admin-table { font-size: 0.76rem; }
+  .admin-table .admin-row-actions .btn { padding: 0.25rem 0.4rem; font-size: 0.72rem; }
 }

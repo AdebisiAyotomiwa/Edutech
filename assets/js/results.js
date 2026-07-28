@@ -1,6 +1,8 @@
 import { requireAuth, getCurrentStudent, logout } from "./auth.js";
 import { getResults, getCourses, getDepartmentById, getRegistrations, getAcademicCalendar } from "./api.js";
 import { calculateGPA, scoreToGrade } from "./utils.js";
+import { initTopbar } from "./topbar.js";
+import { renderHistory } from "./historyComponent.js";
 
 function resolveImagePath(raw) {
   if (!raw || !raw.trim()) return "";
@@ -106,31 +108,13 @@ function initialiseSidebar() {
   sidebarUserName.textContent = `${student.firstName} ${student.lastName}`;
   sidebarUserMeta.textContent = student.matricNumber;
   const initials = student.firstName[0] + student.lastName[0];
-
   if (student.profileImage && student.profileImage.trim()) {
     sidebarAvatarImg.src = resolveImagePath(student.profileImage);
-    sidebarAvatarImg.onerror = () => {
-      sidebarAvatarImg.classList.add("d-none");
-      sidebarAvatarInitials.style.display = "flex";
-      sidebarAvatarInitials.textContent = initials;
-    };
-    sidebarAvatarImg.classList.remove("d-none");
-    sidebarAvatarInitials.style.display = "none";
-  } else {
-    sidebarAvatarInitials.style.display = "flex";
-    sidebarAvatarInitials.textContent = initials;
-  }
-
-  sidebarToggleBtn.addEventListener("click", () => {
-    const open = appSidebar.classList.toggle("is-open");
-    appSidebarScrim.classList.toggle("is-open");
-    sidebarToggleBtn.setAttribute("aria-expanded", open);
-  });
-  appSidebarScrim.addEventListener("click", () => {
-    appSidebar.classList.remove("is-open");
-    appSidebarScrim.classList.remove("is-open");
-    sidebarToggleBtn.setAttribute("aria-expanded", "false");
-  });
+    sidebarAvatarImg.onerror = () => { sidebarAvatarImg.classList.add("d-none"); sidebarAvatarInitials.style.display = "flex"; sidebarAvatarInitials.textContent = initials; };
+    sidebarAvatarImg.classList.remove("d-none"); sidebarAvatarInitials.style.display = "none";
+  } else { sidebarAvatarInitials.style.display = "flex"; sidebarAvatarInitials.textContent = initials; }
+  /* topbar dropdown + mobile sidebar toggle */
+  initTopbar(student);
 }
 
 function initialiseLogout() {
@@ -276,9 +260,33 @@ function showResultsTable(filtered) {
       <td>${r.creditUnit}</td>
       <td class="fw-semibold">${r.score}</td>
       <td><span class="badge badge-grade badge-grade--${grade.grade.toLowerCase()}">${grade.grade}</span></td>
+      <td class="text-end">
+        ${r.submissionId
+          ? `<button type="button" class="btn btn-sm btn-secondary-outline" data-action="history" data-submission-id="${r.submissionId}" title="View history">
+               <i class="bi bi-clock-history"></i>
+             </button>`
+          : `<span class="text-muted small">—</span>`}
+      </td>
     </tr>`;
   }).join("");
   printResultsBtn.closest(".results-print-row")?.classList.remove("d-none");
+
+  resultsTable.querySelectorAll("[data-action='history']").forEach(btn =>
+    btn.addEventListener("click", () => openHistoryModal(btn.dataset.submissionId))
+  );
+}
+
+function openHistoryModal(submissionId) {
+  const modal = new bootstrap.Modal(document.getElementById("historyModal"));
+  const body  = document.getElementById("historyModalBody");
+  body.innerHTML = "";
+  renderHistory(body, {
+    entityType: "resultSubmission",
+    entityId: submissionId,
+    title: "Result history",
+  });
+  modal.show();
+  body.querySelector(".history-toggle")?.click();
 }
 
 function showNotReleasedState() {

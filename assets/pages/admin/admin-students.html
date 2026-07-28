@@ -32,6 +32,7 @@
           <span class="sidebar-badge" id="sidebarPendingBadge" style="display:none;"></span>
         </a>
         <a href="/assets/pages/admin/admin-lecturers.html" class="app-sidebar-link"><i class="bi bi-person-badge-fill"></i> Lecturers</a>
+        <a href="/assets/pages/admin/admin-eligibility.html" class="app-sidebar-link"><i class="bi bi-mortarboard-fill"></i> Eligibility</a>
       </nav>
       <div class="app-sidebar-footer">
         <div class="app-sidebar-user">
@@ -83,31 +84,10 @@
               </div>
             </div>
             <div class="metric-chip">
-              <div class="metric-chip-icon metric-chip-icon--green"><i class="bi bi-1-circle"></i></div>
+              <div class="metric-chip-icon metric-chip-icon--green"><i class="bi bi-patch-check-fill"></i></div>
               <div class="metric-chip-body">
-                <div class="metric-chip-value" id="m100">—</div>
-                <div class="metric-chip-label">100 Level</div>
-              </div>
-            </div>
-            <div class="metric-chip">
-              <div class="metric-chip-icon metric-chip-icon--amber"><i class="bi bi-2-circle"></i></div>
-              <div class="metric-chip-body">
-                <div class="metric-chip-value" id="m200">—</div>
-                <div class="metric-chip-label">200 Level</div>
-              </div>
-            </div>
-            <div class="metric-chip">
-              <div class="metric-chip-icon metric-chip-icon--red"><i class="bi bi-3-circle"></i></div>
-              <div class="metric-chip-body">
-                <div class="metric-chip-value" id="m300">—</div>
-                <div class="metric-chip-label">300 Level</div>
-              </div>
-            </div>
-            <div class="metric-chip">
-              <div class="metric-chip-icon metric-chip-icon--teal"><i class="bi bi-4-circle"></i></div>
-              <div class="metric-chip-body">
-                <div class="metric-chip-value" id="m400">—</div>
-                <div class="metric-chip-label">400 Level</div>
+                <div class="metric-chip-value" id="mActive">—</div>
+                <div class="metric-chip-label">Active</div>
               </div>
             </div>
           </div>
@@ -165,8 +145,9 @@
             </div>
 
             <div class="admin-table-card">
+              <div class="table-scroll-wrap" id="studentsTableScrollWrap">
               <div class="table-responsive">
-                <table class="table admin-table">
+                <table class="table admin-table table-sticky-matric">
                   <thead>
                     <tr>
                       <th>Student</th>
@@ -179,6 +160,7 @@
                   </thead>
                   <tbody id="studentsTbody"></tbody>
                 </table>
+              </div>
               </div>
               <div class="admin-empty-state d-none" id="emptyState">
                 <i class="bi bi-people"></i>

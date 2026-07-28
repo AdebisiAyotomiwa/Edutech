@@ -5,6 +5,7 @@ import {
   createRegistration, deleteRegistration,
   getResultSubmissions,
 } from "../api.js";
+import { previewRegistrationBatch, generateRegistrationBatch } from "../registrationEngine.js";
 
 requireAdminAuth();
 
@@ -50,6 +51,9 @@ async function init() {
     pageContent.classList.remove("d-none");
     bindTabs();
     bindCurrentTab();
+    document.getElementById("generateRegBtn").addEventListener("click", openGeneratePreview);
+    document.getElementById("generateNextSemBtn").addEventListener("click", openGenerateNextSemPreview);
+    document.getElementById("confirmGenerateBtn").addEventListener("click", handleConfirmGenerate);
     bindHistoryTab();
     /* Auto-load all students for current semester */
     renderCurrStudents();
@@ -112,6 +116,12 @@ function bindTabs() {
       const tab = btn.dataset.tab;
       document.getElementById("currentTab").classList.toggle("d-none", tab !== "current");
       document.getElementById("historyTab").classList.toggle("d-none", tab !== "history");
+      /* Auto-load history accordion the first time the history tab opens */
+      if (tab === "history") {
+        histPage = 1;
+        buildHistData();
+        renderHistAccordion();
+      }
     });
   });
 }
@@ -125,15 +135,33 @@ function populateFacultySelects() {
 
   document.getElementById("rCurrFaculty").innerHTML = `<option value="">All Faculties</option>` + opts;
   document.getElementById("rCurrDept").innerHTML    = deptOpts;
-  document.getElementById("rCurrSession").innerHTML = sessOpts;
-  document.getElementById("rCurrSession").value     = calendar.currentSession;
-  document.getElementById("rCurrSemester").value    = String(calendar.currentSemester);
 
   document.getElementById("rHistFaculty").innerHTML = `<option value="">All Faculties</option>` + opts;
   document.getElementById("rHistDept").innerHTML    = deptOpts;
   document.getElementById("rHistSession").innerHTML = `<option value="">All Sessions</option>` + sessOpts;
 
   document.getElementById("loadHistoryBtn").disabled = false;
+
+  /* ── Current session label + generation status ── */
+  const currKey = `${calendar.currentSession}-${calendar.currentSemester}`;
+  const isGenerated = !!(calendar.registrationGenerated && calendar.registrationGenerated[currKey]);
+
+  document.getElementById("currSessionLabel").textContent =
+    `${calendar.currentSession} — Semester ${calendar.currentSemester}`;
+
+  const genBadge   = document.getElementById("currGenBadge");
+  const genBtn     = document.getElementById("generateRegBtn");
+  const nextSemBtn = document.getElementById("generateNextSemBtn");
+
+  if (isGenerated) {
+    genBadge.style.display = "";
+    genBtn.disabled   = true;   // already generated for current sem
+    nextSemBtn.disabled = false;
+  } else {
+    genBadge.style.display = "none";
+    genBtn.disabled   = false;
+    nextSemBtn.disabled = true;  // generate current first
+  }
 
   /* Render metrics for current semester */
   renderRegMetrics();
@@ -191,8 +219,8 @@ function getCurrFilters() {
   return {
     deptId:   document.getElementById("rCurrDept").value,
     level:    document.getElementById("rCurrLevel").value,
-    session:  document.getElementById("rCurrSession").value,
-    semester: Number(document.getElementById("rCurrSemester").value),
+    session:  calendar.currentSession,
+    semester: Number(calendar.currentSemester),
   };
 }
 
@@ -272,7 +300,136 @@ function renderCurrPagination(totalPages) {
   list.querySelectorAll("[data-page]").forEach(btn =>
     btn.addEventListener("click", () => { currPage = Number(btn.dataset.page); renderCurrStudents(); }));
 }
+/* ── Generate current semester ──────────────────────────── */
+async function openGeneratePreview() {
+  const { deptId, level } = getCurrFilters();
+  const session  = calendar.currentSession;
+  const semester = Number(calendar.currentSemester);
+  await _openGenerateModal({ deptId, level, session, semester, isNext: false });
+}
 
+/* ── Generate next semester ─────────────────────────────── */
+async function openGenerateNextSemPreview() {
+  const { deptId, level } = getCurrFilters();
+  /* Next semester: if current is 1 → next is 2 same session; if 2 → Sem 1 of next session year */
+  let session  = calendar.currentSession;
+  let semester = Number(calendar.currentSemester) + 1;
+  if (semester > 2) {
+    semester = 1;
+    const [startYear] = session.split("/").map(Number);
+    session = `${startYear + 1}/${startYear + 2}`;
+  }
+  document.getElementById("generateRegModalTitle").textContent = `Generate Next Semester — ${session} Sem ${semester}`;
+  await _openGenerateModal({ deptId, level, session, semester, isNext: true });
+}
+
+async function _openGenerateModal({ deptId, level, session, semester, isNext }) {
+  const modal = new bootstrap.Modal(document.getElementById("generateRegModal"));
+  const body  = document.getElementById("generateRegModalBody");
+  body.innerHTML = `<div class="text-center py-4"><div class="spinner-border text-success"></div></div>`;
+  modal.show();
+
+  try {
+    const preview = await previewRegistrationBatch({ departmentId: deptId || null, level: level || null, session, semester });
+    pendingBatchParams = { departmentId: deptId || null, level: level || null, session, semester, isNext };
+    renderGeneratePreview(preview, session, semester, level);
+  } catch (err) {
+    console.error(err);
+    body.innerHTML = `<div class="alert alert-danger mb-0">Failed to build preview.</div>`;
+  }
+}
+ 
+function renderGeneratePreview(preview, session, semester, level) {
+  const { eligibleStudents, coreCourses, carryOverByStudent, totalCarryOverCount } = preview;
+  const body = document.getElementById("generateRegModalBody");
+ 
+  const carryRows = carryOverByStudent.slice(0, 5).map(({ student, carryOvers }) =>
+    carryOvers.map(({ course }) => `
+      <tr>
+        <td>${student.matricNumber} — ${student.firstName} ${student.lastName}</td>
+        <td>${course.courseCode} — ${course.courseTitle}</td>
+        <td>${course.creditUnit}</td>
+      </tr>`).join("")
+  ).join("");
+ 
+  const extraCount = carryOverByStudent.length > 5 ? carryOverByStudent.length - 5 : 0;
+ 
+  body.innerHTML = `
+    <p class="text-muted small mb-3">
+      ${session} · Semester ${semester} · Level ${level}
+    </p>
+    <div class="row g-2 mb-3">
+      <div class="col-4">
+        <div class="p-2 rounded bg-light">
+          <div class="text-muted small">Students eligible</div>
+          <div class="fs-5 fw-semibold">${eligibleStudents.length}</div>
+        </div>
+      </div>
+      <div class="col-4">
+        <div class="p-2 rounded bg-light">
+          <div class="text-muted small">Core courses to assign</div>
+          <div class="fs-5 fw-semibold">${coreCourses.length}</div>
+        </div>
+      </div>
+      <div class="col-4">
+        <div class="p-2 rounded bg-warning-subtle">
+          <div class="text-warning small">Carry-overs detected</div>
+          <div class="fs-5 fw-semibold text-warning">${totalCarryOverCount}</div>
+        </div>
+      </div>
+    </div>
+    ${totalCarryOverCount > 0 ? `
+      <p class="small fw-semibold mb-2">Students with outstanding carry-overs</p>
+      <div class="table-responsive mb-2">
+        <table class="table table-sm">
+          <thead><tr><th>Student</th><th>Carry-over course</th><th>Units</th></tr></thead>
+          <tbody>${carryRows}</tbody>
+        </table>
+      </div>
+      ${extraCount > 0 ? `<p class="text-muted small">+${extraCount} more student(s)</p>` : ""}
+    ` : `<p class="text-muted small">No outstanding same-semester carry-overs for this level.</p>`}
+  `;
+ 
+  document.getElementById("confirmGenerateBtn").textContent =
+    `Generate for ${eligibleStudents.length} student${eligibleStudents.length === 1 ? "" : "s"}`;
+  document.getElementById("confirmGenerateBtn").disabled = eligibleStudents.length === 0;
+}
+ 
+let pendingBatchParams = null;
+
+async function handleConfirmGenerate() {
+  if (!pendingBatchParams) return;
+ 
+  const btn = document.getElementById("confirmGenerateBtn");
+  btn.disabled = true;
+  btn.textContent = "Generating…";
+ 
+  try {
+    await generateRegistrationBatch({ ...pendingBatchParams, actorId: admin.id });
+
+    /* Mark the generated flag in the academic calendar so the UI reflects it */
+    const { updateAcademicCalendar } = await import("../api.js");
+    const key = `${pendingBatchParams.session}-${pendingBatchParams.semester}`;
+    const genMap = { ...(calendar.registrationGenerated || {}), [key]: true };
+    await updateAcademicCalendar({ registrationGenerated: genMap });
+    calendar.registrationGenerated = genMap;
+
+    await loadData();
+    renderRegMetrics();
+    renderCurrStudents();
+    populateFacultySelects();   // refresh badge/button state
+    bootstrap.Modal.getInstance(document.getElementById("generateRegModal")).hide();
+  } catch (err) {
+    console.error(err);
+    document.getElementById("generateRegModalBody").insertAdjacentHTML(
+      "beforeend",
+      `<div class="alert alert-danger mt-2 mb-0">Generation failed. Please try again.</div>`
+    );
+    btn.disabled = false;
+    btn.textContent = "Retry generate";
+  }
+}
+ 
 /* ── Registration manage panel ──────────────────────────── */
 function openRegManagePanel(studentId) {
   const { session, semester, deptId } = getCurrFilters();
@@ -379,12 +536,18 @@ async function handleAddCourse() {
   if (dup) { showAlert("addCourseAlert", "This course is already registered for this student."); return; }
 
   try {
+    const courseObj = courses.find(c => String(c.id) === String(courseId));
+    const studentObj = students.find(s => String(s.id) === String(currSelectedStudentId));
     const created = await createRegistration({
       studentId: currSelectedStudentId,
       courseId,
       session,
       semester,
       type,
+    }, {
+      actorId: admin.id,
+      actorRole: "admin",
+      note: `Manually added ${courseObj?.courseCode ?? "a course"} for ${studentObj ? `${studentObj.firstName} ${studentObj.lastName} (${studentObj.matricNumber})` : "student"}.`,
     });
     registrations.push(created);
     currStudentRegs.push(created);
@@ -398,10 +561,15 @@ async function handleAddCourse() {
 }
 
 /* ── Remove course from registration ────────────────────── */
+let pendingDeleteRegSnapshot = null;
 function confirmRemoveCourse(regId) {
   const reg    = registrations.find(r => String(r.id) === String(regId));
   const course = reg ? courses.find(c => String(c.id) === String(reg.courseId)) : null;
+  const studentObj = reg ? students.find(s => String(s.id) === String(reg.studentId)) : null;
   pendingDeleteRegId = regId;
+  pendingDeleteRegSnapshot = reg
+    ? { courseId: reg.courseId, type: reg.type, session: reg.session, semester: reg.semester }
+    : null;
   document.getElementById("deleteRegBody").textContent =
     `This will remove "${course?.courseCode ?? "this course"}" from the student's registration. This cannot be undone.`;
   deleteRegModal.show();
@@ -409,7 +577,12 @@ function confirmRemoveCourse(regId) {
 
 async function handleDeleteRegConfirm() {
   try {
-    await deleteRegistration(pendingDeleteRegId);
+    await deleteRegistration(pendingDeleteRegId, {
+      actorId: admin.id,
+      actorRole: "admin",
+      previousValue: pendingDeleteRegSnapshot,
+      note: "Manually removed course from student's registration.",
+    });
     registrations = registrations.filter(r => String(r.id) !== String(pendingDeleteRegId));
     currStudentRegs = currStudentRegs.filter(r => String(r.id) !== String(pendingDeleteRegId));
     deleteRegModal.hide();
@@ -422,13 +595,16 @@ async function handleDeleteRegConfirm() {
 }
 
 /* ════════════════════════════════════════════════════════
-   REGISTRATION HISTORY TAB
+   REGISTRATION HISTORY TAB  —  per-student accordion (read-only)
    ════════════════════════════════════════════════════════ */
 function bindHistoryTab() {
-  document.getElementById("rHistFaculty").addEventListener("change", onHistFacultyChange);
-  document.getElementById("rHistDept").addEventListener("change", onHistDeptChange);
-  document.getElementById("loadHistoryBtn").addEventListener("click", loadHistory);
-  document.getElementById("rHistSearch").addEventListener("input", () => { histPage = 1; renderHistTable(); });
+  document.getElementById("rHistFaculty").addEventListener("change", () => { histPage = 1; onHistFacultyChange(); });
+  document.getElementById("rHistDept").addEventListener("change",    () => { histPage = 1; buildHistData(); renderHistAccordion(); });
+  document.getElementById("rHistLevel").addEventListener("change",   () => { histPage = 1; buildHistData(); renderHistAccordion(); });
+  document.getElementById("rHistSession").addEventListener("change", () => { histPage = 1; buildHistData(); renderHistAccordion(); });
+  document.getElementById("rHistSemester").addEventListener("change",() => { histPage = 1; buildHistData(); renderHistAccordion(); });
+  document.getElementById("loadHistoryBtn").addEventListener("click", () => { histPage = 1; buildHistData(); renderHistAccordion(); });
+  document.getElementById("rHistSearch").addEventListener("input",   () => { histPage = 1; renderHistAccordion(); });
 }
 
 function onHistFacultyChange() {
@@ -437,19 +613,8 @@ function onHistFacultyChange() {
   deptSel.innerHTML = `<option value="">All Departments</option>` +
     departments.filter(d => !faculty || d.faculty === faculty)
       .map(d => `<option value="${d.id}">${d.name}</option>`).join("");
-  deptSel.disabled = false;
-}
-
-function onHistDeptChange() {
-  document.getElementById("loadHistoryBtn").disabled = false;
-}
-
-function loadHistory() {
-  document.getElementById("histFilterPrompt").classList.add("d-none");
-  document.getElementById("histResultsArea").classList.remove("d-none");
-  histPage = 1;
   buildHistData();
-  renderHistTable();
+  renderHistAccordion();
 }
 
 function buildHistData() {
@@ -458,63 +623,126 @@ function buildHistData() {
   const session  = document.getElementById("rHistSession").value;
   const semester = document.getElementById("rHistSemester").value;
 
-  const deptStudentIds = new Set(
-    students
-      .filter(s => String(s.departmentId) === String(deptId) && (!level || Number(s.level) === Number(level)))
-      .map(s => String(s.id))
+  const eligibleStudents = students.filter(s =>
+    (!deptId || String(s.departmentId) === String(deptId)) &&
+    (!level  || Number(s.level) === Number(level))
   );
+  const eligibleIds = new Set(eligibleStudents.map(s => String(s.id)));
 
-  histData = registrations
-    .filter(r => {
-      const inDept  = deptStudentIds.has(String(r.studentId));
-      const sessMatch = !session  || r.session === session;
-      const semMatch  = !semester || Number(r.semester) === Number(semester);
-      return inDept && sessMatch && semMatch;
-    })
-    .map(r => ({
-      ...r,
-      student: students.find(s => String(s.id) === String(r.studentId)),
-      course:  courses.find(c  => String(c.id) === String(r.courseId)),
-    }));
+  const filtered = registrations.filter(r => {
+    const inStudents = eligibleIds.has(String(r.studentId));
+    const sessMatch  = !session  || r.session === session;
+    const semMatch   = !semester || Number(r.semester) === Number(semester);
+    return inStudents && sessMatch && semMatch;
+  });
+
+  const byStudent = new Map();
+  filtered.forEach(reg => {
+    const sid = String(reg.studentId);
+    if (!byStudent.has(sid)) byStudent.set(sid, []);
+    byStudent.get(sid).push(reg);
+  });
+
+  histData = Array.from(byStudent.entries())
+    .map(([sid, regs]) => ({
+      student: students.find(s => String(s.id) === sid),
+      regs: regs.sort((a, b) => {
+        if (a.session !== b.session) return a.session.localeCompare(b.session);
+        return a.semester - b.semester;
+      }),
+    }))
+    .filter(row => row.student);
 }
 
-function renderHistTable() {
+function renderHistAccordion() {
   const q = document.getElementById("rHistSearch").value.trim().toLowerCase();
-  const filtered = q
-    ? histData.filter(r =>
-        (r.student && `${r.student.firstName} ${r.student.lastName}`.toLowerCase().includes(q)) ||
-        (r.student && r.student.matricNumber.toLowerCase().includes(q)) ||
-        (r.course  && r.course.courseCode.toLowerCase().includes(q)))
-    : histData;
+  let filtered = histData;
+  if (q) {
+    filtered = histData.map(row => ({
+      ...row,
+      regs: row.regs.filter(r => {
+        const c = courses.find(co => String(co.id) === String(r.courseId));
+        return `${row.student.firstName} ${row.student.lastName}`.toLowerCase().includes(q) ||
+          row.student.matricNumber.toLowerCase().includes(q) ||
+          (c && c.courseCode.toLowerCase().includes(q));
+      }),
+    })).filter(row => row.regs.length > 0);
+  }
 
-  document.getElementById("rHistCount").textContent = `${filtered.length} registration${filtered.length === 1 ? "" : "s"}`;
+  const total = filtered.length;
+  document.getElementById("rHistCount").textContent = `${total} student${total === 1 ? "" : "s"}`;
 
-  const totalPages = Math.max(1, Math.ceil(filtered.length / PAGE_SIZE));
+  const totalPages = Math.max(1, Math.ceil(total / PAGE_SIZE));
   if (histPage > totalPages) histPage = totalPages;
   const start = (histPage - 1) * PAGE_SIZE;
   const paged = filtered.slice(start, start + PAGE_SIZE);
 
   document.getElementById("histPaginationInfo").textContent =
-    filtered.length ? `Showing ${start+1}–${Math.min(start+PAGE_SIZE,filtered.length)} of ${filtered.length}` : "";
+    total ? `Showing ${start + 1}–${Math.min(start + PAGE_SIZE, total)} of ${total}` : "";
 
-  const tbody = document.getElementById("histRegsTbody");
-  const empty = document.getElementById("histRegsEmpty");
+  const container = document.getElementById("histAccordion");
+  const empty     = document.getElementById("histRegsEmpty");
 
-  if (paged.length === 0) { tbody.innerHTML = ""; empty.classList.remove("d-none"); renderHistPagination(0); return; }
+  if (!container) return;
+  if (paged.length === 0) { container.innerHTML = ""; empty.classList.remove("d-none"); renderHistPagination(0); return; }
   empty.classList.add("d-none");
 
-  tbody.innerHTML = paged.map(r => {
-    const typeTag = r.type === "carry-over"
-      ? `<span class="carryover-tag">CARRY-OVER</span>`
-      : `<span class="status-badge status-badge--completed">Regular</span>`;
-    return `<tr>
-      <td class="fw-semibold">${r.student ? `${r.student.firstName} ${r.student.lastName}` : "Unknown"}</td>
-      <td class="text-muted-cell">${r.student?.matricNumber ?? "—"}</td>
-      <td class="text-muted-cell">${r.course ? `${r.course.courseCode} — ${r.course.courseTitle}` : "Unknown"}</td>
-      <td>${r.session}</td>
-      <td>Sem ${r.semester}</td>
-      <td>${typeTag}</td>
-    </tr>`;
+  container.innerHTML = paged.map((row, idx) => {
+    const { student, regs } = row;
+    const initials   = (student.firstName[0] + student.lastName[0]).toUpperCase();
+    const collapseId = `histRegCol_${student.id}`;
+
+    /* Group regs by session+semester */
+    const groups = new Map();
+    regs.forEach(r => {
+      const key = `${r.session}|${r.semester}`;
+      if (!groups.has(key)) groups.set(key, []);
+      groups.get(key).push(r);
+    });
+
+    const groupHtml = Array.from(groups.entries()).map(([key, groupRegs]) => {
+      const [sess, sem] = key.split("|");
+      const rows = groupRegs.map(reg => {
+        const course  = courses.find(c => String(c.id) === String(reg.courseId));
+        const typeTag = reg.type === "carry-over"
+          ? `<span class="carryover-tag">C/O</span>`
+          : `<span class="status-badge status-badge--completed" style="font-size:.7rem;">Regular</span>`;
+        return `<tr>
+          <td class="fw-semibold">${course?.courseCode ?? "—"}</td>
+          <td>${course?.courseTitle ?? "Unknown"}</td>
+          <td>${course?.creditUnit ?? "—"}</td>
+          <td>${typeTag}</td>
+        </tr>`;
+      }).join("");
+      return `<div class="mb-2">
+        <div class="text-muted small fw-semibold mb-1">${sess} — Semester ${sem}</div>
+        <table class="table table-sm admin-table mb-0">
+          <thead><tr><th>Code</th><th>Title</th><th>Credits</th><th>Type</th></tr></thead>
+          <tbody>${rows}</tbody>
+        </table>
+      </div>`;
+    }).join("");
+
+    return `<div class="hist-student-card mb-2">
+      <button class="hist-student-header" type="button"
+        data-bs-toggle="collapse" data-bs-target="#${collapseId}"
+        aria-expanded="${idx === 0 ? "true" : "false"}" aria-controls="${collapseId}">
+        <span class="d-flex align-items-center gap-2">
+          <span class="student-avatar-mini">${initials}</span>
+          <span>
+            <span class="fw-semibold">${student.firstName} ${student.lastName}</span>
+            <span class="text-muted-cell ms-2 small">${student.matricNumber}</span>
+          </span>
+        </span>
+        <span class="hist-student-meta">
+          <span class="badge bg-secondary">${regs.length} course${regs.length === 1 ? "" : "s"}</span>
+          <i class="bi bi-chevron-down hist-chevron"></i>
+        </span>
+      </button>
+      <div class="collapse ${idx === 0 ? "show" : ""}" id="${collapseId}">
+        <div class="hist-student-body">${groupHtml}</div>
+      </div>
+    </div>`;
   }).join("");
 
   renderHistPagination(totalPages);
@@ -522,6 +750,7 @@ function renderHistTable() {
 
 function renderHistPagination(totalPages) {
   const list = document.getElementById("histPaginationList");
+  if (!list) return;
   if (totalPages <= 1) { list.innerHTML = ""; return; }
   let html = `<li class="page-item${histPage===1?" disabled":""}"><button class="page-link" data-page="${histPage-1}">&lsaquo;</button></li>`;
   for (let i = 1; i <= totalPages; i++) {
@@ -534,9 +763,8 @@ function renderHistPagination(totalPages) {
   html += `<li class="page-item${histPage===totalPages?" disabled":""}"><button class="page-link" data-page="${histPage+1}">&rsaquo;</button></li>`;
   list.innerHTML = html;
   list.querySelectorAll("[data-page]").forEach(btn =>
-    btn.addEventListener("click", () => { histPage = Number(btn.dataset.page); renderHistTable(); }));
+    btn.addEventListener("click", () => { histPage = Number(btn.dataset.page); renderHistAccordion(); }));
 }
 
-/* ── Helpers ────────────────────────────────────────────── */
-function showAlert(id, msg) { const el = document.getElementById(id); el.textContent = msg; el.classList.remove("d-none"); }
-function hideAlert(id)      { const el = document.getElementById(id); el.textContent = "";  el.classList.add("d-none"); }
+function showAlert(id, msg) { const el = document.getElementById(id); if(el){ el.textContent = msg; el.classList.remove("d-none"); } }
+function hideAlert(id)      { const el = document.getElementById(id); if(el){ el.textContent = "";  el.classList.add("d-none"); } }
