@@ -23,6 +23,24 @@ let selectedCourseId   = null;
 let selectedCourse     = null;
 let existingSubmission = null;
 
+/*
+ * DUPLICATE-SUBMISSION GUARD — two problems could previously let a
+ * lecturer create two "pending" resultSubmissions for the same
+ * course/session/semester:
+ *   1. A user could double-click "Yes, Submit" (or the confirm modal
+ *      could be re-triggered) before the in-flight request finished,
+ *      firing handleSubmit() twice concurrently.
+ *   2. existingSubmission was only ever checked against the
+ *      *in-memory* submissions array, which can be stale if the page
+ *      was reloaded/re-entered before an earlier submit's refetch
+ *      had a chance to settle elsewhere (e.g. two tabs, or a fast
+ *      back/forward navigation).
+ * isSubmitting fixes (1). The live re-check inside handleSubmit()
+ * fixes (2) by asking the server directly, right before writing,
+ * whether a submission already exists for this exact course/term.
+ */
+let isSubmitting = false;
+
 /* ── Bootstrap modals ───────────────────────────────────── */
 let submitConfirmModal;
 
@@ -388,6 +406,14 @@ function openSubmitConfirm() {
    error is thrown part-way through the API calls.
    ─────────────────────────────────────────────────────────── */
 async function handleSubmit() {
+  /* DUPLICATE-SUBMISSION GUARD (1/2) — reject re-entrant calls.
+     Without this, a double-click on "Yes, Submit" (or any other
+     path that could fire the handler twice before the first
+     request round-trips) could create two resultSubmissions rows
+     for the same course/session/semester. */
+  if (isSubmitting) return;
+  isSubmitting = true;
+
   const confirmBtn = document.getElementById("confirmSubmitBtn");
   confirmBtn.disabled = true;
   confirmBtn.innerHTML = `<span class="spinner-border spinner-border-sm me-1"></span> Submitting…`;
@@ -406,6 +432,30 @@ async function handleSubmit() {
     if (scoreRows.length === 0) {
       showSubmitStatus("No valid scores to submit.", "warning");
       return;  // finally still runs — spinner resets
+    }
+
+    /* DUPLICATE-SUBMISSION GUARD (2/2) — re-check the server directly
+       right before writing, instead of trusting only the in-memory
+       `existingSubmission` (which may be stale after a fast reload,
+       a second tab, or a race with another action). If the server
+       already has a submission for this exact course/session/semester
+       that we don't know about locally, adopt it and bail out of the
+       "first-time submission" branch instead of creating a duplicate. */
+    const liveMatches = await getResultSubmissions({
+      lecturerId: Number(lecturer.id),
+      courseId:   Number(selectedCourseId),
+      session:    calendar.currentSession,
+      semester:   Number(calendar.currentSemester),
+    });
+    if (liveMatches.length > 0 && !existingSubmission) {
+      existingSubmission = liveMatches[0];
+      showSubmitStatus(
+        "A submission for this course already exists — refreshing instead of creating a duplicate.",
+        "info"
+      );
+      renderStatusNotices();
+      renderStudentTable();
+      return; // finally still runs — spinner resets
     }
 
     const isResubmit = existingSubmission && existingSubmission.status === "rejected";
@@ -536,6 +586,7 @@ async function handleSubmit() {
      */
     confirmBtn.disabled = false;
     confirmBtn.innerHTML = `<i class="bi bi-send-fill"></i> Yes, Submit`;
+    isSubmitting = false;
   }
 }
 

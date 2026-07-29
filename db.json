@@ -33358,18 +33358,6 @@
       "id": "Vb_wRJlUf68"
     },
     {
-      "studentId": 19,
-      "courseId": 55,
-      "session": "2025/2026",
-      "semester": 2,
-      "level": 300,
-      "score": 55,
-      "published": false,
-      "submissionId": "qO6bjF3UyP8",
-      "uploadedBy": "3",
-      "id": "fm7mam9p3bY"
-    },
-    {
       "studentId": 11,
       "courseId": 37,
       "session": "2025/2026",
@@ -35553,20 +35541,6 @@
     },
     {
       "lecturerId": "3",
-      "courseId": "55",
-      "session": "2025/2026",
-      "semester": 2,
-      "level": 300,
-      "status": "pending",
-      "submittedAt": "2026-07-29T15:15:39.995Z",
-      "reviewedBy": null,
-      "reviewedAt": null,
-      "rejectionReason": null,
-      "version": 1,
-      "id": "qO6bjF3UyP8"
-    },
-    {
-      "lecturerId": "3",
       "courseId": "37",
       "session": "2025/2026",
       "semester": 2,
@@ -35822,7 +35796,7 @@
         "semester": 2,
         "version": 1
       },
-      "note": "Submitted results for review (v1).",
+      "note": "Submitted results for review (v1). [duplicate submission — deduplicated by system cleanup on 2026-07-29; scores merged into resultSubmission l92Fg4q47T8]",
       "id": "xsveB0wNLBU"
     },
     {
