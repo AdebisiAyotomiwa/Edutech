@@ -352,24 +352,26 @@ function renderHistAccordion() {
     const groupHtml = groups.map(g => `
       <div class="mb-2">
         <div class="text-muted small fw-semibold mb-1">${g.session} — Semester ${g.semester}</div>
-        <table class="table table-sm admin-table mb-0">
-          <thead><tr><th>Code</th><th>Title</th><th>Credits</th><th>Score</th><th>Grade</th><th class="text-end">Edit</th></tr></thead>
-          <tbody>
-            ${g.results.map(r => {
-              const gc = r.grade.toLowerCase();
-              return `<tr>
-                <td class="fw-semibold">${r.course?.courseCode ?? "—"}</td>
-                <td>${r.course?.courseTitle ?? "Unknown"}</td>
-                <td>${r.course?.creditUnit ?? "—"}</td>
-                <td class="fw-semibold">${r.score}</td>
-                <td><span class="badge-grade badge-grade--${gc}">${r.grade}</span></td>
-                <td class="text-end">
-                  <button class="btn btn-secondary-outline btn-sm" data-hist-edit="${r.id}" title="Edit score"><i class="bi bi-pencil"></i></button>
-                </td>
-              </tr>`;
-            }).join("")}
-          </tbody>
-        </table>
+        <div class="hist-table-scroll">
+          <table class="table table-sm admin-table mb-0">
+            <thead><tr><th>Code</th><th>Title</th><th>Credits</th><th>Score</th><th>Grade</th><th class="text-end">Edit</th></tr></thead>
+            <tbody>
+              ${g.results.map(r => {
+                const gc = r.grade.toLowerCase();
+                return `<tr>
+                  <td class="fw-semibold">${r.course?.courseCode ?? "—"}</td>
+                  <td>${r.course?.courseTitle ?? "Unknown"}</td>
+                  <td>${r.course?.creditUnit ?? "—"}</td>
+                  <td class="fw-semibold">${r.score}</td>
+                  <td><span class="badge-grade badge-grade--${gc}">${r.grade}</span></td>
+                  <td class="text-end">
+                    <button class="btn btn-secondary-outline btn-sm" data-hist-edit="${r.id}" title="Edit score"><i class="bi bi-pencil"></i></button>
+                  </td>
+                </tr>`;
+              }).join("")}
+            </tbody>
+          </table>
+        </div>
       </div>`).join("");
 
     return `
@@ -398,6 +400,18 @@ function renderHistAccordion() {
   /* Bind edit buttons */
   container.querySelectorAll("[data-hist-edit]").forEach(btn =>
     btn.addEventListener("click", () => openEditResultModal(btn.dataset.histEdit)));
+
+  /* Scroll-end indicator: hide the right-edge gradient when the user
+     has scrolled to the end of each .hist-table-scroll container */
+  container.querySelectorAll(".hist-table-scroll").forEach(wrap => {
+    const update = () => {
+      const atEnd = wrap.scrollLeft + wrap.clientWidth >= wrap.scrollWidth - 2;
+      wrap.classList.toggle("scroll-end", atEnd);
+    };
+    // Set initial state (table may already fit without scrolling)
+    update();
+    wrap.addEventListener("scroll", update, { passive: true });
+  });
 
   renderHistPagination(totalPages);
 }
