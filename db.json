@@ -33272,6 +33272,30 @@
       "semester": 1,
       "score": 78,
       "published": true
+    },
+    {
+      "studentId": 33,
+      "courseId": 117,
+      "session": "2025/2026",
+      "semester": 2,
+      "level": 200,
+      "score": 59,
+      "published": false,
+      "submissionId": "A9XGpWe0TO0",
+      "uploadedBy": "9",
+      "id": "zfr6mY3kwvI"
+    },
+    {
+      "studentId": 34,
+      "courseId": 117,
+      "session": "2025/2026",
+      "semester": 2,
+      "level": 200,
+      "score": 70,
+      "published": false,
+      "submissionId": "A9XGpWe0TO0",
+      "uploadedBy": "9",
+      "id": "nlZYwNpMqVI"
     }
   ],
   "lecturers": [
@@ -35376,6 +35400,20 @@
       "reviewedAt": "2026-02-12T14:00:00Z",
       "rejectionReason": "Please verify the scores for entries 3 and 7.",
       "version": 1
+    },
+    {
+      "lecturerId": "9",
+      "courseId": "117",
+      "session": "2025/2026",
+      "semester": 2,
+      "level": 200,
+      "status": "pending",
+      "submittedAt": "2026-07-29T14:40:51.073Z",
+      "reviewedBy": null,
+      "reviewedAt": null,
+      "rejectionReason": null,
+      "version": 1,
+      "id": "A9XGpWe0TO0"
     }
   ],
   "auditLog": [
@@ -35523,6 +35561,23 @@
       },
       "note": "Approved and published 3 result(s).",
       "id": "l6YO4RQ_23o"
+    },
+    {
+      "entityType": "resultSubmission",
+      "entityId": "A9XGpWe0TO0",
+      "action": "submitted",
+      "actorId": "9",
+      "actorRole": "lecturer",
+      "timestamp": "2026-07-29T14:40:51.186Z",
+      "previousValue": null,
+      "newValue": {
+        "courseId": "117",
+        "session": "2025/2026",
+        "semester": 2,
+        "version": 1
+      },
+      "note": "Submitted results for review (v1).",
+      "id": "zitWtC-nAzQ"
     }
   ],
   "registrationBatches": [
