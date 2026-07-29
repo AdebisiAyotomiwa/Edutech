@@ -59,7 +59,7 @@ async function init() {
     if (preselectedId) loadCourse();
 
     // Wire up events
-    document.getElementById("loadCourseBtn").addEventListener("click", loadCourse);
+    document.getElementById("loadCourseBtn").addEventListener("click", () => loadCourse());
     document.getElementById("submitBtn").addEventListener("click", openSubmitConfirm);
     document.getElementById("confirmSubmitBtn").addEventListener("click", handleSubmit);
   } catch (err) {
@@ -79,8 +79,7 @@ async function loadData() {
     getRegistrations(),
     getResultSubmissions({ lecturerId: Number(lecturer.id) }),
     getResults(),
-  ]);
-}
+  ]);}
 
 /* ── Course select dropdown ─────────────────────────────── */
 function populateCourseSelect() {
@@ -105,7 +104,7 @@ function populateCourseSelect() {
 }
 
 /* ── Load course & students ─────────────────────────────── */
-function loadCourse() {
+async function loadCourse() {
   const courseId = document.getElementById("courseSelect").value;
   if (!courseId) {
     showSubmitStatus("Please select a course first.", "warning");
@@ -119,6 +118,24 @@ function loadCourse() {
          s.session           === calendar.currentSession &&
          Number(s.semester)  === Number(calendar.currentSemester)
   );
+
+  /* Fetch registrations for just this course/session/semester for accuracy */
+  try {
+    const courseRegsFromAPI = await getRegistrations({
+      courseId: Number(courseId),
+      session:  calendar.currentSession,
+      semester: Number(calendar.currentSemester),
+    });
+    /* Merge into registrations array — replace any existing entries for this course */
+    registrations = [
+      ...registrations.filter(r =>
+        !(String(r.courseId) === String(courseId) &&
+          r.session === calendar.currentSession &&
+          Number(r.semester) === Number(calendar.currentSemester))
+      ),
+      ...courseRegsFromAPI,
+    ];
+  } catch { /* fall back to full registrations array already in memory */ }
 
   renderCourseInfoBanner();
   renderStatusNotices();
@@ -415,8 +432,8 @@ async function handleSubmit() {
     submitConfirmModal.hide();
     showSubmitStatus("✓ Submitted for admin approval! This batch is now locked until reviewed.", "success");
 
-    // Refresh submissions list so status notices update
-    submissions = await getResultSubmissions({ lecturerId: lecturer.id });
+    // Refresh only this lecturer's submissions and linked results
+    submissions = await getResultSubmissions({ lecturerId: Number(lecturer.id) });
     results     = await getResults();
     existingSubmission = submissions.find(
       s => String(s.courseId) === String(selectedCourseId) &&

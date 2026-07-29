@@ -78,6 +78,8 @@
   font-size:.95rem;
   font-weight:600;
   color:var(--ink-900);
+  word-break:break-word;
+  overflow-wrap:anywhere;
 }
 
 .profile-note{

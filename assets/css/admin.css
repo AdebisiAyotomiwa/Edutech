@@ -559,8 +559,51 @@
   background: var(--paper-50);
 }
 
-/* ── NO sticky last column ──────────────────────────────── */
-/* (removed table-sticky-last — Actions column scrolls normally) */
+/* ── Sticky staffID (col 2) on lecturers table ──────────── */
+.admin-table.table-sticky-col2 thead th:nth-child(2),
+.admin-table.table-sticky-col2 tbody td:nth-child(2) {
+  position: sticky;
+  left: 0;
+  z-index: 2;
+  background: #fff;
+  box-shadow: 2px 0 4px rgba(0,0,0,0.06);
+}
+.admin-table.table-sticky-col2 thead th:nth-child(2) {
+  background: var(--paper-100);
+}
+.admin-table.table-sticky-col2 tbody tr:hover td:nth-child(2) {
+  background: var(--paper-50);
+}
+
+/* ── Topbar approvals badge ──────────────────────────────── */
+.topbar-icon-btn {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  color: var(--ink-700);
+  text-decoration: none;
+  transition: background 0.15s;
+}
+.topbar-icon-btn:hover { background: var(--paper-100); }
+.topbar-badge {
+  position: absolute;
+  top: 2px;
+  right: 2px;
+  min-width: 16px;
+  height: 16px;
+  border-radius: 8px;
+  background: var(--danger);
+  color: #fff;
+  font-size: 0.62rem;
+  font-weight: 700;
+  line-height: 16px;
+  text-align: center;
+  padding: 0 3px;
+}
 
 /* ── Min-widths to prevent header wrapping ──────────────── */
 .admin-table th { white-space: nowrap; }

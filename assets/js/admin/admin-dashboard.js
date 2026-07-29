@@ -67,6 +67,12 @@ function setupSidebar() {
     badge.textContent = pendingCount;
     badge.style.display = "";
   }
+  // Also wire the topbar approvals badge
+  const topbarBadge = document.getElementById("topbarApprovalsBadge");
+  if (topbarBadge && pendingCount > 0) {
+    topbarBadge.textContent = pendingCount;
+    topbarBadge.style.display = "";
+  }
 
   const toggle = document.getElementById("sidebarToggleBtn");
   const sidebar = document.getElementById("appSidebar");

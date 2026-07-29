@@ -122,7 +122,7 @@
 
             <div class="admin-table-card">
               <div class="table-responsive">
-                <table class="table admin-table">
+                <table class="table admin-table table-sticky-first">
                   <thead>
                     <tr>
                       <th>Code</th><th>Title</th><th>Credits</th><th>Level</th><th>Semester</th><th>Department</th><th>Status</th><th class="text-end">Actions</th>
@@ -153,12 +153,16 @@
             </div>
             <div class="admin-table-card">
               <div class="table-responsive">
-                <table class="table admin-table">
+                <table class="table admin-table table-sticky-first">
                   <thead><tr><th>Department</th><th>Faculty</th><th>Students</th><th>Courses</th><th class="text-end">Actions</th></tr></thead>
                   <tbody id="deptsTbody"></tbody>
                 </table>
               </div>
               <div class="admin-empty-state d-none" id="deptsEmptyState"><i class="bi bi-building"></i><p class="mt-2 mb-0">No departments found.</p></div>
+            </div>
+            <div class="d-flex justify-content-between align-items-center mt-3 flex-wrap gap-2">
+              <div class="text-muted small" id="deptPaginationInfo"></div>
+              <ul class="pagination pagination-sm mb-0" id="deptPaginationList"></ul>
             </div>
           </div>
 
@@ -175,12 +179,16 @@
             </div>
             <div class="admin-table-card">
               <div class="table-responsive">
-                <table class="table admin-table">
+                <table class="table admin-table table-sticky-first">
                   <thead><tr><th>Faculty Name</th><th>Departments</th><th>Students</th><th class="text-end">Actions</th></tr></thead>
                   <tbody id="facultiesTbody"></tbody>
                 </table>
               </div>
               <div class="admin-empty-state d-none" id="facultiesEmptyState"><i class="bi bi-bank"></i><p class="mt-2 mb-0">No faculties found.</p></div>
+            </div>
+            <div class="d-flex justify-content-between align-items-center mt-3 flex-wrap gap-2">
+              <div class="text-muted small" id="facPaginationInfo"></div>
+              <ul class="pagination pagination-sm mb-0" id="facPaginationList"></ul>
             </div>
           </div>
         </div>

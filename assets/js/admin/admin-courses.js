@@ -26,10 +26,10 @@ const appSidebar  = document.getElementById("appSidebar");
 const appSidebarScrim = document.getElementById("appSidebarScrim");
 const logoutBtn   = document.getElementById("logoutBtn");
 
-const courseModal = new bootstrap.Modal(document.getElementById("courseModal"));
-const deptModal   = new bootstrap.Modal(document.getElementById("deptModal"));
-const facultyModal = new bootstrap.Modal(document.getElementById("facultyModal"));
-const deleteConfirmModal = new bootstrap.Modal(document.getElementById("deleteConfirmModal"));
+let courseModal = null;
+let deptModal   = null;
+let facultyModal = null;
+let deleteConfirmModal = null;
 
 /* ── Boot ───────────────────────────────────────────────── */
 document.addEventListener("DOMContentLoaded", init);
@@ -39,6 +39,10 @@ async function init() {
     admin = getCurrentAdmin();
     if (!admin) { window.location.href = "/assets/pages/admin/admin-login.html"; return; }
     setupSidebar(); setupLogout();
+    courseModal = new bootstrap.Modal(document.getElementById("courseModal"));
+    deptModal   = new bootstrap.Modal(document.getElementById("deptModal"));
+    facultyModal = new bootstrap.Modal(document.getElementById("facultyModal"));
+    deleteConfirmModal = new bootstrap.Modal(document.getElementById("deleteConfirmModal"));
     await loadData();
     populateFacultySelects();
     pageState.classList.add("d-none");
@@ -369,8 +373,11 @@ async function handleArchiveCourse() {
 /* ════════════════════════════════════════════════════════
    DEPARTMENTS
    ════════════════════════════════════════════════════════ */
+const DEPT_PAGE_SIZE = 15;
+let deptPage = 1;
+
 function bindDeptEvents() {
-  document.getElementById("deptSearchInput").addEventListener("input", renderDepts);
+  document.getElementById("deptSearchInput").addEventListener("input", () => { deptPage = 1; renderDepts(); });
   document.getElementById("addDeptBtn").addEventListener("click", openAddDeptModal);
   document.getElementById("deptForm").addEventListener("submit", handleDeptFormSubmit);
 }
@@ -380,13 +387,25 @@ function renderDepts() {
   const filtered = departments.filter(d =>
     !q || d.name.toLowerCase().includes(q) || d.faculty.toLowerCase().includes(q)
   );
+
+  const total      = filtered.length;
+  const totalPages = Math.max(1, Math.ceil(total / DEPT_PAGE_SIZE));
+  if (deptPage > totalPages) deptPage = totalPages;
+  const start = (deptPage - 1) * DEPT_PAGE_SIZE;
+  const paged = filtered.slice(start, start + DEPT_PAGE_SIZE);
+
+  const paginationInfo = document.getElementById("deptPaginationInfo");
+  if (paginationInfo) paginationInfo.textContent = total
+    ? `Showing ${start + 1}–${Math.min(start + DEPT_PAGE_SIZE, total)} of ${total}`
+    : "";
+
   const tbody = document.getElementById("deptsTbody");
   const empty = document.getElementById("deptsEmptyState");
 
-  if (filtered.length === 0) { tbody.innerHTML = ""; empty.classList.remove("d-none"); return; }
+  if (paged.length === 0) { tbody.innerHTML = ""; empty.classList.remove("d-none"); renderDeptPagination(0); return; }
   empty.classList.add("d-none");
 
-  tbody.innerHTML = filtered.map(d => {
+  tbody.innerHTML = paged.map(d => {
     const sc = students.filter(s => String(s.departmentId) === String(d.id)).length;
     const cc = courses.filter(c => String(c.departmentId) === String(d.id)).length;
     return `<tr>
@@ -406,6 +425,26 @@ function renderDepts() {
     btn.addEventListener("click", () => openEditDeptModal(btn.dataset.id)));
   tbody.querySelectorAll("[data-action='delete']").forEach(btn =>
     btn.addEventListener("click", () => confirmDeleteDept(btn.dataset.id)));
+
+  renderDeptPagination(totalPages);
+}
+
+function renderDeptPagination(totalPages) {
+  const list = document.getElementById("deptPaginationList");
+  if (!list) return;
+  if (totalPages <= 1) { list.innerHTML = ""; return; }
+  let html = `<li class="page-item${deptPage===1?" disabled":""}"><button class="page-link" data-page="${deptPage-1}">&lsaquo;</button></li>`;
+  for (let i = 1; i <= totalPages; i++) {
+    if (totalPages > 7 && Math.abs(i - deptPage) > 2 && i !== 1 && i !== totalPages) {
+      if (i === 2 || i === totalPages - 1) html += `<li class="page-item disabled"><span class="page-link">…</span></li>`;
+      continue;
+    }
+    html += `<li class="page-item${i===deptPage?" active":""}"><button class="page-link" data-page="${i}">${i}</button></li>`;
+  }
+  html += `<li class="page-item${deptPage===totalPages?" disabled":""}"><button class="page-link" data-page="${deptPage+1}">&rsaquo;</button></li>`;
+  list.innerHTML = html;
+  list.querySelectorAll("[data-page]").forEach(btn =>
+    btn.addEventListener("click", () => { deptPage = Number(btn.dataset.page); renderDepts(); }));
 }
 
 function openAddDeptModal() {
@@ -488,8 +527,11 @@ function confirmDeleteDept(id) {
 /* ════════════════════════════════════════════════════════
    FACULTIES
    ════════════════════════════════════════════════════════ */
+const FAC_PAGE_SIZE = 15;
+let facPage = 1;
+
 function bindFacultyEvents() {
-  document.getElementById("facultySearchInput").addEventListener("input", renderFaculties);
+  document.getElementById("facultySearchInput").addEventListener("input", () => { facPage = 1; renderFaculties(); });
   document.getElementById("addFacultyBtn").addEventListener("click", openAddFacultyModal);
   document.getElementById("facultyForm").addEventListener("submit", handleFacultyFormSubmit);
 }
@@ -497,13 +539,25 @@ function bindFacultyEvents() {
 function renderFaculties() {
   const q = document.getElementById("facultySearchInput").value.trim().toLowerCase();
   const filtered = faculties.filter(f => !q || f.name.toLowerCase().includes(q));
+
+  const total      = filtered.length;
+  const totalPages = Math.max(1, Math.ceil(total / FAC_PAGE_SIZE));
+  if (facPage > totalPages) facPage = totalPages;
+  const start = (facPage - 1) * FAC_PAGE_SIZE;
+  const paged = filtered.slice(start, start + FAC_PAGE_SIZE);
+
+  const paginationInfo = document.getElementById("facPaginationInfo");
+  if (paginationInfo) paginationInfo.textContent = total
+    ? `Showing ${start + 1}–${Math.min(start + FAC_PAGE_SIZE, total)} of ${total}`
+    : "";
+
   const tbody = document.getElementById("facultiesTbody");
   const empty = document.getElementById("facultiesEmptyState");
 
-  if (filtered.length === 0) { tbody.innerHTML = ""; empty.classList.remove("d-none"); return; }
+  if (paged.length === 0) { tbody.innerHTML = ""; empty.classList.remove("d-none"); renderFacPagination(0); return; }
   empty.classList.add("d-none");
 
-  tbody.innerHTML = filtered.map(f => {
+  tbody.innerHTML = paged.map(f => {
     const deptCount    = departments.filter(d => d.faculty === f.name).length;
     const studentCount = students.filter(s => {
       const dept = departments.find(d => String(d.id) === String(s.departmentId));
@@ -526,6 +580,26 @@ function renderFaculties() {
     btn.addEventListener("click", () => openEditFacultyModal(btn.dataset.id)));
   tbody.querySelectorAll("[data-action='delete']").forEach(btn =>
     btn.addEventListener("click", () => confirmDeleteFaculty(btn.dataset.id)));
+
+  renderFacPagination(totalPages);
+}
+
+function renderFacPagination(totalPages) {
+  const list = document.getElementById("facPaginationList");
+  if (!list) return;
+  if (totalPages <= 1) { list.innerHTML = ""; return; }
+  let html = `<li class="page-item${facPage===1?" disabled":""}"><button class="page-link" data-page="${facPage-1}">&lsaquo;</button></li>`;
+  for (let i = 1; i <= totalPages; i++) {
+    if (totalPages > 7 && Math.abs(i - facPage) > 2 && i !== 1 && i !== totalPages) {
+      if (i === 2 || i === totalPages - 1) html += `<li class="page-item disabled"><span class="page-link">…</span></li>`;
+      continue;
+    }
+    html += `<li class="page-item${i===facPage?" active":""}"><button class="page-link" data-page="${i}">${i}</button></li>`;
+  }
+  html += `<li class="page-item${facPage===totalPages?" disabled":""}"><button class="page-link" data-page="${facPage+1}">&rsaquo;</button></li>`;
+  list.innerHTML = html;
+  list.querySelectorAll("[data-page]").forEach(btn =>
+    btn.addEventListener("click", () => { facPage = Number(btn.dataset.page); renderFaculties(); }));
 }
 
 function openAddFacultyModal() {

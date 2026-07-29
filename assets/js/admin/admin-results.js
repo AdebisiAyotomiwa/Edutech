@@ -33,7 +33,9 @@ const sidebarToggleBtn = document.getElementById("sidebarToggleBtn");
 const appSidebar       = document.getElementById("appSidebar");
 const appSidebarScrim  = document.getElementById("appSidebarScrim");
 const logoutBtn        = document.getElementById("logoutBtn");
-const editResultModal  = new bootstrap.Modal(document.getElementById("editResultModal"));
+const editResultModal  = null; // initialised in init() after DOM ready
+let _editResultModal;
+let publishConfirmModal = null;
 
 /* ── Boot ───────────────────────────────────────────────── */
 document.addEventListener("DOMContentLoaded", init);
@@ -43,6 +45,8 @@ async function init() {
     admin = getCurrentAdmin();
     if (!admin) { window.location.href = "/assets/pages/admin/admin-login.html"; return; }
     setupSidebar(); setupLogout();
+    _editResultModal = new bootstrap.Modal(document.getElementById("editResultModal"));
+    publishConfirmModal = new bootstrap.Modal(document.getElementById("publishConfirmModal"));
     await loadData();
     buildSessionList();
     populateFacultySelects();
@@ -112,7 +116,6 @@ function setupLogout() {
   });
 }
 
-/* bindTabs wires up history auto-load when the tab is switched to */
 function bindTabs() {
   document.getElementById("mainTabs").querySelectorAll(".nav-link").forEach(btn => {
     btn.addEventListener("click", () => {
@@ -152,9 +155,11 @@ function populateFacultySelects() {
   currSemEl.value      = String(calendar.currentSemester);
   currSemEl.disabled   = true;
 
-  /* History tab: all sessions */
+  /* History tab: all sessions — session/semester always enabled */
   const histSessOpts = allSessions.map(s => `<option value="${s}">${s}</option>`).join("");
   document.getElementById("rHistSession").innerHTML = `<option value="">All Sessions</option>` + histSessOpts;
+  document.getElementById("rHistSession").disabled  = false;
+  document.getElementById("rHistSemester").disabled = false;
 
   /* Render current semester metrics */
   renderResultsMetrics();
@@ -231,167 +236,6 @@ function getCurrFilters() {
   };
 }
 
-function renderCurrStudents() {
-  const { deptId, level, session, semester } = getCurrFilters();
-
-  document.getElementById("scoreEntryPanel").classList.add("d-none");
-  document.getElementById("currFilterPrompt").classList.add("d-none");
-  document.getElementById("currStudentArea").classList.remove("d-none");
-
-  let deptStudents = students.filter(s =>
-    (!deptId || String(s.departmentId) === String(deptId)) &&
-    (!level  || Number(s.level) === Number(level))
-  );
-
-  /* Only students registered in current session/semester */
-  deptStudents = deptStudents.filter(s =>
-    registrations.some(r =>
-      String(r.studentId) === String(s.id) &&
-      r.session === session && Number(r.semester) === semester)
-  );
-
-  const q = document.getElementById("rCurrSearch").value.trim().toLowerCase();
-  if (q) deptStudents = deptStudents.filter(s =>
-    `${s.firstName} ${s.lastName}`.toLowerCase().includes(q) ||
-    s.matricNumber.toLowerCase().includes(q)
-  );
-
-  document.getElementById("rCurrStudentCount").textContent =
-    `${deptStudents.length} student${deptStudents.length === 1 ? "" : "s"}`;
-
-  const totalPages = Math.max(1, Math.ceil(deptStudents.length / PAGE_SIZE));
-  if (currPage > totalPages) currPage = totalPages;
-  const start = (currPage - 1) * PAGE_SIZE;
-  const paged = deptStudents.slice(start, start + PAGE_SIZE);
-
-  document.getElementById("currPaginationInfo").textContent =
-    deptStudents.length ? `Showing ${start + 1}–${Math.min(start + PAGE_SIZE, deptStudents.length)} of ${deptStudents.length}` : "";
-
-  const tbody = document.getElementById("currStudentsTbody");
-  const empty = document.getElementById("currStudentsEmpty");
-
-  if (paged.length === 0) { tbody.innerHTML = ""; empty.classList.remove("d-none"); renderCurrPagination(0); return; }
-  empty.classList.add("d-none");
-
-  tbody.innerHTML = paged.map(s => {
-    const regs = registrations.filter(r =>
-      String(r.studentId) === String(s.id) && r.session === session && Number(r.semester) === semester);
-    const resSem = results.filter(r =>
-      String(r.studentId) === String(s.id) && r.session === session && Number(r.semester) === semester);
-    /* "Pending" = registered but no published result */
-    const pending = regs.filter(r =>
-      !resSem.some(res => String(res.courseId) === String(r.courseId) && res.published === true)
-    ).length;
-    /* "Published" = has a published result */
-    const entered = resSem.filter(r => r.published === true).length;
-    /* "Draft" = saved but not published */
-    const drafts  = resSem.filter(r => r.published === false).length;
-
-    return `<tr>
-      <td>
-        <div class="d-flex align-items-center gap-2">
-          <span class="student-avatar-mini">${(s.firstName[0] + s.lastName[0]).toUpperCase()}</span>
-          <div class="fw-semibold">${s.firstName} ${s.lastName}</div>
-        </div>
-      </td>
-      <td class="text-muted-cell">${s.matricNumber}</td>
-      <td>
-        <span class="badge-grade badge-grade--${pending > 0 ? "f" : "a"}">${pending} pending</span>
-        ${drafts > 0 ? `<span class="badge-grade badge-grade--d ms-1">${drafts} draft</span>` : ""}
-      </td>
-      <td>${entered} published</td>      <td class="text-end">
-        <button class="btn btn-brand btn-sm" data-action="enter" data-id="${s.id}">
-          <i class="bi bi-pencil-square"></i> ${pending > 0 ? "Enter Scores" : "Edit Scores"}
-        </button>
-      </td>
-    </tr>`;
-  }).join("");
-
-  tbody.querySelectorAll("[data-action='enter']").forEach(btn =>
-    btn.addEventListener("click", () => openScoreEntry(btn.dataset.id)));
-
-  renderCurrPagination(totalPages);
-}
-
-function renderCurrPagination(totalPages) {
-  const list = document.getElementById("currPaginationList");
-  if (totalPages <= 1) { list.innerHTML = ""; return; }
-  let html = `<li class="page-item${currPage === 1 ? " disabled" : ""}"><button class="page-link" data-page="${currPage - 1}">&lsaquo;</button></li>`;
-  for (let i = 1; i <= totalPages; i++) {
-    html += `<li class="page-item${i === currPage ? " active" : ""}"><button class="page-link" data-page="${i}">${i}</button></li>`;
-  }
-  html += `<li class="page-item${currPage === totalPages ? " disabled" : ""}"><button class="page-link" data-page="${currPage + 1}">&rsaquo;</button></li>`;
-  list.innerHTML = html;
-  list.querySelectorAll("[data-page]").forEach(btn =>
-    btn.addEventListener("click", () => { currPage = Number(btn.dataset.page); renderCurrStudents(); }));
-}
-
-/* ── Score entry panel (current semester only) ──────────── */
-function openScoreEntry(studentId) {
-  const { session, semester, deptId } = getCurrFilters();
-  const student = students.find(s => String(s.id) === String(studentId));
-  if (!student) return;
-
-  currSelectedStudentId = studentId;
-  document.getElementById("currStudentArea").classList.add("d-none");
-  document.getElementById("scoreEntryPanel").classList.remove("d-none");
-  document.getElementById("scoreStudentName").textContent = `${student.firstName} ${student.lastName}`;
-  document.getElementById("scoreStudentMeta").textContent =
-    `${student.matricNumber} · ${session} Semester ${semester}`;
-  document.getElementById("scorePublishStatus").textContent = "";
-
-  const regs = registrations.filter(r =>
-    String(r.studentId) === String(studentId) &&
-    r.session === session && Number(r.semester) === semester
-  );
-
-  const tbody = document.getElementById("scoreTbody");
-  tbody.innerHTML = regs.map(reg => {
-    const course = courses.find(c => String(c.id) === String(reg.courseId));
-    if (!course) return "";
-    const existing = results.find(r =>
-      String(r.studentId) === String(studentId) &&
-      String(r.courseId)  === String(reg.courseId) &&
-      r.session === session && Number(r.semester) === semester
-    );
-    const score = existing ? existing.score : "";
-    const grade = existing ? scoreToGrade(existing.score).grade : "—";
-    let statusLabel;
-    if (!existing) {
-      statusLabel = `<span class="status-badge status-badge--pending">Pending</span>`;
-    } else if (existing.published === false) {
-      statusLabel = `<span class="status-badge status-badge--pending" style="background:var(--warn-100);color:var(--warn);">Draft</span>`;
-    } else {
-      statusLabel = `<span class="status-badge status-badge--completed">Published</span>`;
-    }
-    const rowClass = existing ? (existing.published === false ? "table-warning" : "table-success") : "";
-    return `<tr class="${rowClass}" data-course-id="${course.id}" data-result-id="${existing ? existing.id : ""}" data-level="${course.level}">
-      <td class="fw-semibold">${course.courseCode}</td>
-      <td>${course.courseTitle}</td>
-      <td>${course.creditUnit}</td>
-      <td><input type="number" class="form-control form-control-sm score-input" style="width:90px"
-          min="0" max="100" value="${score}" placeholder="0–100"></td>
-      <td class="grade-cell fw-semibold">${grade}</td>
-      <td>${statusLabel}</td>
-    </tr>`;
-  }).join("");
-
-  /* Live grade preview */
-  tbody.querySelectorAll(".score-input").forEach(inp => {
-    inp.addEventListener("input", () => {
-      const row = inp.closest("tr");
-      const val = inp.value.trim();
-      row.querySelector(".grade-cell").textContent = val === "" ? "—" : scoreToGrade(Number(val)).grade;
-    });
-  });
-}
-
-function showStudentList() {
-  document.getElementById("scoreEntryPanel").classList.add("d-none");
-  document.getElementById("currStudentArea").classList.remove("d-none");
-  currSelectedStudentId = null;
-}
-
 /* ════════════════════════════════════════════════════════
    RESULT HISTORY TAB  —  Edit past results, per-student accordion
    ════════════════════════════════════════════════════════ */
@@ -411,10 +255,6 @@ function onHistFacultyChange() {
   deptSel.innerHTML = `<option value="">All Departments</option>` +
     departments.filter(d => !faculty || d.faculty === faculty)
       .map(d => `<option value="${d.id}">${d.name}</option>`).join("");
-  /* Enable session/semester filters once a faculty is chosen */
-  const hasFaculty = !!faculty;
-  document.getElementById("rHistSession").disabled  = !hasFaculty;
-  document.getElementById("rHistSemester").disabled = !hasFaculty;
   syncActiveFilters();
   histPage = 1;
   buildHistStudents();
@@ -422,8 +262,6 @@ function onHistFacultyChange() {
 }
 
 function onHistDeptChange() {
-  document.getElementById("rHistSession").disabled  = false;
-  document.getElementById("rHistSemester").disabled = false;
   syncActiveFilters();
   histPage = 1;
   buildHistStudents();
@@ -446,8 +284,9 @@ function buildHistStudents() {
 
   histStudents = students
     .filter(s =>
-      String(s.departmentId) === String(deptId) &&
-      (!level || Number(s.level) === Number(level))
+      // dept filter is now optional — empty string means all departments
+      (!deptId || String(s.departmentId) === String(deptId)) &&
+      (!level  || Number(s.level) === Number(level))
     )
     .map(s => {
       const studentResults = results.filter(r => {
@@ -537,7 +376,7 @@ function renderHistAccordion() {
       <div class="hist-student-card mb-2" id="${accordId}">
         <button class="hist-student-header" type="button"
           data-bs-toggle="collapse" data-bs-target="#${collapseId}"
-          aria-expanded="${idx === 0 ? "true" : "false"}" aria-controls="${collapseId}">
+          aria-expanded="false" aria-controls="${collapseId}">
           <span class="d-flex align-items-center gap-2">
             <span class="student-avatar-mini">${initials}</span>
             <span>
@@ -550,7 +389,7 @@ function renderHistAccordion() {
             <i class="bi bi-chevron-down hist-chevron"></i>
           </span>
         </button>
-        <div class="collapse ${idx === 0 ? "show" : ""}" id="${collapseId}">
+        <div class="collapse" id="${collapseId}">
           <div class="hist-student-body">${groupHtml}</div>
         </div>
       </div>`;
@@ -602,7 +441,7 @@ function openEditResultModal(id) {
     `${student ? student.firstName + " " + student.lastName : "Unknown"} · ${course?.courseCode ?? "?"} · ${r.session} Sem ${r.semester}`;
   document.getElementById("editResultScore").value = r.score;
   hideAlert("editResultAlert");
-  editResultModal.show();
+  _editResultModal.show();
 }
 
 async function handleEditResultSubmit(e) {
@@ -619,7 +458,7 @@ async function handleEditResultSubmit(e) {
     results[idx] = { ...results[idx], ...updated };
     buildHistStudents();
     renderHistAccordion();
-    editResultModal.hide();
+    _editResultModal.hide();
   } catch (err) {
     console.error(err);
     showAlert("editResultAlert", "Failed to update result. Please try again.");
@@ -630,10 +469,6 @@ function showAlert(id, msg) { const el = document.getElementById(id); el.textCon
 function hideAlert(id)      { const el = document.getElementById(id); el.textContent = "";  el.classList.add("d-none"); }
 
 /* ── Save Draft (saves scores, published=false, invisible to students) ── */
-async function saveDraft() {
-  await persistScores({ publishImmediately: false });
-}
-
 /* ── Save & Publish (saves scores, published=true, immediately visible) ── */
 async function saveAndPublish() {
   await persistScores({ publishImmediately: true });
@@ -721,92 +556,6 @@ async function persistScores({ publishImmediately }) {
 }
 
 /* ── Publish confirm ─────────────────────────────────────── */
-const publishConfirmModal = new bootstrap.Modal(document.getElementById("publishConfirmModal"));
-
-function openPublishConfirm() {
-  const { session, semester } = getCurrFilters();
-  const student = students.find(s => String(s.id) === String(currSelectedStudentId));
-
-  /* Count draft scores (saved but not yet published) for this student/session/semester */
-  const draftCount = results.filter(r =>
-    String(r.studentId) === String(currSelectedStudentId) &&
-    r.session === session &&
-    Number(r.semester) === semester &&
-    r.published === false
-  ).length;
-
-  /* Count unsaved inputs (have a value but no resultId yet) */
-  const unsavedInputs = Array.from(document.getElementById("scoreTbody").querySelectorAll("tr")).filter(row => {
-    const inp = row.querySelector(".score-input");
-    return inp && inp.value.trim() !== "" && !row.dataset.resultId;
-  }).length;
-
-  if (draftCount === 0 && unsavedInputs === 0) {
-    document.getElementById("scorePublishStatus").innerHTML =
-      `<span class="text-muted">No draft scores to publish. Save scores as draft first, then publish.</span>`;
-    return;
-  }
-
-  if (unsavedInputs > 0 && draftCount === 0) {
-    document.getElementById("scorePublishStatus").innerHTML =
-      `<span class="text-warning"><i class="bi bi-exclamation-triangle-fill"></i> You have unsaved scores. Click <strong>Save Draft</strong> first, then Publish.</span>`;
-    return;
-  }
-
-  const name = student ? `${student.firstName} ${student.lastName}` : "this student";
-  document.getElementById("publishConfirmBody").textContent =
-    `This will publish ${draftCount} draft result${draftCount === 1 ? "" : "s"} for ${name} (${session}, Semester ${semester}) to the student portal.`;
-
-  publishConfirmModal.show();
-}
-
-async function confirmPublish() {
-  const { session, semester } = getCurrFilters();
-  const studentId = Number(currSelectedStudentId); // Number to match seeded data type
-  const statusEl  = document.getElementById("scorePublishStatus");
-  const confirmBtn = document.getElementById("confirmPublishBtn");
-
-  /* Get all draft results for this student/session/semester */
-  const drafts = results.filter(r =>
-    String(r.studentId) === String(studentId) &&
-    r.session === session &&
-    Number(r.semester) === semester &&
-    r.published === false
-  );
-
-  if (drafts.length === 0) {
-    publishConfirmModal.hide();
-    statusEl.textContent = "No draft scores to publish.";
-    return;
-  }
-
-  confirmBtn.disabled = true;
-  confirmBtn.innerHTML = `<span class="spinner-border spinner-border-sm me-1"></span> Publishing…`;
-
-  try {
-    await Promise.all(drafts.map(r =>
-      updateResult(r.id, { published: true }).then(upd => {
-        const idx = results.findIndex(res => String(res.id) === String(r.id));
-        if (idx !== -1) results[idx] = { ...results[idx], ...upd, published: true };
-      })
-    ));
-
-    publishConfirmModal.hide();
-    statusEl.innerHTML =
-      `<span class="text-success"><i class="bi bi-check-circle-fill"></i> ${drafts.length} result${drafts.length === 1 ? "" : "s"} published to student portal.</span>`;
-
-    /* Refresh the score table to show Published status */
-    openScoreEntry(studentId);
-    renderCurrStudents();
-  } catch (err) {
-    console.error(err);
-    statusEl.textContent = "Failed to publish results. Please try again.";
-  } finally {
-    confirmBtn.disabled = false;
-    confirmBtn.innerHTML = `<i class="bi bi-cloud-upload"></i> Yes, Publish`;
-  }
-}
-
 function markRowStatus(row, published) {
   if (published) {
     row.classList.remove("table-warning");
@@ -818,5 +567,339 @@ function markRowStatus(row, published) {
     row.classList.add("table-warning");
     row.querySelector("td:last-child").innerHTML =
       `<span class="status-badge status-badge--pending" style="background:var(--warn-100);color:var(--warn);">Draft</span>`;
+  }
+}
+
+/* ════════════════════════════════════════════════════════
+   CURRENT SEMESTER — COURSE-CENTRIC VIEW (overrides old per-student version)
+   Shows each unique course registered this semester.
+   • Courses with a lecturer submission → "Review in Approvals"
+   • Courses with NO submission → "Enter Scores" (direct admin entry)
+   ════════════════════════════════════════════════════════ */
+function renderCurrStudents() {
+  const { deptId, level, session, semester } = getCurrFilters();
+
+  document.getElementById("scoreEntryPanel").classList.add("d-none");
+  document.getElementById("currFilterPrompt").classList.add("d-none");
+  document.getElementById("currStudentArea").classList.remove("d-none");
+
+  /* Get all registrations for this session/semester */
+  let semRegs = registrations.filter(r =>
+    r.session === session && Number(r.semester) === semester
+  );
+
+  /* Optional dept/level filters */
+  if (deptId || level) {
+    const filteredStudentIds = new Set(
+      students.filter(s =>
+        (!deptId || String(s.departmentId) === String(deptId)) &&
+        (!level  || Number(s.level) === Number(level))
+      ).map(s => String(s.id))
+    );
+    semRegs = semRegs.filter(r => filteredStudentIds.has(String(r.studentId)));
+  }
+
+  /* Build unique course list */
+  const courseMap = new Map();
+  semRegs.forEach(reg => {
+    const cId = String(reg.courseId);
+    if (!courseMap.has(cId)) {
+      courseMap.set(cId, { courseId: cId, studentIds: new Set() });
+    }
+    courseMap.get(cId).studentIds.add(String(reg.studentId));
+  });
+
+  /* Search filter */
+  const q = (document.getElementById("rCurrSearch")?.value || "").trim().toLowerCase();
+
+  let courseRows = Array.from(courseMap.values())
+    .map(row => {
+      const course = courses.find(c => String(c.id) === String(row.courseId));
+      return { ...row, course };
+    })
+    .filter(row => row.course)
+    .filter(row => !q ||
+      row.course.courseCode.toLowerCase().includes(q) ||
+      row.course.courseTitle.toLowerCase().includes(q)
+    )
+    .sort((a, b) => a.course.courseCode.localeCompare(b.course.courseCode));
+
+  document.getElementById("rCurrStudentCount").textContent =
+    `${courseRows.length} course${courseRows.length === 1 ? "" : "s"}`;
+
+  const totalPages = Math.max(1, Math.ceil(courseRows.length / PAGE_SIZE));
+  if (currPage > totalPages) currPage = totalPages;
+  const start = (currPage - 1) * PAGE_SIZE;
+  const paged = courseRows.slice(start, start + PAGE_SIZE);
+
+  document.getElementById("currPaginationInfo").textContent =
+    courseRows.length ? `Showing ${start+1}–${Math.min(start+PAGE_SIZE, courseRows.length)} of ${courseRows.length}` : "";
+
+  const tbody = document.getElementById("currStudentsTbody");
+  const empty = document.getElementById("currStudentsEmpty");
+
+  if (paged.length === 0) { tbody.innerHTML = ""; empty.classList.remove("d-none"); renderCurrPagination(0); return; }
+  empty.classList.add("d-none");
+
+  tbody.innerHTML = paged.map(row => {
+    const { course, studentIds } = row;
+
+    /* Check if a submission exists for this course/session/semester */
+    const sub = submissions.find(s =>
+      String(s.courseId) === String(course.id) &&
+      s.session === session &&
+      Number(s.semester) === semester
+    );
+
+    /* Submission status badge */
+    let subBadge, actionBtn;
+    if (sub) {
+      const badgeStyle = {
+        pending:  "background:var(--warn-100);color:var(--warn);",
+        approved: "background:var(--success-100);color:var(--success);",
+        rejected: "background:var(--danger-100);color:var(--danger);",
+      }[sub.status] || "";
+      const icon = {
+        pending: "bi-hourglass-split",
+        approved: "bi-check-circle-fill",
+        rejected: "bi-x-circle-fill",
+      }[sub.status] || "bi-circle";
+      subBadge = `<span class="status-badge" style="${badgeStyle}"><i class="bi ${icon} me-1"></i>${sub.status}</span>`;
+      actionBtn = `<a href="/assets/pages/admin/admin-approvals.html" class="btn btn-secondary-outline btn-sm">
+        <i class="bi bi-eye"></i> Review in Approvals
+      </a>`;
+    } else {
+      subBadge = `<span class="status-badge status-badge--pending">No submission</span>`;
+      actionBtn = `<button class="btn btn-brand btn-sm" data-action="enter" data-course-id="${course.id}">
+        <i class="bi bi-pencil-square"></i> Enter Scores
+      </button>`;
+    }
+
+    return `<tr>
+      <td class="fw-semibold">${course.courseCode}</td>
+      <td>${course.courseTitle}</td>
+      <td>${course.level}</td>
+      <td>${studentIds.size}</td>
+      <td>${subBadge}</td>
+      <td class="text-end">${actionBtn}</td>
+    </tr>`;
+  }).join("");
+
+  /* Wire Enter Scores buttons */
+  tbody.querySelectorAll("[data-action='enter']").forEach(btn =>
+    btn.addEventListener("click", () => openScoreEntryByCourse(btn.dataset.courseId))
+  );
+
+  renderCurrPagination(totalPages);
+}
+
+/* ── Score entry by course (no submission) ──────────────── */
+function openScoreEntryByCourse(courseId) {
+  const { session, semester } = getCurrFilters();
+  const course = courses.find(c => String(c.id) === String(courseId));
+  if (!course) return;
+
+  currSelectedStudentId = null;   // not used in course-based entry
+  document.getElementById("currStudentArea").classList.add("d-none");
+  document.getElementById("scoreEntryPanel").classList.remove("d-none");
+  document.getElementById("scoreStudentName").textContent = `${course.courseCode} — ${course.courseTitle}`;
+  document.getElementById("scoreStudentMeta").textContent = `${session}, Semester ${semester} · ${course.level} Level · Direct admin entry`;
+  document.getElementById("scorePublishStatus").textContent = "";
+
+  /* Get all students registered for this course */
+  const courseRegs = registrations.filter(r =>
+    String(r.courseId) === String(courseId) &&
+    r.session === session && Number(r.semester) === semester
+  );
+
+  const tbody = document.getElementById("scoreTbody");
+  tbody.innerHTML = courseRegs.map(reg => {
+    const student = students.find(s => String(s.id) === String(reg.studentId));
+    if (!student) return "";
+    const existing = results.find(r =>
+      String(r.studentId) === String(student.id) &&
+      String(r.courseId)  === String(courseId) &&
+      r.session === session && Number(r.semester) === semester
+    );
+    const score = existing ? existing.score : "";
+    const grade = existing ? scoreToGrade(existing.score).grade : "—";
+    let statusLabel;
+    if (!existing) {
+      statusLabel = `<span class="status-badge status-badge--pending">Pending</span>`;
+    } else if (existing.published === false) {
+      statusLabel = `<span class="status-badge status-badge--pending" style="background:var(--warn-100);color:var(--warn);">Draft</span>`;
+    } else {
+      statusLabel = `<span class="status-badge status-badge--completed">Published</span>`;
+    }
+    const rowClass = existing ? (existing.published === false ? "table-warning" : "table-success") : "";
+    return `<tr class="${rowClass}"
+      data-student-id="${student.id}"
+      data-course-id="${courseId}"
+      data-result-id="${existing ? existing.id : ""}"
+      data-level="${course.level}">
+      <td class="fw-semibold">${student.firstName} ${student.lastName}</td>
+      <td class="text-muted-cell">${student.matricNumber}</td>
+      <td colspan="2">
+        <input type="number" class="form-control form-control-sm score-input" style="width:90px"
+          min="0" max="100" value="${score}" placeholder="0–100">
+      </td>
+      <td class="grade-cell fw-semibold">${grade}</td>
+      <td>${statusLabel}</td>
+    </tr>`;
+  }).join("");
+
+  /* Update table header to match new column layout */
+  tbody.closest("table").querySelector("thead tr").innerHTML =
+    `<th>Student</th><th>Matric No.</th><th>Score (0–100)</th><th></th><th>Grade</th><th>Status</th>`;
+
+  /* Live grade preview */
+  tbody.querySelectorAll(".score-input").forEach(inp => {
+    inp.addEventListener("input", () => {
+      const row = inp.closest("tr");
+      const val = inp.value.trim();
+      row.querySelector(".grade-cell").textContent = val === "" ? "—" : scoreToGrade(Number(val)).grade;
+    });
+  });
+}
+
+/* ── Override showStudentList to go back to course list ─── */
+function showStudentList() {
+  document.getElementById("scoreEntryPanel").classList.add("d-none");
+  document.getElementById("currStudentArea").classList.remove("d-none");
+  currSelectedStudentId = null;
+  renderCurrStudents();
+}
+
+/* ── Override saveDraft for course-based entry ──────────── */
+async function saveDraft() {
+  const { session, semester } = getCurrFilters();
+  const rows     = Array.from(document.getElementById("scoreTbody").querySelectorAll("tr"));
+  const saveBtn  = document.getElementById("saveDraftBtn");
+  const statusEl = document.getElementById("scorePublishStatus");
+  const jobs     = [];
+
+  rows.forEach(row => {
+    const inp = row.querySelector(".score-input");
+    if (!inp) return;
+    const val = inp.value.trim();
+    if (val === "") return;
+    const score     = Number(val);
+    if (isNaN(score) || score < 0 || score > 100) return;
+    const studentId = row.dataset.studentId;
+    const courseId  = row.dataset.courseId;
+    const resultId  = row.dataset.resultId;
+    const level     = Number(row.dataset.level);
+
+    if (resultId) {
+      const existing = results.find(r => String(r.id) === String(resultId));
+      const alreadyPublished = existing?.published === true;
+      jobs.push(
+        updateResult(resultId, { score, published: alreadyPublished }).then(upd => {
+          const idx = results.findIndex(r => String(r.id) === String(resultId));
+          if (idx !== -1) results[idx] = { ...results[idx], ...upd };
+          markRowDraft(row, alreadyPublished);
+        })
+      );
+    } else {
+      jobs.push(
+        createResult({ studentId: Number(studentId), courseId: Number(courseId), session, semester, level, score, published: false }).then(created => {
+          results.push(created);
+          row.dataset.resultId = created.id;
+          markRowDraft(row, false);
+        })
+      );
+    }
+  });
+
+  if (jobs.length === 0) { statusEl.textContent = "No scores to save."; return; }
+  saveBtn.disabled = true;
+  statusEl.innerHTML = `<span class="text-muted"><i class="bi bi-hourglass-split"></i> Saving…</span>`;
+  try {
+    await Promise.all(jobs);
+    statusEl.innerHTML = `<span class="text-success"><i class="bi bi-floppy-fill"></i> ${jobs.length} score${jobs.length === 1 ? "" : "s"} saved as draft.</span>`;
+    renderResultsMetrics();
+  } catch (err) {
+    console.error(err);
+    statusEl.textContent = "Some scores failed to save. Please try again.";
+  } finally { saveBtn.disabled = false; }
+}
+
+/* ── Override openPublishConfirm for course-based entry ─── */
+function openPublishConfirm() {
+  const { session, semester } = getCurrFilters();
+
+  /* Gather courseId from first data row */
+  const firstRow = document.querySelector("#scoreTbody tr[data-course-id]");
+  if (!firstRow) return;
+  const courseId = firstRow.dataset.courseId;
+  const course   = courses.find(c => String(c.id) === String(courseId));
+
+  const draftCount = results.filter(r =>
+    String(r.courseId) === String(courseId) &&
+    r.session === session && Number(r.semester) === semester &&
+    r.published === false
+  ).length;
+
+  const unsavedCount = Array.from(document.querySelectorAll("#scoreTbody .score-input")).filter(i =>
+    i.value.trim() !== "" && !i.closest("tr").dataset.resultId
+  ).length;
+
+  if (draftCount === 0 && unsavedCount === 0) {
+    document.getElementById("scorePublishStatus").innerHTML =
+      `<span class="text-muted">No draft scores to publish. Save scores first.</span>`;
+    return;
+  }
+  if (unsavedCount > 0 && draftCount === 0) {
+    document.getElementById("scorePublishStatus").innerHTML =
+      `<span class="text-warning"><i class="bi bi-exclamation-triangle-fill"></i> Click <strong>Save Draft</strong> first, then Publish.</span>`;
+    return;
+  }
+
+  document.getElementById("publishConfirmBody").textContent =
+    `This will publish ${draftCount} draft result${draftCount === 1 ? "" : "s"} for ${course?.courseCode ?? "this course"} to the student portal.`;
+  publishConfirmModal.show();
+}
+
+/* ── Override confirmPublish for course-based entry ─────── */
+async function confirmPublish() {
+  const { session, semester } = getCurrFilters();
+  const statusEl  = document.getElementById("scorePublishStatus");
+  const confirmBtn = document.getElementById("confirmPublishBtn");
+
+  /* Get all draft results visible in the score table */
+  const firstRow = document.querySelector("#scoreTbody tr[data-course-id]");
+  if (!firstRow) return;
+  const courseId = firstRow.dataset.courseId;
+
+  const drafts = results.filter(r =>
+    String(r.courseId) === String(courseId) &&
+    r.session === session && Number(r.semester) === semester &&
+    r.published === false
+  );
+
+  if (drafts.length === 0) { publishConfirmModal.hide(); statusEl.textContent = "No drafts to publish."; return; }
+
+  confirmBtn.disabled = true;
+  confirmBtn.innerHTML = `<span class="spinner-border spinner-border-sm me-1"></span> Publishing…`;
+
+  try {
+    await Promise.all(drafts.map(r =>
+      updateResult(r.id, { published: true }).then(upd => {
+        const idx = results.findIndex(res => String(res.id) === String(r.id));
+        if (idx !== -1) results[idx] = { ...results[idx], ...upd, published: true };
+      })
+    ));
+    publishConfirmModal.hide();
+    statusEl.innerHTML = `<span class="text-success"><i class="bi bi-check-circle-fill"></i> ${drafts.length} result${drafts.length === 1 ? "" : "s"} published.</span>`;
+    /* Refresh score table status column */
+    openScoreEntryByCourse(courseId);
+    renderCurrStudents();
+    renderResultsMetrics();
+  } catch (err) {
+    console.error(err);
+    statusEl.textContent = "Failed to publish. Please try again.";
+  } finally {
+    confirmBtn.disabled = false;
+    confirmBtn.innerHTML = `<i class="bi bi-cloud-upload"></i> Yes, Publish`;
   }
 }

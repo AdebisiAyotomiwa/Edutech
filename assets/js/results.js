@@ -2,7 +2,6 @@ import { requireAuth, getCurrentStudent, logout } from "./auth.js";
 import { getResults, getCourses, getDepartmentById, getRegistrations, getAcademicCalendar } from "./api.js";
 import { calculateGPA, scoreToGrade } from "./utils.js";
 import { initTopbar } from "./topbar.js";
-import { renderHistory } from "./historyComponent.js";
 
 function resolveImagePath(raw) {
   if (!raw || !raw.trim()) return "";
@@ -260,33 +259,9 @@ function showResultsTable(filtered) {
       <td>${r.creditUnit}</td>
       <td class="fw-semibold">${r.score}</td>
       <td><span class="badge badge-grade badge-grade--${grade.grade.toLowerCase()}">${grade.grade}</span></td>
-      <td class="text-end">
-        ${r.submissionId
-          ? `<button type="button" class="btn btn-sm btn-secondary-outline" data-action="history" data-submission-id="${r.submissionId}" title="View history">
-               <i class="bi bi-clock-history"></i>
-             </button>`
-          : `<span class="text-muted small">—</span>`}
-      </td>
     </tr>`;
   }).join("");
   printResultsBtn.closest(".results-print-row")?.classList.remove("d-none");
-
-  resultsTable.querySelectorAll("[data-action='history']").forEach(btn =>
-    btn.addEventListener("click", () => openHistoryModal(btn.dataset.submissionId))
-  );
-}
-
-function openHistoryModal(submissionId) {
-  const modal = new bootstrap.Modal(document.getElementById("historyModal"));
-  const body  = document.getElementById("historyModalBody");
-  body.innerHTML = "";
-  renderHistory(body, {
-    entityType: "resultSubmission",
-    entityId: submissionId,
-    title: "Result history",
-  });
-  modal.show();
-  body.querySelector(".history-toggle")?.click();
 }
 
 function showNotReleasedState() {
@@ -321,7 +296,15 @@ function showNoDataState() {
 /* ── Print ──────────────────────────────────────────────── */
 function handlePrint() {
   const filtered = getFilteredResults();
-  if (!filtered.length) return;
+  if (!filtered.length) {
+    // Briefly notify the user if there's nothing to print
+    const btn = printResultsBtn;
+    const orig = btn.innerHTML;
+    btn.textContent = "No results to print";
+    btn.disabled = true;
+    setTimeout(() => { btn.innerHTML = orig; btn.disabled = false; }, 2000);
+    return;
+  }
   preparePrintArea(filtered);
   window.print();
 }

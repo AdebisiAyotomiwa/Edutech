@@ -39,10 +39,10 @@ const appSidebar       = document.getElementById("appSidebar");
 const appSidebarScrim  = document.getElementById("appSidebarScrim");
 const logoutBtn        = document.getElementById("logoutBtn");
 
-const studentModal       = new bootstrap.Modal(document.getElementById("studentModal"));
-const viewStudentModal   = new bootstrap.Modal(document.getElementById("viewStudentModal"));
-const resetPasswordModal = new bootstrap.Modal(document.getElementById("resetPasswordModal"));
-const deleteStudentModal = new bootstrap.Modal(document.getElementById("deleteStudentModal"));
+let studentModal       = null;
+let viewStudentModal   = null;
+let resetPasswordModal = null;
+let deleteStudentModal = null;
 
 /* ── Boot ───────────────────────────────────────────────── */
 document.addEventListener("DOMContentLoaded", init);
@@ -53,6 +53,10 @@ async function init() {
     if (!admin) { window.location.href = "/assets/pages/admin/admin-login.html"; return; }
     setupSidebar();
     setupLogout();
+    studentModal       = new bootstrap.Modal(document.getElementById("studentModal"));
+    viewStudentModal   = new bootstrap.Modal(document.getElementById("viewStudentModal"));
+    resetPasswordModal = new bootstrap.Modal(document.getElementById("resetPasswordModal"));
+    deleteStudentModal = new bootstrap.Modal(document.getElementById("deleteStudentModal"));
     await loadData();
     populateFilterSelects();
     renderMetrics(students); // metrics always across all students

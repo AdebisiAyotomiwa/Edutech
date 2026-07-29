@@ -2,7 +2,7 @@ import { requireAdminAuth, getCurrentAdmin, adminLogout } from "../adminAuth.js"
 import {
   getLecturers, createLecturer, updateLecturer, deleteLecturer,
   getCourseAssignments, createCourseAssignment, deleteCourseAssignment,
-  getCourses, getDepartments, getResultSubmissions,
+  getCourses, getDepartments, getResultSubmissions, getAcademicCalendar,
 } from "../api.js";
 
 requireAdminAuth();
@@ -14,6 +14,7 @@ let courses     = [];
 let departments = [];
 let assignments = [];
 let submissions = [];   // used for pending badge count
+let calendar    = null;
 
 /* Editing state */
 let editingLecturerId   = null;
@@ -29,9 +30,9 @@ const appSidebar  = document.getElementById("appSidebar");
 const appSidebarScrim = document.getElementById("appSidebarScrim");
 const logoutBtn   = document.getElementById("logoutBtn");
 
-const lecturerModal    = new bootstrap.Modal(document.getElementById("lecturerModal"));
-const assignmentModal  = new bootstrap.Modal(document.getElementById("assignmentModal"));
-const deleteConfirmModal = new bootstrap.Modal(document.getElementById("deleteConfirmModal"));
+let lecturerModal    = null;
+let assignmentModal  = null;
+let deleteConfirmModal = null;
 
 /* ── Boot ───────────────────────────────────────────────── */
 document.addEventListener("DOMContentLoaded", init);
@@ -46,6 +47,12 @@ async function init() {
 
     setupSidebar();
     setupLogout();
+
+    /* Initialise modals after DOM is ready */
+    lecturerModal      = new bootstrap.Modal(document.getElementById("lecturerModal"));
+    assignmentModal    = new bootstrap.Modal(document.getElementById("assignmentModal"));
+    deleteConfirmModal = new bootstrap.Modal(document.getElementById("deleteConfirmModal"));
+
     await loadData();
 
     populateDeptSelect();
@@ -67,12 +74,13 @@ async function init() {
 
 /* ── Data ───────────────────────────────────────────────── */
 async function loadData() {
-  [lecturers, courses, departments, assignments, submissions] = await Promise.all([
+  [lecturers, courses, departments, assignments, submissions, calendar] = await Promise.all([
     getLecturers(),
     getCourses(),
     getDepartments(),
     getCourseAssignments(),
     getResultSubmissions(),
+    getAcademicCalendar(),
   ]);
 }
 
@@ -86,7 +94,7 @@ function setupSidebar() {
   // Pending badge on Approvals nav link
   const pendingCount = submissions.filter(s => s.status === "pending").length;
   const badge = document.getElementById("sidebarPendingBadge");
-  if (pendingCount > 0) { badge.textContent = pendingCount; badge.style.display = ""; }
+  if (badge && pendingCount > 0) { badge.textContent = pendingCount; badge.style.display = ""; }
 
   sidebarToggleBtn.addEventListener("click", () => {
     const open = appSidebar.classList.toggle("is-open");
@@ -177,9 +185,14 @@ function renderLecturers() {
   empty.classList.add("d-none");
 
   tbody.innerHTML = paged.map(l => {
-    const dept     = departments.find(d => String(d.id) === String(l.departmentId));
-    const count    = assignments.filter(a => String(a.lecturerId) === String(l.id)).length;
-    const initials = l.name.split(" ").map(p => p[0]).join("").slice(0, 2).toUpperCase();
+    const dept      = departments.find(d => String(d.id) === String(l.departmentId));
+    // Count only current semester assignments
+    const currCount = assignments.filter(a =>
+      String(a.lecturerId) === String(l.id) &&
+      calendar && a.session === calendar.currentSession &&
+      Number(a.semester) === Number(calendar.currentSemester)
+    ).length;
+    const initials    = l.name.split(" ").map(p => p[0]).join("").slice(0, 2).toUpperCase();
     const displayName = `${l.title ? l.title + " " : ""}${l.name}`;
     return `<tr>
       <td>
@@ -191,7 +204,7 @@ function renderLecturers() {
       <td class="text-muted-cell">${l.staffId}</td>
       <td class="text-muted-cell">${l.email}</td>
       <td>${dept?.name ?? "—"}</td>
-      <td>${count} assignment${count === 1 ? "" : "s"}</td>
+      <td>${currCount} course${currCount === 1 ? "" : "s"} (current sem)</td>
       <td>
         <div class="admin-row-actions">
           <button class="btn btn-secondary-outline btn-sm" data-action="edit"   data-id="${l.id}" title="Edit"><i class="bi bi-pencil"></i></button>
@@ -257,63 +270,6 @@ function openEditLecturerModal(id) {
   lecturerModal.show();
 }
 
-async function handleLecturerFormSubmit(e) {
-  e.preventDefault();
-  hideAlert("lecturerFormAlert");
-
-  const name       = document.getElementById("lName").value.trim();
-  const staffId    = document.getElementById("lStaffId").value.trim().toUpperCase();
-  const email      = document.getElementById("lEmail").value.trim();
-  const deptId     = document.getElementById("lDepartment").value;
-  const password   = document.getElementById("lPassword").value.trim();
-
-  if (!name || !staffId || !email || !deptId) {
-    showAlert("lecturerFormAlert", "Please fill in all required fields."); return;
-  }
-
-  // Duplicate staff ID check
-  const dupStaff = lecturers.find(l =>
-    l.staffId.toUpperCase() === staffId && String(l.id) !== String(editingLecturerId)
-  );
-  if (dupStaff) { showAlert("lecturerFormAlert", `Staff ID "${staffId}" already exists.`); return; }
-
-  // Duplicate email check
-  const dupEmail = lecturers.find(l =>
-    l.email.toLowerCase() === email.toLowerCase() && String(l.id) !== String(editingLecturerId)
-  );
-  if (dupEmail) { showAlert("lecturerFormAlert", "A lecturer with this email already exists."); return; }
-
-  const data = { name, staffId, email, departmentId: deptId, role: "lecturer" };
-
-  if (editingLecturerId === null) {
-    // New lecturer must have a password
-    if (!password || password.length < 6) {
-      showAlert("lecturerFormAlert", "Password must be at least 6 characters."); return;
-    }
-    data.password = password;
-  } else if (password) {
-    // If a password is provided on edit, update it
-    data.password = password;
-  }
-
-  try {
-    if (editingLecturerId === null) {
-      const created = await createLecturer(data);
-      lecturers.push(created);
-    } else {
-      const updated = await updateLecturer(editingLecturerId, data);
-      const idx = lecturers.findIndex(l => String(l.id) === String(editingLecturerId));
-      lecturers[idx] = { ...lecturers[idx], ...updated };
-    }
-    lecturerModal.hide();
-    populateAssignmentSelects();
-    renderLecturers();
-  } catch (err) {
-    console.error(err);
-    showAlert("lecturerFormAlert", "Failed to save. Please try again.");
-  }
-}
-
 function confirmDeleteLecturer(id) {
   const l = lecturers.find(lec => String(lec.id) === String(id));
   if (!l) return;
@@ -327,36 +283,7 @@ function confirmDeleteLecturer(id) {
 
 /* ── Assignments tab ─────────────────────────────────────── */
 function bindAssignmentEvents() {
-  document.getElementById("addAssignmentBtn").addEventListener("click", openAddAssignmentModal);
   document.getElementById("assignmentForm").addEventListener("submit", handleAssignmentFormSubmit);
-}
-
-function renderAssignments() {
-  const tbody = document.getElementById("assignmentsTbody");
-  const empty = document.getElementById("assignmentsEmpty");
-
-  if (assignments.length === 0) { tbody.innerHTML = ""; empty.classList.remove("d-none"); return; }
-  empty.classList.add("d-none");
-
-  tbody.innerHTML = assignments.map(a => {
-    const lecturer = lecturers.find(l => String(l.id) === String(a.lecturerId));
-    const course   = courses.find(c => String(c.id) === String(a.courseId));
-    return `<tr>
-      <td class="fw-semibold">${lecturer ? lecturer.name : "Unknown"}</td>
-      <td>${course ? course.courseCode + " — " + course.courseTitle : "Unknown"}</td>
-      <td>${a.session}</td>
-      <td>Sem ${a.semester}</td>
-      <td class="text-end">
-        <button class="btn btn-danger-soft btn-sm" data-action="delete" data-id="${a.id}" title="Remove">
-          <i class="bi bi-trash"></i>
-        </button>
-      </td>
-    </tr>`;
-  }).join("");
-
-  tbody.querySelectorAll("[data-action='delete']").forEach(btn =>
-    btn.addEventListener("click", () => confirmDeleteAssignment(btn.dataset.id))
-  );
 }
 
 function openAddAssignmentModal() {
@@ -512,32 +439,58 @@ function renderAssignments() {
   if (lecturers.length === 0) { container.innerHTML = ""; empty.classList.remove("d-none"); return; }
   empty.classList.add("d-none");
 
-  container.innerHTML = lecturers.map((lec, idx) => {
+  container.innerHTML = lecturers.map((lec) => {
     const lecAssignments = assignments.filter(a => String(a.lecturerId) === String(lec.id));
     const initials       = lec.name.split(" ").map(p => p[0]).join("").slice(0, 2).toUpperCase();
     const displayName    = `${lec.title ? lec.title + " " : ""}${lec.name}`;
     const dept           = departments.find(d => String(d.id) === String(lec.departmentId));
     const collapseId     = `asnCol_${lec.id}`;
 
+    // Group assignments by session+semester for cleaner display
+    const grouped = new Map();
+    lecAssignments.forEach(a => {
+      const key = `${a.session}|${a.semester}`;
+      if (!grouped.has(key)) grouped.set(key, []);
+      grouped.get(key).push(a);
+    });
+    const sortedGroups = Array.from(grouped.entries())
+      .sort(([a], [b]) => {
+        const [sa, sema] = a.split("|");
+        const [sb, semb] = b.split("|");
+        return sa !== sb ? sb.localeCompare(sa) : Number(sema) - Number(semb);
+      });
+
     const rowsHtml = lecAssignments.length === 0
-      ? `<tr><td colspan="5" class="text-muted text-center py-3 small">No courses assigned yet</td></tr>`
-      : lecAssignments.map(a => {
-          const course = courses.find(c => String(c.id) === String(a.courseId));
-          return `<tr>
-            <td class="fw-semibold">${course?.courseCode ?? "—"}</td>
-            <td>${course?.courseTitle ?? "Unknown"}</td>
-            <td>${a.session}</td>
-            <td>Sem ${a.semester}</td>
-            <td class="text-end">
-              <button class="btn btn-danger-soft btn-sm" data-del-asn="${a.id}" title="Remove"><i class="bi bi-trash"></i></button>
+      ? `<tr><td colspan="4" class="text-muted text-center py-3 small">No courses assigned yet</td></tr>`
+      : sortedGroups.map(([key, groupAssns]) => {
+          const [sess, sem] = key.split("|");
+          const isCurrent = calendar &&
+            sess === calendar.currentSession &&
+            Number(sem) === Number(calendar.currentSemester);
+          const groupHeader = `<tr style="background:var(--paper-50);">
+            <td colspan="4" class="fw-semibold small py-1 px-3" style="border-bottom:1px solid var(--line-200);">
+              ${sess} — Semester ${sem}
+              ${isCurrent ? `<span class="status-badge status-badge--completed ms-2" style="font-size:.68rem;">Current</span>` : ""}
             </td>
           </tr>`;
+          const courseRows = groupAssns.map(a => {
+            const course = courses.find(c => String(c.id) === String(a.courseId));
+            return `<tr>
+              <td class="fw-semibold">${course?.courseCode ?? "—"}</td>
+              <td class="cell-wrap">${course?.courseTitle ?? "Unknown"}</td>
+              <td class="text-muted-cell">${course?.level ?? "—"}</td>
+              <td class="text-end">
+                <button class="btn btn-danger-soft btn-sm" data-del-asn="${a.id}" title="Remove"><i class="bi bi-trash"></i></button>
+              </td>
+            </tr>`;
+          }).join("");
+          return groupHeader + courseRows;
         }).join("");
 
     return `<div class="hist-student-card mb-2">
       <button class="hist-student-header" type="button"
         data-bs-toggle="collapse" data-bs-target="#${collapseId}"
-        aria-expanded="${idx === 0 ? "true" : "false"}">
+        aria-expanded="false">
         <span class="d-flex align-items-center gap-2">
           <span class="student-avatar-mini">${initials}</span>
           <span>
@@ -553,12 +506,14 @@ function renderAssignments() {
           <i class="bi bi-chevron-down hist-chevron ms-2"></i>
         </span>
       </button>
-      <div class="collapse ${idx === 0 ? "show" : ""}" id="${collapseId}">
+      <div class="collapse" id="${collapseId}">
         <div class="hist-student-body p-0">
-          <table class="table table-sm admin-table mb-0">
-            <thead><tr><th>Code</th><th>Title</th><th>Session</th><th>Semester</th><th class="text-end">Action</th></tr></thead>
-            <tbody>${rowsHtml}</tbody>
-          </table>
+          <div class="table-responsive">
+            <table class="table table-sm admin-table table-sticky-first mb-0" style="min-width:400px;">
+              <thead><tr><th>Code</th><th>Title</th><th>Level</th><th class="text-end">Action</th></tr></thead>
+              <tbody>${rowsHtml}</tbody>
+            </table>
+          </div>
         </div>
       </div>
     </div>`;

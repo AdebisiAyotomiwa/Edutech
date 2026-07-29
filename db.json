@@ -20,21 +20,22 @@
   ],
   "academicCalendar": {
     "currentSession": "2025/2026",
-    "currentSemester": 1,
+    "currentSemester": 2,
     "registrationWindow": {
       "normal": {
         "isOpen": false,
-        "opensAt": "2025-09-01T00:00:00Z",
-        "closesAt": "2025-09-21T23:59:59Z"
+        "opensAt": "2026-01-15T00:00:00Z",
+        "closesAt": "2026-01-30T23:59:59Z"
       },
       "late": {
         "isOpen": false,
-        "opensAt": "2025-09-22T00:00:00Z",
-        "closesAt": "2025-10-05T23:59:59Z"
+        "opensAt": "2026-01-31T00:00:00Z",
+        "closesAt": "2026-02-07T23:59:59Z"
       }
     },
     "registrationGenerated": {
-      "2025/2026-1": true
+      "2025/2026-1": true,
+      "2025/2026-2": true
     }
   },
   "departments": [
@@ -75,39 +76,46 @@
     {
       "level": 100,
       "minUnits": 16,
-      "maxUnits": 32
+      "maxUnits": 32,
+      "id": "zYI5uZWVlTk"
     },
     {
       "level": 200,
       "minUnits": 16,
-      "maxUnits": 32
+      "maxUnits": 32,
+      "id": "ySfY19fKnCE"
     },
     {
       "level": 300,
       "minUnits": 16,
-      "maxUnits": 32
+      "maxUnits": 32,
+      "id": "DnnN1A2GHyI"
     },
     {
       "level": 400,
       "minUnits": 14,
-      "maxUnits": 28
+      "maxUnits": 28,
+      "id": "ltYlZ0WDt2Y"
     },
     {
       "level": 500,
       "minUnits": 14,
-      "maxUnits": 28
+      "maxUnits": 28,
+      "id": "fE2R8Ghk8M8"
     }
   ],
   "graduationRequirements": [
     {
       "durationYears": 4,
       "minTotalUnits": 120,
-      "minCoreUnits": 90
+      "minCoreUnits": 90,
+      "id": "frMQsXyuvsI"
     },
     {
       "durationYears": 5,
       "minTotalUnits": 150,
-      "minCoreUnits": 115
+      "minCoreUnits": 115,
+      "id": "1ep6H5ZUPFw"
     }
   ],
   "students": [
@@ -3720,6 +3728,468 @@
       "departmentId": "4",
       "courseType": "elective",
       "status": "active"
+    },
+    {
+      "id": "277",
+      "courseCode": "CSC100X101",
+      "courseTitle": "Study Skills (CSC)",
+      "creditUnit": 1,
+      "semester": 1,
+      "level": 100,
+      "departmentId": "1",
+      "courseType": "elective",
+      "status": "active"
+    },
+    {
+      "id": "278",
+      "courseCode": "CSC100X201",
+      "courseTitle": "Academic Integrity (CSC)",
+      "creditUnit": 1,
+      "semester": 2,
+      "level": 100,
+      "departmentId": "1",
+      "courseType": "elective",
+      "status": "active"
+    },
+    {
+      "id": "279",
+      "courseCode": "CSC200X101",
+      "courseTitle": "Career Orientation (CSC)",
+      "creditUnit": 1,
+      "semester": 1,
+      "level": 200,
+      "departmentId": "1",
+      "courseType": "elective",
+      "status": "active"
+    },
+    {
+      "id": "280",
+      "courseCode": "CSC200X201",
+      "courseTitle": "Peer Tutorial (CSC)",
+      "creditUnit": 1,
+      "semester": 2,
+      "level": 200,
+      "departmentId": "1",
+      "courseType": "elective",
+      "status": "active"
+    },
+    {
+      "id": "281",
+      "courseCode": "CSC300X101",
+      "courseTitle": "Communication Workshop (CSC)",
+      "creditUnit": 1,
+      "semester": 1,
+      "level": 300,
+      "departmentId": "1",
+      "courseType": "elective",
+      "status": "active"
+    },
+    {
+      "id": "282",
+      "courseCode": "CSC300X201",
+      "courseTitle": "Lab Safety (CSC)",
+      "creditUnit": 1,
+      "semester": 2,
+      "level": 300,
+      "departmentId": "1",
+      "courseType": "elective",
+      "status": "active"
+    },
+    {
+      "id": "283",
+      "courseCode": "CSC400X101",
+      "courseTitle": "Professional Ethics Seminar (CSC)",
+      "creditUnit": 1,
+      "semester": 1,
+      "level": 400,
+      "departmentId": "1",
+      "courseType": "elective",
+      "status": "active"
+    },
+    {
+      "id": "284",
+      "courseCode": "CSC400X201",
+      "courseTitle": "Research Orientation (CSC)",
+      "creditUnit": 1,
+      "semester": 2,
+      "level": 400,
+      "departmentId": "1",
+      "courseType": "elective",
+      "status": "active"
+    },
+    {
+      "id": "285",
+      "courseCode": "MTH100X101",
+      "courseTitle": "Industry Exposure (MTH)",
+      "creditUnit": 1,
+      "semester": 1,
+      "level": 100,
+      "departmentId": "2",
+      "courseType": "elective",
+      "status": "active"
+    },
+    {
+      "id": "286",
+      "courseCode": "MTH100X201",
+      "courseTitle": "Soft Skills Development (MTH)",
+      "creditUnit": 1,
+      "semester": 2,
+      "level": 100,
+      "departmentId": "2",
+      "courseType": "elective",
+      "status": "active"
+    },
+    {
+      "id": "287",
+      "courseCode": "MTH200X101",
+      "courseTitle": "Study Skills (MTH)",
+      "creditUnit": 1,
+      "semester": 1,
+      "level": 200,
+      "departmentId": "2",
+      "courseType": "elective",
+      "status": "active"
+    },
+    {
+      "id": "288",
+      "courseCode": "MTH200X201",
+      "courseTitle": "Academic Integrity (MTH)",
+      "creditUnit": 1,
+      "semester": 2,
+      "level": 200,
+      "departmentId": "2",
+      "courseType": "elective",
+      "status": "active"
+    },
+    {
+      "id": "289",
+      "courseCode": "MTH300X101",
+      "courseTitle": "Career Orientation (MTH)",
+      "creditUnit": 1,
+      "semester": 1,
+      "level": 300,
+      "departmentId": "2",
+      "courseType": "elective",
+      "status": "active"
+    },
+    {
+      "id": "290",
+      "courseCode": "MTH300X201",
+      "courseTitle": "Peer Tutorial (MTH)",
+      "creditUnit": 1,
+      "semester": 2,
+      "level": 300,
+      "departmentId": "2",
+      "courseType": "elective",
+      "status": "active"
+    },
+    {
+      "id": "291",
+      "courseCode": "MTH400X101",
+      "courseTitle": "Communication Workshop (MTH)",
+      "creditUnit": 1,
+      "semester": 1,
+      "level": 400,
+      "departmentId": "2",
+      "courseType": "elective",
+      "status": "active"
+    },
+    {
+      "id": "292",
+      "courseCode": "MTH400X201",
+      "courseTitle": "Lab Safety (MTH)",
+      "creditUnit": 1,
+      "semester": 2,
+      "level": 400,
+      "departmentId": "2",
+      "courseType": "elective",
+      "status": "active"
+    },
+    {
+      "id": "293",
+      "courseCode": "CVE100X101",
+      "courseTitle": "Professional Ethics Seminar (CVE)",
+      "creditUnit": 1,
+      "semester": 1,
+      "level": 100,
+      "departmentId": "3",
+      "courseType": "elective",
+      "status": "active"
+    },
+    {
+      "id": "294",
+      "courseCode": "CVE100X201",
+      "courseTitle": "Research Orientation (CVE)",
+      "creditUnit": 1,
+      "semester": 2,
+      "level": 100,
+      "departmentId": "3",
+      "courseType": "elective",
+      "status": "active"
+    },
+    {
+      "id": "295",
+      "courseCode": "CVE200X101",
+      "courseTitle": "Industry Exposure (CVE)",
+      "creditUnit": 1,
+      "semester": 1,
+      "level": 200,
+      "departmentId": "3",
+      "courseType": "elective",
+      "status": "active"
+    },
+    {
+      "id": "296",
+      "courseCode": "CVE200X201",
+      "courseTitle": "Soft Skills Development (CVE)",
+      "creditUnit": 1,
+      "semester": 2,
+      "level": 200,
+      "departmentId": "3",
+      "courseType": "elective",
+      "status": "active"
+    },
+    {
+      "id": "297",
+      "courseCode": "CVE300X101",
+      "courseTitle": "Study Skills (CVE)",
+      "creditUnit": 1,
+      "semester": 1,
+      "level": 300,
+      "departmentId": "3",
+      "courseType": "elective",
+      "status": "active"
+    },
+    {
+      "id": "298",
+      "courseCode": "CVE300X201",
+      "courseTitle": "Academic Integrity (CVE)",
+      "creditUnit": 1,
+      "semester": 2,
+      "level": 300,
+      "departmentId": "3",
+      "courseType": "elective",
+      "status": "active"
+    },
+    {
+      "id": "299",
+      "courseCode": "CVE400X101",
+      "courseTitle": "Career Orientation (CVE)",
+      "creditUnit": 1,
+      "semester": 1,
+      "level": 400,
+      "departmentId": "3",
+      "courseType": "elective",
+      "status": "active"
+    },
+    {
+      "id": "300",
+      "courseCode": "CVE400X201",
+      "courseTitle": "Peer Tutorial (CVE)",
+      "creditUnit": 1,
+      "semester": 2,
+      "level": 400,
+      "departmentId": "3",
+      "courseType": "elective",
+      "status": "active"
+    },
+    {
+      "id": "301",
+      "courseCode": "EEE100X101",
+      "courseTitle": "Communication Workshop (EEE)",
+      "creditUnit": 1,
+      "semester": 1,
+      "level": 100,
+      "departmentId": "4",
+      "courseType": "elective",
+      "status": "active"
+    },
+    {
+      "id": "302",
+      "courseCode": "EEE100X201",
+      "courseTitle": "Lab Safety (EEE)",
+      "creditUnit": 1,
+      "semester": 2,
+      "level": 100,
+      "departmentId": "4",
+      "courseType": "elective",
+      "status": "active"
+    },
+    {
+      "id": "303",
+      "courseCode": "EEE200X101",
+      "courseTitle": "Professional Ethics Seminar (EEE)",
+      "creditUnit": 1,
+      "semester": 1,
+      "level": 200,
+      "departmentId": "4",
+      "courseType": "elective",
+      "status": "active"
+    },
+    {
+      "id": "304",
+      "courseCode": "EEE200X201",
+      "courseTitle": "Research Orientation (EEE)",
+      "creditUnit": 1,
+      "semester": 2,
+      "level": 200,
+      "departmentId": "4",
+      "courseType": "elective",
+      "status": "active"
+    },
+    {
+      "id": "305",
+      "courseCode": "EEE300X101",
+      "courseTitle": "Industry Exposure (EEE)",
+      "creditUnit": 1,
+      "semester": 1,
+      "level": 300,
+      "departmentId": "4",
+      "courseType": "elective",
+      "status": "active"
+    },
+    {
+      "id": "306",
+      "courseCode": "EEE300X201",
+      "courseTitle": "Soft Skills Development (EEE)",
+      "creditUnit": 1,
+      "semester": 2,
+      "level": 300,
+      "departmentId": "4",
+      "courseType": "elective",
+      "status": "active"
+    },
+    {
+      "id": "307",
+      "courseCode": "EEE400X101",
+      "courseTitle": "Study Skills (EEE)",
+      "creditUnit": 1,
+      "semester": 1,
+      "level": 400,
+      "departmentId": "4",
+      "courseType": "elective",
+      "status": "active"
+    },
+    {
+      "id": "308",
+      "courseCode": "EEE400X201",
+      "courseTitle": "Academic Integrity (EEE)",
+      "creditUnit": 1,
+      "semester": 2,
+      "level": 400,
+      "departmentId": "4",
+      "courseType": "elective",
+      "status": "active"
+    },
+    {
+      "id": "309",
+      "courseCode": "CSC107E",
+      "courseTitle": "Computer Science Elective 100-1",
+      "creditUnit": 2,
+      "semester": 2,
+      "level": 100,
+      "departmentId": "1",
+      "courseType": "elective"
+    },
+    {
+      "id": "310",
+      "courseCode": "CSC109E",
+      "courseTitle": "Computer Science Elective 100-2",
+      "creditUnit": 2,
+      "semester": 2,
+      "level": 100,
+      "departmentId": "1",
+      "courseType": "elective"
+    },
+    {
+      "id": "311",
+      "courseCode": "MTH107E",
+      "courseTitle": "Mathematics Elective 100-1",
+      "creditUnit": 2,
+      "semester": 2,
+      "level": 100,
+      "departmentId": "2",
+      "courseType": "elective"
+    },
+    {
+      "id": "312",
+      "courseCode": "MTH109E",
+      "courseTitle": "Mathematics Elective 100-2",
+      "creditUnit": 2,
+      "semester": 2,
+      "level": 100,
+      "departmentId": "2",
+      "courseType": "elective"
+    },
+    {
+      "id": "313",
+      "courseCode": "CVE107E",
+      "courseTitle": "Civil Engineering Elective 100-1",
+      "creditUnit": 2,
+      "semester": 2,
+      "level": 100,
+      "departmentId": "3",
+      "courseType": "elective"
+    },
+    {
+      "id": "314",
+      "courseCode": "CVE109E",
+      "courseTitle": "Civil Engineering Elective 100-2",
+      "creditUnit": 2,
+      "semester": 2,
+      "level": 100,
+      "departmentId": "3",
+      "courseType": "elective"
+    },
+    {
+      "id": "315",
+      "courseCode": "CVE208E",
+      "courseTitle": "Civil Engineering Elective 200-1",
+      "creditUnit": 2,
+      "semester": 2,
+      "level": 200,
+      "departmentId": "3",
+      "courseType": "elective"
+    },
+    {
+      "id": "316",
+      "courseCode": "EEE107E",
+      "courseTitle": "Electrical Engineering Elective 100-1",
+      "creditUnit": 2,
+      "semester": 2,
+      "level": 100,
+      "departmentId": "4",
+      "courseType": "elective"
+    },
+    {
+      "id": "317",
+      "courseCode": "EEE109E",
+      "courseTitle": "Electrical Engineering Elective 100-2",
+      "creditUnit": 2,
+      "semester": 2,
+      "level": 100,
+      "departmentId": "4",
+      "courseType": "elective"
+    },
+    {
+      "id": "318",
+      "courseCode": "EEE207E",
+      "courseTitle": "Electrical Engineering Elective 200-1",
+      "creditUnit": 2,
+      "semester": 2,
+      "level": 200,
+      "departmentId": "4",
+      "courseType": "elective"
+    },
+    {
+      "id": "319",
+      "courseCode": "EEE209E",
+      "courseTitle": "Electrical Engineering Elective 200-2",
+      "creditUnit": 2,
+      "semester": 2,
+      "level": 200,
+      "departmentId": "4",
+      "courseType": "elective"
     }
   ],
   "registrations": [
@@ -15962,6 +16432,2796 @@
       "semester": 2,
       "type": "regular",
       "source": "auto"
+    },
+    {
+      "id": "1361",
+      "studentId": 1,
+      "courseId": 5,
+      "session": "2025/2026",
+      "semester": 2,
+      "type": "regular",
+      "source": "auto"
+    },
+    {
+      "id": "1362",
+      "studentId": 1,
+      "courseId": 6,
+      "session": "2025/2026",
+      "semester": 2,
+      "type": "regular",
+      "source": "auto"
+    },
+    {
+      "id": "1363",
+      "studentId": 1,
+      "courseId": 7,
+      "session": "2025/2026",
+      "semester": 2,
+      "type": "regular",
+      "source": "auto"
+    },
+    {
+      "id": "1364",
+      "studentId": 1,
+      "courseId": 8,
+      "session": "2025/2026",
+      "semester": 2,
+      "type": "regular",
+      "source": "auto"
+    },
+    {
+      "id": "1365",
+      "studentId": 1,
+      "courseId": 153,
+      "session": "2025/2026",
+      "semester": 2,
+      "type": "regular",
+      "source": "student"
+    },
+    {
+      "id": "1366",
+      "studentId": 1,
+      "courseId": 154,
+      "session": "2025/2026",
+      "semester": 2,
+      "type": "regular",
+      "source": "student"
+    },
+    {
+      "id": "1367",
+      "studentId": 2,
+      "courseId": 5,
+      "session": "2025/2026",
+      "semester": 2,
+      "type": "regular",
+      "source": "auto"
+    },
+    {
+      "id": "1368",
+      "studentId": 2,
+      "courseId": 6,
+      "session": "2025/2026",
+      "semester": 2,
+      "type": "regular",
+      "source": "auto"
+    },
+    {
+      "id": "1369",
+      "studentId": 2,
+      "courseId": 7,
+      "session": "2025/2026",
+      "semester": 2,
+      "type": "regular",
+      "source": "auto"
+    },
+    {
+      "id": "1370",
+      "studentId": 2,
+      "courseId": 8,
+      "session": "2025/2026",
+      "semester": 2,
+      "type": "regular",
+      "source": "auto"
+    },
+    {
+      "id": "1371",
+      "studentId": 2,
+      "courseId": 153,
+      "session": "2025/2026",
+      "semester": 2,
+      "type": "regular",
+      "source": "student"
+    },
+    {
+      "id": "1372",
+      "studentId": 2,
+      "courseId": 154,
+      "session": "2025/2026",
+      "semester": 2,
+      "type": "regular",
+      "source": "student"
+    },
+    {
+      "id": "1373",
+      "studentId": 3,
+      "courseId": 5,
+      "session": "2025/2026",
+      "semester": 2,
+      "type": "regular",
+      "source": "auto"
+    },
+    {
+      "id": "1374",
+      "studentId": 3,
+      "courseId": 6,
+      "session": "2025/2026",
+      "semester": 2,
+      "type": "regular",
+      "source": "auto"
+    },
+    {
+      "id": "1375",
+      "studentId": 3,
+      "courseId": 7,
+      "session": "2025/2026",
+      "semester": 2,
+      "type": "regular",
+      "source": "auto"
+    },
+    {
+      "id": "1376",
+      "studentId": 3,
+      "courseId": 8,
+      "session": "2025/2026",
+      "semester": 2,
+      "type": "regular",
+      "source": "auto"
+    },
+    {
+      "id": "1377",
+      "studentId": 3,
+      "courseId": 153,
+      "session": "2025/2026",
+      "semester": 2,
+      "type": "regular",
+      "source": "student"
+    },
+    {
+      "id": "1378",
+      "studentId": 3,
+      "courseId": 154,
+      "session": "2025/2026",
+      "semester": 2,
+      "type": "regular",
+      "source": "student"
+    },
+    {
+      "id": "1379",
+      "studentId": 4,
+      "courseId": 13,
+      "session": "2025/2026",
+      "semester": 2,
+      "type": "regular",
+      "source": "auto"
+    },
+    {
+      "id": "1380",
+      "studentId": 4,
+      "courseId": 14,
+      "session": "2025/2026",
+      "semester": 2,
+      "type": "regular",
+      "source": "auto"
+    },
+    {
+      "id": "1381",
+      "studentId": 4,
+      "courseId": 15,
+      "session": "2025/2026",
+      "semester": 2,
+      "type": "regular",
+      "source": "auto"
+    },
+    {
+      "id": "1382",
+      "studentId": 4,
+      "courseId": 16,
+      "session": "2025/2026",
+      "semester": 2,
+      "type": "regular",
+      "source": "auto"
+    },
+    {
+      "id": "1383",
+      "studentId": 4,
+      "courseId": 161,
+      "session": "2025/2026",
+      "semester": 2,
+      "type": "regular",
+      "source": "student"
+    },
+    {
+      "id": "1384",
+      "studentId": 4,
+      "courseId": 162,
+      "session": "2025/2026",
+      "semester": 2,
+      "type": "regular",
+      "source": "student"
+    },
+    {
+      "id": "1385",
+      "studentId": 4,
+      "courseId": 6,
+      "session": "2025/2026",
+      "semester": 2,
+      "type": "carry-over",
+      "source": "auto"
+    },
+    {
+      "id": "1386",
+      "studentId": 4,
+      "courseId": 156,
+      "session": "2025/2026",
+      "semester": 2,
+      "type": "carry-over",
+      "source": "auto"
+    },
+    {
+      "id": "1387",
+      "studentId": 5,
+      "courseId": 13,
+      "session": "2025/2026",
+      "semester": 2,
+      "type": "regular",
+      "source": "auto"
+    },
+    {
+      "id": "1388",
+      "studentId": 5,
+      "courseId": 14,
+      "session": "2025/2026",
+      "semester": 2,
+      "type": "regular",
+      "source": "auto"
+    },
+    {
+      "id": "1389",
+      "studentId": 5,
+      "courseId": 15,
+      "session": "2025/2026",
+      "semester": 2,
+      "type": "regular",
+      "source": "auto"
+    },
+    {
+      "id": "1390",
+      "studentId": 5,
+      "courseId": 16,
+      "session": "2025/2026",
+      "semester": 2,
+      "type": "regular",
+      "source": "auto"
+    },
+    {
+      "id": "1391",
+      "studentId": 5,
+      "courseId": 161,
+      "session": "2025/2026",
+      "semester": 2,
+      "type": "regular",
+      "source": "student"
+    },
+    {
+      "id": "1392",
+      "studentId": 5,
+      "courseId": 162,
+      "session": "2025/2026",
+      "semester": 2,
+      "type": "regular",
+      "source": "student"
+    },
+    {
+      "id": "1393",
+      "studentId": 6,
+      "courseId": 13,
+      "session": "2025/2026",
+      "semester": 2,
+      "type": "regular",
+      "source": "auto"
+    },
+    {
+      "id": "1394",
+      "studentId": 6,
+      "courseId": 14,
+      "session": "2025/2026",
+      "semester": 2,
+      "type": "regular",
+      "source": "auto"
+    },
+    {
+      "id": "1395",
+      "studentId": 6,
+      "courseId": 15,
+      "session": "2025/2026",
+      "semester": 2,
+      "type": "regular",
+      "source": "auto"
+    },
+    {
+      "id": "1396",
+      "studentId": 6,
+      "courseId": 16,
+      "session": "2025/2026",
+      "semester": 2,
+      "type": "regular",
+      "source": "auto"
+    },
+    {
+      "id": "1397",
+      "studentId": 6,
+      "courseId": 161,
+      "session": "2025/2026",
+      "semester": 2,
+      "type": "regular",
+      "source": "student"
+    },
+    {
+      "id": "1398",
+      "studentId": 6,
+      "courseId": 162,
+      "session": "2025/2026",
+      "semester": 2,
+      "type": "regular",
+      "source": "student"
+    },
+    {
+      "id": "1399",
+      "studentId": 7,
+      "courseId": 21,
+      "session": "2025/2026",
+      "semester": 2,
+      "type": "regular",
+      "source": "auto"
+    },
+    {
+      "id": "1400",
+      "studentId": 7,
+      "courseId": 22,
+      "session": "2025/2026",
+      "semester": 2,
+      "type": "regular",
+      "source": "auto"
+    },
+    {
+      "id": "1401",
+      "studentId": 7,
+      "courseId": 23,
+      "session": "2025/2026",
+      "semester": 2,
+      "type": "regular",
+      "source": "auto"
+    },
+    {
+      "id": "1402",
+      "studentId": 7,
+      "courseId": 24,
+      "session": "2025/2026",
+      "semester": 2,
+      "type": "regular",
+      "source": "auto"
+    },
+    {
+      "id": "1403",
+      "studentId": 7,
+      "courseId": 169,
+      "session": "2025/2026",
+      "semester": 2,
+      "type": "regular",
+      "source": "student"
+    },
+    {
+      "id": "1404",
+      "studentId": 7,
+      "courseId": 170,
+      "session": "2025/2026",
+      "semester": 2,
+      "type": "regular",
+      "source": "student"
+    },
+    {
+      "id": "1405",
+      "studentId": 7,
+      "courseId": 6,
+      "session": "2025/2026",
+      "semester": 2,
+      "type": "carry-over",
+      "source": "auto"
+    },
+    {
+      "id": "1406",
+      "studentId": 7,
+      "courseId": 15,
+      "session": "2025/2026",
+      "semester": 2,
+      "type": "carry-over",
+      "source": "auto"
+    },
+    {
+      "id": "1407",
+      "studentId": 7,
+      "courseId": 153,
+      "session": "2025/2026",
+      "semester": 2,
+      "type": "carry-over",
+      "source": "auto"
+    },
+    {
+      "id": "1408",
+      "studentId": 7,
+      "courseId": 155,
+      "session": "2025/2026",
+      "semester": 2,
+      "type": "carry-over",
+      "source": "auto"
+    },
+    {
+      "id": "1409",
+      "studentId": 8,
+      "courseId": 21,
+      "session": "2025/2026",
+      "semester": 2,
+      "type": "regular",
+      "source": "auto"
+    },
+    {
+      "id": "1410",
+      "studentId": 8,
+      "courseId": 22,
+      "session": "2025/2026",
+      "semester": 2,
+      "type": "regular",
+      "source": "auto"
+    },
+    {
+      "id": "1411",
+      "studentId": 8,
+      "courseId": 23,
+      "session": "2025/2026",
+      "semester": 2,
+      "type": "regular",
+      "source": "auto"
+    },
+    {
+      "id": "1412",
+      "studentId": 8,
+      "courseId": 24,
+      "session": "2025/2026",
+      "semester": 2,
+      "type": "regular",
+      "source": "auto"
+    },
+    {
+      "id": "1413",
+      "studentId": 8,
+      "courseId": 169,
+      "session": "2025/2026",
+      "semester": 2,
+      "type": "regular",
+      "source": "student"
+    },
+    {
+      "id": "1414",
+      "studentId": 8,
+      "courseId": 170,
+      "session": "2025/2026",
+      "semester": 2,
+      "type": "regular",
+      "source": "student"
+    },
+    {
+      "id": "1415",
+      "studentId": 8,
+      "courseId": 13,
+      "session": "2025/2026",
+      "semester": 2,
+      "type": "carry-over",
+      "source": "auto"
+    },
+    {
+      "id": "1416",
+      "studentId": 9,
+      "courseId": 29,
+      "session": "2025/2026",
+      "semester": 2,
+      "type": "regular",
+      "source": "auto"
+    },
+    {
+      "id": "1417",
+      "studentId": 9,
+      "courseId": 30,
+      "session": "2025/2026",
+      "semester": 2,
+      "type": "regular",
+      "source": "auto"
+    },
+    {
+      "id": "1418",
+      "studentId": 9,
+      "courseId": 31,
+      "session": "2025/2026",
+      "semester": 2,
+      "type": "regular",
+      "source": "auto"
+    },
+    {
+      "id": "1419",
+      "studentId": 9,
+      "courseId": 32,
+      "session": "2025/2026",
+      "semester": 2,
+      "type": "regular",
+      "source": "auto"
+    },
+    {
+      "id": "1420",
+      "studentId": 9,
+      "courseId": 177,
+      "session": "2025/2026",
+      "semester": 2,
+      "type": "regular",
+      "source": "student"
+    },
+    {
+      "id": "1421",
+      "studentId": 9,
+      "courseId": 178,
+      "session": "2025/2026",
+      "semester": 2,
+      "type": "regular",
+      "source": "student"
+    },
+    {
+      "id": "1422",
+      "studentId": 9,
+      "courseId": 14,
+      "session": "2025/2026",
+      "semester": 2,
+      "type": "carry-over",
+      "source": "auto"
+    },
+    {
+      "id": "1423",
+      "studentId": 9,
+      "courseId": 21,
+      "session": "2025/2026",
+      "semester": 2,
+      "type": "carry-over",
+      "source": "auto"
+    },
+    {
+      "id": "1424",
+      "studentId": 9,
+      "courseId": 22,
+      "session": "2025/2026",
+      "semester": 2,
+      "type": "carry-over",
+      "source": "auto"
+    },
+    {
+      "id": "1425",
+      "studentId": 9,
+      "courseId": 162,
+      "session": "2025/2026",
+      "semester": 2,
+      "type": "carry-over",
+      "source": "auto"
+    },
+    {
+      "id": "1426",
+      "studentId": 10,
+      "courseId": 29,
+      "session": "2025/2026",
+      "semester": 2,
+      "type": "regular",
+      "source": "auto"
+    },
+    {
+      "id": "1427",
+      "studentId": 10,
+      "courseId": 30,
+      "session": "2025/2026",
+      "semester": 2,
+      "type": "regular",
+      "source": "auto"
+    },
+    {
+      "id": "1428",
+      "studentId": 10,
+      "courseId": 31,
+      "session": "2025/2026",
+      "semester": 2,
+      "type": "regular",
+      "source": "auto"
+    },
+    {
+      "id": "1429",
+      "studentId": 10,
+      "courseId": 32,
+      "session": "2025/2026",
+      "semester": 2,
+      "type": "regular",
+      "source": "auto"
+    },
+    {
+      "id": "1430",
+      "studentId": 10,
+      "courseId": 177,
+      "session": "2025/2026",
+      "semester": 2,
+      "type": "regular",
+      "source": "student"
+    },
+    {
+      "id": "1431",
+      "studentId": 10,
+      "courseId": 178,
+      "session": "2025/2026",
+      "semester": 2,
+      "type": "regular",
+      "source": "student"
+    },
+    {
+      "id": "1432",
+      "studentId": 10,
+      "courseId": 170,
+      "session": "2025/2026",
+      "semester": 2,
+      "type": "carry-over",
+      "source": "auto"
+    },
+    {
+      "id": "1433",
+      "studentId": 10,
+      "courseId": 161,
+      "session": "2025/2026",
+      "semester": 2,
+      "type": "carry-over",
+      "source": "auto"
+    },
+    {
+      "id": "1434",
+      "studentId": 10,
+      "courseId": 153,
+      "session": "2025/2026",
+      "semester": 2,
+      "type": "carry-over",
+      "source": "auto"
+    },
+    {
+      "id": "1435",
+      "studentId": 11,
+      "courseId": 37,
+      "session": "2025/2026",
+      "semester": 2,
+      "type": "regular",
+      "source": "auto"
+    },
+    {
+      "id": "1436",
+      "studentId": 11,
+      "courseId": 38,
+      "session": "2025/2026",
+      "semester": 2,
+      "type": "regular",
+      "source": "auto"
+    },
+    {
+      "id": "1437",
+      "studentId": 11,
+      "courseId": 39,
+      "session": "2025/2026",
+      "semester": 2,
+      "type": "regular",
+      "source": "auto"
+    },
+    {
+      "id": "1438",
+      "studentId": 11,
+      "courseId": 40,
+      "session": "2025/2026",
+      "semester": 2,
+      "type": "regular",
+      "source": "auto"
+    },
+    {
+      "id": "1439",
+      "studentId": 11,
+      "courseId": 185,
+      "session": "2025/2026",
+      "semester": 2,
+      "type": "regular",
+      "source": "student"
+    },
+    {
+      "id": "1440",
+      "studentId": 11,
+      "courseId": 186,
+      "session": "2025/2026",
+      "semester": 2,
+      "type": "regular",
+      "source": "student"
+    },
+    {
+      "id": "1441",
+      "studentId": 12,
+      "courseId": 37,
+      "session": "2025/2026",
+      "semester": 2,
+      "type": "regular",
+      "source": "auto"
+    },
+    {
+      "id": "1442",
+      "studentId": 12,
+      "courseId": 38,
+      "session": "2025/2026",
+      "semester": 2,
+      "type": "regular",
+      "source": "auto"
+    },
+    {
+      "id": "1443",
+      "studentId": 12,
+      "courseId": 39,
+      "session": "2025/2026",
+      "semester": 2,
+      "type": "regular",
+      "source": "auto"
+    },
+    {
+      "id": "1444",
+      "studentId": 12,
+      "courseId": 40,
+      "session": "2025/2026",
+      "semester": 2,
+      "type": "regular",
+      "source": "auto"
+    },
+    {
+      "id": "1445",
+      "studentId": 12,
+      "courseId": 185,
+      "session": "2025/2026",
+      "semester": 2,
+      "type": "regular",
+      "source": "student"
+    },
+    {
+      "id": "1446",
+      "studentId": 12,
+      "courseId": 186,
+      "session": "2025/2026",
+      "semester": 2,
+      "type": "regular",
+      "source": "student"
+    },
+    {
+      "id": "1447",
+      "studentId": 13,
+      "courseId": 37,
+      "session": "2025/2026",
+      "semester": 2,
+      "type": "regular",
+      "source": "auto"
+    },
+    {
+      "id": "1448",
+      "studentId": 13,
+      "courseId": 38,
+      "session": "2025/2026",
+      "semester": 2,
+      "type": "regular",
+      "source": "auto"
+    },
+    {
+      "id": "1449",
+      "studentId": 13,
+      "courseId": 39,
+      "session": "2025/2026",
+      "semester": 2,
+      "type": "regular",
+      "source": "auto"
+    },
+    {
+      "id": "1450",
+      "studentId": 13,
+      "courseId": 40,
+      "session": "2025/2026",
+      "semester": 2,
+      "type": "regular",
+      "source": "auto"
+    },
+    {
+      "id": "1451",
+      "studentId": 13,
+      "courseId": 185,
+      "session": "2025/2026",
+      "semester": 2,
+      "type": "regular",
+      "source": "student"
+    },
+    {
+      "id": "1452",
+      "studentId": 13,
+      "courseId": 186,
+      "session": "2025/2026",
+      "semester": 2,
+      "type": "regular",
+      "source": "student"
+    },
+    {
+      "id": "1453",
+      "studentId": 14,
+      "courseId": 45,
+      "session": "2025/2026",
+      "semester": 2,
+      "type": "regular",
+      "source": "auto"
+    },
+    {
+      "id": "1454",
+      "studentId": 14,
+      "courseId": 46,
+      "session": "2025/2026",
+      "semester": 2,
+      "type": "regular",
+      "source": "auto"
+    },
+    {
+      "id": "1455",
+      "studentId": 14,
+      "courseId": 47,
+      "session": "2025/2026",
+      "semester": 2,
+      "type": "regular",
+      "source": "auto"
+    },
+    {
+      "id": "1456",
+      "studentId": 14,
+      "courseId": 48,
+      "session": "2025/2026",
+      "semester": 2,
+      "type": "regular",
+      "source": "auto"
+    },
+    {
+      "id": "1457",
+      "studentId": 14,
+      "courseId": 193,
+      "session": "2025/2026",
+      "semester": 2,
+      "type": "regular",
+      "source": "student"
+    },
+    {
+      "id": "1458",
+      "studentId": 14,
+      "courseId": 194,
+      "session": "2025/2026",
+      "semester": 2,
+      "type": "regular",
+      "source": "student"
+    },
+    {
+      "id": "1459",
+      "studentId": 14,
+      "courseId": 39,
+      "session": "2025/2026",
+      "semester": 2,
+      "type": "carry-over",
+      "source": "auto"
+    },
+    {
+      "id": "1460",
+      "studentId": 15,
+      "courseId": 45,
+      "session": "2025/2026",
+      "semester": 2,
+      "type": "regular",
+      "source": "auto"
+    },
+    {
+      "id": "1461",
+      "studentId": 15,
+      "courseId": 46,
+      "session": "2025/2026",
+      "semester": 2,
+      "type": "regular",
+      "source": "auto"
+    },
+    {
+      "id": "1462",
+      "studentId": 15,
+      "courseId": 47,
+      "session": "2025/2026",
+      "semester": 2,
+      "type": "regular",
+      "source": "auto"
+    },
+    {
+      "id": "1463",
+      "studentId": 15,
+      "courseId": 48,
+      "session": "2025/2026",
+      "semester": 2,
+      "type": "regular",
+      "source": "auto"
+    },
+    {
+      "id": "1464",
+      "studentId": 15,
+      "courseId": 193,
+      "session": "2025/2026",
+      "semester": 2,
+      "type": "regular",
+      "source": "student"
+    },
+    {
+      "id": "1465",
+      "studentId": 15,
+      "courseId": 194,
+      "session": "2025/2026",
+      "semester": 2,
+      "type": "regular",
+      "source": "student"
+    },
+    {
+      "id": "1466",
+      "studentId": 15,
+      "courseId": 40,
+      "session": "2025/2026",
+      "semester": 2,
+      "type": "carry-over",
+      "source": "auto"
+    },
+    {
+      "id": "1467",
+      "studentId": 16,
+      "courseId": 45,
+      "session": "2025/2026",
+      "semester": 2,
+      "type": "regular",
+      "source": "auto"
+    },
+    {
+      "id": "1468",
+      "studentId": 16,
+      "courseId": 46,
+      "session": "2025/2026",
+      "semester": 2,
+      "type": "regular",
+      "source": "auto"
+    },
+    {
+      "id": "1469",
+      "studentId": 16,
+      "courseId": 47,
+      "session": "2025/2026",
+      "semester": 2,
+      "type": "regular",
+      "source": "auto"
+    },
+    {
+      "id": "1470",
+      "studentId": 16,
+      "courseId": 48,
+      "session": "2025/2026",
+      "semester": 2,
+      "type": "regular",
+      "source": "auto"
+    },
+    {
+      "id": "1471",
+      "studentId": 16,
+      "courseId": 193,
+      "session": "2025/2026",
+      "semester": 2,
+      "type": "regular",
+      "source": "student"
+    },
+    {
+      "id": "1472",
+      "studentId": 16,
+      "courseId": 194,
+      "session": "2025/2026",
+      "semester": 2,
+      "type": "regular",
+      "source": "student"
+    },
+    {
+      "id": "1473",
+      "studentId": 16,
+      "courseId": 40,
+      "session": "2025/2026",
+      "semester": 2,
+      "type": "carry-over",
+      "source": "auto"
+    },
+    {
+      "id": "1474",
+      "studentId": 17,
+      "courseId": 53,
+      "session": "2025/2026",
+      "semester": 2,
+      "type": "regular",
+      "source": "auto"
+    },
+    {
+      "id": "1475",
+      "studentId": 17,
+      "courseId": 54,
+      "session": "2025/2026",
+      "semester": 2,
+      "type": "regular",
+      "source": "auto"
+    },
+    {
+      "id": "1476",
+      "studentId": 17,
+      "courseId": 55,
+      "session": "2025/2026",
+      "semester": 2,
+      "type": "regular",
+      "source": "auto"
+    },
+    {
+      "id": "1477",
+      "studentId": 17,
+      "courseId": 56,
+      "session": "2025/2026",
+      "semester": 2,
+      "type": "regular",
+      "source": "auto"
+    },
+    {
+      "id": "1478",
+      "studentId": 17,
+      "courseId": 201,
+      "session": "2025/2026",
+      "semester": 2,
+      "type": "regular",
+      "source": "student"
+    },
+    {
+      "id": "1479",
+      "studentId": 17,
+      "courseId": 202,
+      "session": "2025/2026",
+      "semester": 2,
+      "type": "regular",
+      "source": "student"
+    },
+    {
+      "id": "1480",
+      "studentId": 17,
+      "courseId": 193,
+      "session": "2025/2026",
+      "semester": 2,
+      "type": "carry-over",
+      "source": "auto"
+    },
+    {
+      "id": "1481",
+      "studentId": 18,
+      "courseId": 53,
+      "session": "2025/2026",
+      "semester": 2,
+      "type": "regular",
+      "source": "auto"
+    },
+    {
+      "id": "1482",
+      "studentId": 18,
+      "courseId": 54,
+      "session": "2025/2026",
+      "semester": 2,
+      "type": "regular",
+      "source": "auto"
+    },
+    {
+      "id": "1483",
+      "studentId": 18,
+      "courseId": 55,
+      "session": "2025/2026",
+      "semester": 2,
+      "type": "regular",
+      "source": "auto"
+    },
+    {
+      "id": "1484",
+      "studentId": 18,
+      "courseId": 56,
+      "session": "2025/2026",
+      "semester": 2,
+      "type": "regular",
+      "source": "auto"
+    },
+    {
+      "id": "1485",
+      "studentId": 18,
+      "courseId": 201,
+      "session": "2025/2026",
+      "semester": 2,
+      "type": "regular",
+      "source": "student"
+    },
+    {
+      "id": "1486",
+      "studentId": 18,
+      "courseId": 202,
+      "session": "2025/2026",
+      "semester": 2,
+      "type": "regular",
+      "source": "student"
+    },
+    {
+      "id": "1487",
+      "studentId": 18,
+      "courseId": 185,
+      "session": "2025/2026",
+      "semester": 2,
+      "type": "carry-over",
+      "source": "auto"
+    },
+    {
+      "id": "1488",
+      "studentId": 18,
+      "courseId": 186,
+      "session": "2025/2026",
+      "semester": 2,
+      "type": "carry-over",
+      "source": "auto"
+    },
+    {
+      "id": "1489",
+      "studentId": 19,
+      "courseId": 61,
+      "session": "2025/2026",
+      "semester": 2,
+      "type": "regular",
+      "source": "auto"
+    },
+    {
+      "id": "1490",
+      "studentId": 19,
+      "courseId": 62,
+      "session": "2025/2026",
+      "semester": 2,
+      "type": "regular",
+      "source": "auto"
+    },
+    {
+      "id": "1491",
+      "studentId": 19,
+      "courseId": 63,
+      "session": "2025/2026",
+      "semester": 2,
+      "type": "regular",
+      "source": "auto"
+    },
+    {
+      "id": "1492",
+      "studentId": 19,
+      "courseId": 64,
+      "session": "2025/2026",
+      "semester": 2,
+      "type": "regular",
+      "source": "auto"
+    },
+    {
+      "id": "1493",
+      "studentId": 19,
+      "courseId": 209,
+      "session": "2025/2026",
+      "semester": 2,
+      "type": "regular",
+      "source": "student"
+    },
+    {
+      "id": "1494",
+      "studentId": 19,
+      "courseId": 210,
+      "session": "2025/2026",
+      "semester": 2,
+      "type": "regular",
+      "source": "student"
+    },
+    {
+      "id": "1495",
+      "studentId": 19,
+      "courseId": 38,
+      "session": "2025/2026",
+      "semester": 2,
+      "type": "carry-over",
+      "source": "auto"
+    },
+    {
+      "id": "1496",
+      "studentId": 19,
+      "courseId": 55,
+      "session": "2025/2026",
+      "semester": 2,
+      "type": "carry-over",
+      "source": "auto"
+    },
+    {
+      "id": "1497",
+      "studentId": 19,
+      "courseId": 201,
+      "session": "2025/2026",
+      "semester": 2,
+      "type": "carry-over",
+      "source": "auto"
+    },
+    {
+      "id": "1498",
+      "studentId": 19,
+      "courseId": 196,
+      "session": "2025/2026",
+      "semester": 2,
+      "type": "carry-over",
+      "source": "auto"
+    },
+    {
+      "id": "1499",
+      "studentId": 19,
+      "courseId": 186,
+      "session": "2025/2026",
+      "semester": 2,
+      "type": "carry-over",
+      "source": "auto"
+    },
+    {
+      "id": "1500",
+      "studentId": 20,
+      "courseId": 61,
+      "session": "2025/2026",
+      "semester": 2,
+      "type": "regular",
+      "source": "auto"
+    },
+    {
+      "id": "1501",
+      "studentId": 20,
+      "courseId": 62,
+      "session": "2025/2026",
+      "semester": 2,
+      "type": "regular",
+      "source": "auto"
+    },
+    {
+      "id": "1502",
+      "studentId": 20,
+      "courseId": 63,
+      "session": "2025/2026",
+      "semester": 2,
+      "type": "regular",
+      "source": "auto"
+    },
+    {
+      "id": "1503",
+      "studentId": 20,
+      "courseId": 64,
+      "session": "2025/2026",
+      "semester": 2,
+      "type": "regular",
+      "source": "auto"
+    },
+    {
+      "id": "1504",
+      "studentId": 20,
+      "courseId": 209,
+      "session": "2025/2026",
+      "semester": 2,
+      "type": "regular",
+      "source": "student"
+    },
+    {
+      "id": "1505",
+      "studentId": 20,
+      "courseId": 210,
+      "session": "2025/2026",
+      "semester": 2,
+      "type": "regular",
+      "source": "student"
+    },
+    {
+      "id": "1506",
+      "studentId": 21,
+      "courseId": 69,
+      "session": "2025/2026",
+      "semester": 2,
+      "type": "regular",
+      "source": "auto"
+    },
+    {
+      "id": "1507",
+      "studentId": 21,
+      "courseId": 70,
+      "session": "2025/2026",
+      "semester": 2,
+      "type": "regular",
+      "source": "auto"
+    },
+    {
+      "id": "1508",
+      "studentId": 21,
+      "courseId": 71,
+      "session": "2025/2026",
+      "semester": 2,
+      "type": "regular",
+      "source": "auto"
+    },
+    {
+      "id": "1509",
+      "studentId": 21,
+      "courseId": 72,
+      "session": "2025/2026",
+      "semester": 2,
+      "type": "regular",
+      "source": "auto"
+    },
+    {
+      "id": "1510",
+      "studentId": 21,
+      "courseId": 217,
+      "session": "2025/2026",
+      "semester": 2,
+      "type": "regular",
+      "source": "student"
+    },
+    {
+      "id": "1511",
+      "studentId": 21,
+      "courseId": 218,
+      "session": "2025/2026",
+      "semester": 2,
+      "type": "regular",
+      "source": "student"
+    },
+    {
+      "id": "1512",
+      "studentId": 22,
+      "courseId": 69,
+      "session": "2025/2026",
+      "semester": 2,
+      "type": "regular",
+      "source": "auto"
+    },
+    {
+      "id": "1513",
+      "studentId": 22,
+      "courseId": 70,
+      "session": "2025/2026",
+      "semester": 2,
+      "type": "regular",
+      "source": "auto"
+    },
+    {
+      "id": "1514",
+      "studentId": 22,
+      "courseId": 71,
+      "session": "2025/2026",
+      "semester": 2,
+      "type": "regular",
+      "source": "auto"
+    },
+    {
+      "id": "1515",
+      "studentId": 22,
+      "courseId": 72,
+      "session": "2025/2026",
+      "semester": 2,
+      "type": "regular",
+      "source": "auto"
+    },
+    {
+      "id": "1516",
+      "studentId": 22,
+      "courseId": 217,
+      "session": "2025/2026",
+      "semester": 2,
+      "type": "regular",
+      "source": "student"
+    },
+    {
+      "id": "1517",
+      "studentId": 22,
+      "courseId": 218,
+      "session": "2025/2026",
+      "semester": 2,
+      "type": "regular",
+      "source": "student"
+    },
+    {
+      "id": "1518",
+      "studentId": 23,
+      "courseId": 77,
+      "session": "2025/2026",
+      "semester": 2,
+      "type": "regular",
+      "source": "auto"
+    },
+    {
+      "id": "1519",
+      "studentId": 23,
+      "courseId": 78,
+      "session": "2025/2026",
+      "semester": 2,
+      "type": "regular",
+      "source": "auto"
+    },
+    {
+      "id": "1520",
+      "studentId": 23,
+      "courseId": 79,
+      "session": "2025/2026",
+      "semester": 2,
+      "type": "regular",
+      "source": "auto"
+    },
+    {
+      "id": "1521",
+      "studentId": 23,
+      "courseId": 80,
+      "session": "2025/2026",
+      "semester": 2,
+      "type": "regular",
+      "source": "auto"
+    },
+    {
+      "id": "1522",
+      "studentId": 23,
+      "courseId": 225,
+      "session": "2025/2026",
+      "semester": 2,
+      "type": "regular",
+      "source": "student"
+    },
+    {
+      "id": "1523",
+      "studentId": 23,
+      "courseId": 226,
+      "session": "2025/2026",
+      "semester": 2,
+      "type": "regular",
+      "source": "student"
+    },
+    {
+      "id": "1524",
+      "studentId": 24,
+      "courseId": 77,
+      "session": "2025/2026",
+      "semester": 2,
+      "type": "regular",
+      "source": "auto"
+    },
+    {
+      "id": "1525",
+      "studentId": 24,
+      "courseId": 78,
+      "session": "2025/2026",
+      "semester": 2,
+      "type": "regular",
+      "source": "auto"
+    },
+    {
+      "id": "1526",
+      "studentId": 24,
+      "courseId": 79,
+      "session": "2025/2026",
+      "semester": 2,
+      "type": "regular",
+      "source": "auto"
+    },
+    {
+      "id": "1527",
+      "studentId": 24,
+      "courseId": 80,
+      "session": "2025/2026",
+      "semester": 2,
+      "type": "regular",
+      "source": "auto"
+    },
+    {
+      "id": "1528",
+      "studentId": 24,
+      "courseId": 225,
+      "session": "2025/2026",
+      "semester": 2,
+      "type": "regular",
+      "source": "student"
+    },
+    {
+      "id": "1529",
+      "studentId": 24,
+      "courseId": 226,
+      "session": "2025/2026",
+      "semester": 2,
+      "type": "regular",
+      "source": "student"
+    },
+    {
+      "id": "1530",
+      "studentId": 24,
+      "courseId": 70,
+      "session": "2025/2026",
+      "semester": 2,
+      "type": "carry-over",
+      "source": "auto"
+    },
+    {
+      "id": "1531",
+      "studentId": 25,
+      "courseId": 85,
+      "session": "2025/2026",
+      "semester": 2,
+      "type": "regular",
+      "source": "auto"
+    },
+    {
+      "id": "1532",
+      "studentId": 25,
+      "courseId": 86,
+      "session": "2025/2026",
+      "semester": 2,
+      "type": "regular",
+      "source": "auto"
+    },
+    {
+      "id": "1533",
+      "studentId": 25,
+      "courseId": 87,
+      "session": "2025/2026",
+      "semester": 2,
+      "type": "regular",
+      "source": "auto"
+    },
+    {
+      "id": "1534",
+      "studentId": 25,
+      "courseId": 88,
+      "session": "2025/2026",
+      "semester": 2,
+      "type": "regular",
+      "source": "auto"
+    },
+    {
+      "id": "1535",
+      "studentId": 25,
+      "courseId": 233,
+      "session": "2025/2026",
+      "semester": 2,
+      "type": "regular",
+      "source": "student"
+    },
+    {
+      "id": "1536",
+      "studentId": 25,
+      "courseId": 234,
+      "session": "2025/2026",
+      "semester": 2,
+      "type": "regular",
+      "source": "student"
+    },
+    {
+      "id": "1537",
+      "studentId": 25,
+      "courseId": 228,
+      "session": "2025/2026",
+      "semester": 2,
+      "type": "carry-over",
+      "source": "auto"
+    },
+    {
+      "id": "1538",
+      "studentId": 25,
+      "courseId": 217,
+      "session": "2025/2026",
+      "semester": 2,
+      "type": "carry-over",
+      "source": "auto"
+    },
+    {
+      "id": "1539",
+      "studentId": 26,
+      "courseId": 85,
+      "session": "2025/2026",
+      "semester": 2,
+      "type": "regular",
+      "source": "auto"
+    },
+    {
+      "id": "1540",
+      "studentId": 26,
+      "courseId": 86,
+      "session": "2025/2026",
+      "semester": 2,
+      "type": "regular",
+      "source": "auto"
+    },
+    {
+      "id": "1541",
+      "studentId": 26,
+      "courseId": 87,
+      "session": "2025/2026",
+      "semester": 2,
+      "type": "regular",
+      "source": "auto"
+    },
+    {
+      "id": "1542",
+      "studentId": 26,
+      "courseId": 88,
+      "session": "2025/2026",
+      "semester": 2,
+      "type": "regular",
+      "source": "auto"
+    },
+    {
+      "id": "1543",
+      "studentId": 26,
+      "courseId": 233,
+      "session": "2025/2026",
+      "semester": 2,
+      "type": "regular",
+      "source": "student"
+    },
+    {
+      "id": "1544",
+      "studentId": 26,
+      "courseId": 234,
+      "session": "2025/2026",
+      "semester": 2,
+      "type": "regular",
+      "source": "student"
+    },
+    {
+      "id": "1545",
+      "studentId": 26,
+      "courseId": 70,
+      "session": "2025/2026",
+      "semester": 2,
+      "type": "carry-over",
+      "source": "auto"
+    },
+    {
+      "id": "1546",
+      "studentId": 26,
+      "courseId": 227,
+      "session": "2025/2026",
+      "semester": 2,
+      "type": "carry-over",
+      "source": "auto"
+    },
+    {
+      "id": "1547",
+      "studentId": 26,
+      "courseId": 217,
+      "session": "2025/2026",
+      "semester": 2,
+      "type": "carry-over",
+      "source": "auto"
+    },
+    {
+      "id": "1548",
+      "studentId": 27,
+      "courseId": 93,
+      "session": "2025/2026",
+      "semester": 2,
+      "type": "regular",
+      "source": "auto"
+    },
+    {
+      "id": "1549",
+      "studentId": 27,
+      "courseId": 94,
+      "session": "2025/2026",
+      "semester": 2,
+      "type": "regular",
+      "source": "auto"
+    },
+    {
+      "id": "1550",
+      "studentId": 27,
+      "courseId": 95,
+      "session": "2025/2026",
+      "semester": 2,
+      "type": "regular",
+      "source": "auto"
+    },
+    {
+      "id": "1551",
+      "studentId": 27,
+      "courseId": 96,
+      "session": "2025/2026",
+      "semester": 2,
+      "type": "regular",
+      "source": "auto"
+    },
+    {
+      "id": "1552",
+      "studentId": 27,
+      "courseId": 241,
+      "session": "2025/2026",
+      "semester": 2,
+      "type": "regular",
+      "source": "student"
+    },
+    {
+      "id": "1553",
+      "studentId": 27,
+      "courseId": 242,
+      "session": "2025/2026",
+      "semester": 2,
+      "type": "regular",
+      "source": "student"
+    },
+    {
+      "id": "1554",
+      "studentId": 27,
+      "courseId": 218,
+      "session": "2025/2026",
+      "semester": 2,
+      "type": "carry-over",
+      "source": "auto"
+    },
+    {
+      "id": "1555",
+      "studentId": 28,
+      "courseId": 93,
+      "session": "2025/2026",
+      "semester": 2,
+      "type": "regular",
+      "source": "auto"
+    },
+    {
+      "id": "1556",
+      "studentId": 28,
+      "courseId": 94,
+      "session": "2025/2026",
+      "semester": 2,
+      "type": "regular",
+      "source": "auto"
+    },
+    {
+      "id": "1557",
+      "studentId": 28,
+      "courseId": 95,
+      "session": "2025/2026",
+      "semester": 2,
+      "type": "regular",
+      "source": "auto"
+    },
+    {
+      "id": "1558",
+      "studentId": 28,
+      "courseId": 96,
+      "session": "2025/2026",
+      "semester": 2,
+      "type": "regular",
+      "source": "auto"
+    },
+    {
+      "id": "1559",
+      "studentId": 28,
+      "courseId": 241,
+      "session": "2025/2026",
+      "semester": 2,
+      "type": "regular",
+      "source": "student"
+    },
+    {
+      "id": "1560",
+      "studentId": 28,
+      "courseId": 242,
+      "session": "2025/2026",
+      "semester": 2,
+      "type": "regular",
+      "source": "student"
+    },
+    {
+      "id": "1561",
+      "studentId": 28,
+      "courseId": 79,
+      "session": "2025/2026",
+      "semester": 2,
+      "type": "carry-over",
+      "source": "auto"
+    },
+    {
+      "id": "1562",
+      "studentId": 28,
+      "courseId": 87,
+      "session": "2025/2026",
+      "semester": 2,
+      "type": "carry-over",
+      "source": "auto"
+    },
+    {
+      "id": "1563",
+      "studentId": 29,
+      "courseId": 101,
+      "session": "2025/2026",
+      "semester": 2,
+      "type": "regular",
+      "source": "auto"
+    },
+    {
+      "id": "1564",
+      "studentId": 29,
+      "courseId": 102,
+      "session": "2025/2026",
+      "semester": 2,
+      "type": "regular",
+      "source": "auto"
+    },
+    {
+      "id": "1565",
+      "studentId": 29,
+      "courseId": 103,
+      "session": "2025/2026",
+      "semester": 2,
+      "type": "regular",
+      "source": "auto"
+    },
+    {
+      "id": "1566",
+      "studentId": 29,
+      "courseId": 104,
+      "session": "2025/2026",
+      "semester": 2,
+      "type": "regular",
+      "source": "auto"
+    },
+    {
+      "id": "1567",
+      "studentId": 29,
+      "courseId": 86,
+      "session": "2025/2026",
+      "semester": 2,
+      "type": "carry-over",
+      "source": "auto"
+    },
+    {
+      "id": "1568",
+      "studentId": 29,
+      "courseId": 96,
+      "session": "2025/2026",
+      "semester": 2,
+      "type": "carry-over",
+      "source": "auto"
+    },
+    {
+      "id": "1569",
+      "studentId": 29,
+      "courseId": 235,
+      "session": "2025/2026",
+      "semester": 2,
+      "type": "carry-over",
+      "source": "auto"
+    },
+    {
+      "id": "1570",
+      "studentId": 30,
+      "courseId": 101,
+      "session": "2025/2026",
+      "semester": 2,
+      "type": "regular",
+      "source": "auto"
+    },
+    {
+      "id": "1571",
+      "studentId": 30,
+      "courseId": 102,
+      "session": "2025/2026",
+      "semester": 2,
+      "type": "regular",
+      "source": "auto"
+    },
+    {
+      "id": "1572",
+      "studentId": 30,
+      "courseId": 103,
+      "session": "2025/2026",
+      "semester": 2,
+      "type": "regular",
+      "source": "auto"
+    },
+    {
+      "id": "1573",
+      "studentId": 30,
+      "courseId": 104,
+      "session": "2025/2026",
+      "semester": 2,
+      "type": "regular",
+      "source": "auto"
+    },
+    {
+      "id": "1574",
+      "studentId": 30,
+      "courseId": 242,
+      "session": "2025/2026",
+      "semester": 2,
+      "type": "carry-over",
+      "source": "auto"
+    },
+    {
+      "id": "1575",
+      "studentId": 31,
+      "courseId": 109,
+      "session": "2025/2026",
+      "semester": 2,
+      "type": "regular",
+      "source": "auto"
+    },
+    {
+      "id": "1576",
+      "studentId": 31,
+      "courseId": 110,
+      "session": "2025/2026",
+      "semester": 2,
+      "type": "regular",
+      "source": "auto"
+    },
+    {
+      "id": "1577",
+      "studentId": 31,
+      "courseId": 111,
+      "session": "2025/2026",
+      "semester": 2,
+      "type": "regular",
+      "source": "auto"
+    },
+    {
+      "id": "1578",
+      "studentId": 31,
+      "courseId": 112,
+      "session": "2025/2026",
+      "semester": 2,
+      "type": "regular",
+      "source": "auto"
+    },
+    {
+      "id": "1579",
+      "studentId": 31,
+      "courseId": 249,
+      "session": "2025/2026",
+      "semester": 2,
+      "type": "regular",
+      "source": "student"
+    },
+    {
+      "id": "1580",
+      "studentId": 31,
+      "courseId": 250,
+      "session": "2025/2026",
+      "semester": 2,
+      "type": "regular",
+      "source": "student"
+    },
+    {
+      "id": "1581",
+      "studentId": 32,
+      "courseId": 109,
+      "session": "2025/2026",
+      "semester": 2,
+      "type": "regular",
+      "source": "auto"
+    },
+    {
+      "id": "1582",
+      "studentId": 32,
+      "courseId": 110,
+      "session": "2025/2026",
+      "semester": 2,
+      "type": "regular",
+      "source": "auto"
+    },
+    {
+      "id": "1583",
+      "studentId": 32,
+      "courseId": 111,
+      "session": "2025/2026",
+      "semester": 2,
+      "type": "regular",
+      "source": "auto"
+    },
+    {
+      "id": "1584",
+      "studentId": 32,
+      "courseId": 112,
+      "session": "2025/2026",
+      "semester": 2,
+      "type": "regular",
+      "source": "auto"
+    },
+    {
+      "id": "1585",
+      "studentId": 32,
+      "courseId": 249,
+      "session": "2025/2026",
+      "semester": 2,
+      "type": "regular",
+      "source": "student"
+    },
+    {
+      "id": "1586",
+      "studentId": 32,
+      "courseId": 250,
+      "session": "2025/2026",
+      "semester": 2,
+      "type": "regular",
+      "source": "student"
+    },
+    {
+      "id": "1587",
+      "studentId": 33,
+      "courseId": 117,
+      "session": "2025/2026",
+      "semester": 2,
+      "type": "regular",
+      "source": "auto"
+    },
+    {
+      "id": "1588",
+      "studentId": 33,
+      "courseId": 118,
+      "session": "2025/2026",
+      "semester": 2,
+      "type": "regular",
+      "source": "auto"
+    },
+    {
+      "id": "1589",
+      "studentId": 33,
+      "courseId": 119,
+      "session": "2025/2026",
+      "semester": 2,
+      "type": "regular",
+      "source": "auto"
+    },
+    {
+      "id": "1590",
+      "studentId": 33,
+      "courseId": 120,
+      "session": "2025/2026",
+      "semester": 2,
+      "type": "regular",
+      "source": "auto"
+    },
+    {
+      "id": "1591",
+      "studentId": 33,
+      "courseId": 257,
+      "session": "2025/2026",
+      "semester": 2,
+      "type": "regular",
+      "source": "student"
+    },
+    {
+      "id": "1592",
+      "studentId": 33,
+      "courseId": 258,
+      "session": "2025/2026",
+      "semester": 2,
+      "type": "regular",
+      "source": "student"
+    },
+    {
+      "id": "1593",
+      "studentId": 34,
+      "courseId": 117,
+      "session": "2025/2026",
+      "semester": 2,
+      "type": "regular",
+      "source": "auto"
+    },
+    {
+      "id": "1594",
+      "studentId": 34,
+      "courseId": 118,
+      "session": "2025/2026",
+      "semester": 2,
+      "type": "regular",
+      "source": "auto"
+    },
+    {
+      "id": "1595",
+      "studentId": 34,
+      "courseId": 119,
+      "session": "2025/2026",
+      "semester": 2,
+      "type": "regular",
+      "source": "auto"
+    },
+    {
+      "id": "1596",
+      "studentId": 34,
+      "courseId": 120,
+      "session": "2025/2026",
+      "semester": 2,
+      "type": "regular",
+      "source": "auto"
+    },
+    {
+      "id": "1597",
+      "studentId": 34,
+      "courseId": 257,
+      "session": "2025/2026",
+      "semester": 2,
+      "type": "regular",
+      "source": "student"
+    },
+    {
+      "id": "1598",
+      "studentId": 34,
+      "courseId": 258,
+      "session": "2025/2026",
+      "semester": 2,
+      "type": "regular",
+      "source": "student"
+    },
+    {
+      "id": "1599",
+      "studentId": 35,
+      "courseId": 125,
+      "session": "2025/2026",
+      "semester": 2,
+      "type": "regular",
+      "source": "auto"
+    },
+    {
+      "id": "1600",
+      "studentId": 35,
+      "courseId": 126,
+      "session": "2025/2026",
+      "semester": 2,
+      "type": "regular",
+      "source": "auto"
+    },
+    {
+      "id": "1601",
+      "studentId": 35,
+      "courseId": 127,
+      "session": "2025/2026",
+      "semester": 2,
+      "type": "regular",
+      "source": "auto"
+    },
+    {
+      "id": "1602",
+      "studentId": 35,
+      "courseId": 128,
+      "session": "2025/2026",
+      "semester": 2,
+      "type": "regular",
+      "source": "auto"
+    },
+    {
+      "id": "1603",
+      "studentId": 35,
+      "courseId": 265,
+      "session": "2025/2026",
+      "semester": 2,
+      "type": "regular",
+      "source": "student"
+    },
+    {
+      "id": "1604",
+      "studentId": 35,
+      "courseId": 266,
+      "session": "2025/2026",
+      "semester": 2,
+      "type": "regular",
+      "source": "student"
+    },
+    {
+      "id": "1605",
+      "studentId": 35,
+      "courseId": 119,
+      "session": "2025/2026",
+      "semester": 2,
+      "type": "carry-over",
+      "source": "auto"
+    },
+    {
+      "id": "1606",
+      "studentId": 36,
+      "courseId": 125,
+      "session": "2025/2026",
+      "semester": 2,
+      "type": "regular",
+      "source": "auto"
+    },
+    {
+      "id": "1607",
+      "studentId": 36,
+      "courseId": 126,
+      "session": "2025/2026",
+      "semester": 2,
+      "type": "regular",
+      "source": "auto"
+    },
+    {
+      "id": "1608",
+      "studentId": 36,
+      "courseId": 127,
+      "session": "2025/2026",
+      "semester": 2,
+      "type": "regular",
+      "source": "auto"
+    },
+    {
+      "id": "1609",
+      "studentId": 36,
+      "courseId": 128,
+      "session": "2025/2026",
+      "semester": 2,
+      "type": "regular",
+      "source": "auto"
+    },
+    {
+      "id": "1610",
+      "studentId": 36,
+      "courseId": 265,
+      "session": "2025/2026",
+      "semester": 2,
+      "type": "regular",
+      "source": "student"
+    },
+    {
+      "id": "1611",
+      "studentId": 36,
+      "courseId": 266,
+      "session": "2025/2026",
+      "semester": 2,
+      "type": "regular",
+      "source": "student"
+    },
+    {
+      "id": "1612",
+      "studentId": 36,
+      "courseId": 109,
+      "session": "2025/2026",
+      "semester": 2,
+      "type": "carry-over",
+      "source": "auto"
+    },
+    {
+      "id": "1613",
+      "studentId": 36,
+      "courseId": 119,
+      "session": "2025/2026",
+      "semester": 2,
+      "type": "carry-over",
+      "source": "auto"
+    },
+    {
+      "id": "1614",
+      "studentId": 36,
+      "courseId": 120,
+      "session": "2025/2026",
+      "semester": 2,
+      "type": "carry-over",
+      "source": "auto"
+    },
+    {
+      "id": "1615",
+      "studentId": 36,
+      "courseId": 258,
+      "session": "2025/2026",
+      "semester": 2,
+      "type": "carry-over",
+      "source": "auto"
+    },
+    {
+      "id": "1616",
+      "studentId": 37,
+      "courseId": 133,
+      "session": "2025/2026",
+      "semester": 2,
+      "type": "regular",
+      "source": "auto"
+    },
+    {
+      "id": "1617",
+      "studentId": 37,
+      "courseId": 134,
+      "session": "2025/2026",
+      "semester": 2,
+      "type": "regular",
+      "source": "auto"
+    },
+    {
+      "id": "1618",
+      "studentId": 37,
+      "courseId": 135,
+      "session": "2025/2026",
+      "semester": 2,
+      "type": "regular",
+      "source": "auto"
+    },
+    {
+      "id": "1619",
+      "studentId": 37,
+      "courseId": 136,
+      "session": "2025/2026",
+      "semester": 2,
+      "type": "regular",
+      "source": "auto"
+    },
+    {
+      "id": "1620",
+      "studentId": 37,
+      "courseId": 273,
+      "session": "2025/2026",
+      "semester": 2,
+      "type": "regular",
+      "source": "student"
+    },
+    {
+      "id": "1621",
+      "studentId": 37,
+      "courseId": 274,
+      "session": "2025/2026",
+      "semester": 2,
+      "type": "regular",
+      "source": "student"
+    },
+    {
+      "id": "1622",
+      "studentId": 37,
+      "courseId": 119,
+      "session": "2025/2026",
+      "semester": 2,
+      "type": "carry-over",
+      "source": "auto"
+    },
+    {
+      "id": "1623",
+      "studentId": 38,
+      "courseId": 133,
+      "session": "2025/2026",
+      "semester": 2,
+      "type": "regular",
+      "source": "auto"
+    },
+    {
+      "id": "1624",
+      "studentId": 38,
+      "courseId": 134,
+      "session": "2025/2026",
+      "semester": 2,
+      "type": "regular",
+      "source": "auto"
+    },
+    {
+      "id": "1625",
+      "studentId": 38,
+      "courseId": 135,
+      "session": "2025/2026",
+      "semester": 2,
+      "type": "regular",
+      "source": "auto"
+    },
+    {
+      "id": "1626",
+      "studentId": 38,
+      "courseId": 136,
+      "session": "2025/2026",
+      "semester": 2,
+      "type": "regular",
+      "source": "auto"
+    },
+    {
+      "id": "1627",
+      "studentId": 38,
+      "courseId": 273,
+      "session": "2025/2026",
+      "semester": 2,
+      "type": "regular",
+      "source": "student"
+    },
+    {
+      "id": "1628",
+      "studentId": 38,
+      "courseId": 274,
+      "session": "2025/2026",
+      "semester": 2,
+      "type": "regular",
+      "source": "student"
+    },
+    {
+      "id": "1629",
+      "studentId": 38,
+      "courseId": 110,
+      "session": "2025/2026",
+      "semester": 2,
+      "type": "carry-over",
+      "source": "auto"
+    },
+    {
+      "id": "1630",
+      "studentId": 38,
+      "courseId": 120,
+      "session": "2025/2026",
+      "semester": 2,
+      "type": "carry-over",
+      "source": "auto"
+    },
+    {
+      "id": "1631",
+      "studentId": 38,
+      "courseId": 257,
+      "session": "2025/2026",
+      "semester": 2,
+      "type": "carry-over",
+      "source": "auto"
+    },
+    {
+      "id": "1632",
+      "studentId": 39,
+      "courseId": 141,
+      "session": "2025/2026",
+      "semester": 2,
+      "type": "regular",
+      "source": "auto"
+    },
+    {
+      "id": "1633",
+      "studentId": 39,
+      "courseId": 142,
+      "session": "2025/2026",
+      "semester": 2,
+      "type": "regular",
+      "source": "auto"
+    },
+    {
+      "id": "1634",
+      "studentId": 39,
+      "courseId": 143,
+      "session": "2025/2026",
+      "semester": 2,
+      "type": "regular",
+      "source": "auto"
+    },
+    {
+      "id": "1635",
+      "studentId": 39,
+      "courseId": 144,
+      "session": "2025/2026",
+      "semester": 2,
+      "type": "regular",
+      "source": "auto"
+    },
+    {
+      "id": "1636",
+      "studentId": 39,
+      "courseId": 133,
+      "session": "2025/2026",
+      "semester": 2,
+      "type": "carry-over",
+      "source": "auto"
+    },
+    {
+      "id": "1637",
+      "studentId": 40,
+      "courseId": 141,
+      "session": "2025/2026",
+      "semester": 2,
+      "type": "regular",
+      "source": "auto"
+    },
+    {
+      "id": "1638",
+      "studentId": 40,
+      "courseId": 142,
+      "session": "2025/2026",
+      "semester": 2,
+      "type": "regular",
+      "source": "auto"
+    },
+    {
+      "id": "1639",
+      "studentId": 40,
+      "courseId": 143,
+      "session": "2025/2026",
+      "semester": 2,
+      "type": "regular",
+      "source": "auto"
+    },
+    {
+      "id": "1640",
+      "studentId": 40,
+      "courseId": 144,
+      "session": "2025/2026",
+      "semester": 2,
+      "type": "regular",
+      "source": "auto"
+    },
+    {
+      "id": "1641",
+      "studentId": 40,
+      "courseId": 133,
+      "session": "2025/2026",
+      "semester": 2,
+      "type": "carry-over",
+      "source": "auto"
+    },
+    {
+      "id": "1642",
+      "studentId": 40,
+      "courseId": 268,
+      "session": "2025/2026",
+      "semester": 2,
+      "type": "carry-over",
+      "source": "auto"
+    },
+    {
+      "id": "1643",
+      "studentId": 40,
+      "courseId": 260,
+      "session": "2025/2026",
+      "semester": 2,
+      "type": "carry-over",
+      "source": "auto"
+    },
+    {
+      "id": "1644",
+      "studentId": 40,
+      "courseId": 252,
+      "session": "2025/2026",
+      "semester": 2,
+      "type": "carry-over",
+      "source": "auto"
+    },
+    {
+      "id": "1645",
+      "studentId": 1,
+      "courseId": 309,
+      "session": "2025/2026",
+      "semester": 2,
+      "type": "regular",
+      "source": "auto"
+    },
+    {
+      "id": "1646",
+      "studentId": 2,
+      "courseId": 309,
+      "session": "2025/2026",
+      "semester": 2,
+      "type": "regular",
+      "source": "auto"
+    },
+    {
+      "id": "1647",
+      "studentId": 3,
+      "courseId": 309,
+      "session": "2025/2026",
+      "semester": 2,
+      "type": "regular",
+      "source": "auto"
+    },
+    {
+      "id": "1648",
+      "studentId": 1,
+      "courseId": 310,
+      "session": "2025/2026",
+      "semester": 2,
+      "type": "regular",
+      "source": "auto"
+    },
+    {
+      "id": "1649",
+      "studentId": 2,
+      "courseId": 310,
+      "session": "2025/2026",
+      "semester": 2,
+      "type": "regular",
+      "source": "auto"
+    },
+    {
+      "id": "1650",
+      "studentId": 3,
+      "courseId": 310,
+      "session": "2025/2026",
+      "semester": 2,
+      "type": "regular",
+      "source": "auto"
+    },
+    {
+      "id": "1651",
+      "studentId": 11,
+      "courseId": 311,
+      "session": "2025/2026",
+      "semester": 2,
+      "type": "regular",
+      "source": "auto"
+    },
+    {
+      "id": "1652",
+      "studentId": 12,
+      "courseId": 311,
+      "session": "2025/2026",
+      "semester": 2,
+      "type": "regular",
+      "source": "auto"
+    },
+    {
+      "id": "1653",
+      "studentId": 13,
+      "courseId": 311,
+      "session": "2025/2026",
+      "semester": 2,
+      "type": "regular",
+      "source": "auto"
+    },
+    {
+      "id": "1654",
+      "studentId": 11,
+      "courseId": 312,
+      "session": "2025/2026",
+      "semester": 2,
+      "type": "regular",
+      "source": "auto"
+    },
+    {
+      "id": "1655",
+      "studentId": 12,
+      "courseId": 312,
+      "session": "2025/2026",
+      "semester": 2,
+      "type": "regular",
+      "source": "auto"
+    },
+    {
+      "id": "1656",
+      "studentId": 13,
+      "courseId": 312,
+      "session": "2025/2026",
+      "semester": 2,
+      "type": "regular",
+      "source": "auto"
+    },
+    {
+      "id": "1657",
+      "studentId": 21,
+      "courseId": 313,
+      "session": "2025/2026",
+      "semester": 2,
+      "type": "regular",
+      "source": "auto"
+    },
+    {
+      "id": "1658",
+      "studentId": 22,
+      "courseId": 313,
+      "session": "2025/2026",
+      "semester": 2,
+      "type": "regular",
+      "source": "auto"
+    },
+    {
+      "id": "1659",
+      "studentId": 21,
+      "courseId": 314,
+      "session": "2025/2026",
+      "semester": 2,
+      "type": "regular",
+      "source": "auto"
+    },
+    {
+      "id": "1660",
+      "studentId": 22,
+      "courseId": 314,
+      "session": "2025/2026",
+      "semester": 2,
+      "type": "regular",
+      "source": "auto"
+    },
+    {
+      "id": "1661",
+      "studentId": 23,
+      "courseId": 315,
+      "session": "2025/2026",
+      "semester": 2,
+      "type": "regular",
+      "source": "auto"
+    },
+    {
+      "id": "1662",
+      "studentId": 24,
+      "courseId": 315,
+      "session": "2025/2026",
+      "semester": 2,
+      "type": "regular",
+      "source": "auto"
+    },
+    {
+      "id": "1663",
+      "studentId": 31,
+      "courseId": 316,
+      "session": "2025/2026",
+      "semester": 2,
+      "type": "regular",
+      "source": "auto"
+    },
+    {
+      "id": "1664",
+      "studentId": 32,
+      "courseId": 316,
+      "session": "2025/2026",
+      "semester": 2,
+      "type": "regular",
+      "source": "auto"
+    },
+    {
+      "id": "1665",
+      "studentId": 31,
+      "courseId": 317,
+      "session": "2025/2026",
+      "semester": 2,
+      "type": "regular",
+      "source": "auto"
+    },
+    {
+      "id": "1666",
+      "studentId": 32,
+      "courseId": 317,
+      "session": "2025/2026",
+      "semester": 2,
+      "type": "regular",
+      "source": "auto"
+    },
+    {
+      "id": "1667",
+      "studentId": 33,
+      "courseId": 318,
+      "session": "2025/2026",
+      "semester": 2,
+      "type": "regular",
+      "source": "auto"
+    },
+    {
+      "id": "1668",
+      "studentId": 34,
+      "courseId": 318,
+      "session": "2025/2026",
+      "semester": 2,
+      "type": "regular",
+      "source": "auto"
+    },
+    {
+      "id": "1669",
+      "studentId": 33,
+      "courseId": 319,
+      "session": "2025/2026",
+      "semester": 2,
+      "type": "regular",
+      "source": "auto"
+    },
+    {
+      "id": "1670",
+      "studentId": 34,
+      "courseId": 319,
+      "session": "2025/2026",
+      "semester": 2,
+      "type": "regular",
+      "source": "auto"
     }
   ],
   "results": [
@@ -18593,7 +21853,7 @@
       "semester": 1,
       "level": 100,
       "score": 78,
-      "published": false,
+      "published": true,
       "submissionId": "3",
       "uploadedBy": "1"
     },
@@ -18605,7 +21865,7 @@
       "semester": 1,
       "level": 100,
       "score": 73,
-      "published": false,
+      "published": true,
       "submissionId": "3",
       "uploadedBy": "1"
     },
@@ -18617,7 +21877,7 @@
       "semester": 1,
       "level": 100,
       "score": 40,
-      "published": false,
+      "published": true,
       "submissionId": "3",
       "uploadedBy": "1"
     },
@@ -18629,7 +21889,7 @@
       "semester": 1,
       "level": 100,
       "score": 53,
-      "published": false,
+      "published": true,
       "submissionId": "4",
       "uploadedBy": "2"
     },
@@ -18641,7 +21901,7 @@
       "semester": 1,
       "level": 100,
       "score": 57,
-      "published": false,
+      "published": true,
       "submissionId": "4",
       "uploadedBy": "2"
     },
@@ -18653,80 +21913,8 @@
       "semester": 1,
       "level": 100,
       "score": 54,
-      "published": false,
+      "published": true,
       "submissionId": "4",
-      "uploadedBy": "2"
-    },
-    {
-      "id": "487",
-      "studentId": 1,
-      "courseId": 1,
-      "session": "2024/2025",
-      "semester": 2,
-      "level": 100,
-      "score": 43,
-      "published": true,
-      "submissionId": "6",
-      "uploadedBy": "1"
-    },
-    {
-      "id": "488",
-      "studentId": 2,
-      "courseId": 1,
-      "session": "2024/2025",
-      "semester": 2,
-      "level": 100,
-      "score": 86,
-      "published": true,
-      "submissionId": "6",
-      "uploadedBy": "1"
-    },
-    {
-      "id": "489",
-      "studentId": 3,
-      "courseId": 1,
-      "session": "2024/2025",
-      "semester": 2,
-      "level": 100,
-      "score": 53,
-      "published": true,
-      "submissionId": "6",
-      "uploadedBy": "1"
-    },
-    {
-      "id": "490",
-      "studentId": 1,
-      "courseId": 4,
-      "session": "2024/2025",
-      "semester": 2,
-      "level": 100,
-      "score": 92,
-      "published": true,
-      "submissionId": "7",
-      "uploadedBy": "2"
-    },
-    {
-      "id": "491",
-      "studentId": 2,
-      "courseId": 4,
-      "session": "2024/2025",
-      "semester": 2,
-      "level": 100,
-      "score": 58,
-      "published": true,
-      "submissionId": "7",
-      "uploadedBy": "2"
-    },
-    {
-      "id": "492",
-      "studentId": 3,
-      "courseId": 4,
-      "session": "2024/2025",
-      "semester": 2,
-      "level": 100,
-      "score": 59,
-      "published": true,
-      "submissionId": "7",
       "uploadedBy": "2"
     },
     {
@@ -18773,7 +21961,7 @@
       "semester": 2,
       "level": 200,
       "score": 71,
-      "published": false,
+      "published": true,
       "submissionId": "9",
       "uploadedBy": "4"
     },
@@ -18785,7 +21973,7 @@
       "semester": 2,
       "level": 200,
       "score": 82,
-      "published": false,
+      "published": true,
       "submissionId": "9",
       "uploadedBy": "4"
     },
@@ -18797,7 +21985,7 @@
       "semester": 2,
       "level": 200,
       "score": 50,
-      "published": false,
+      "published": true,
       "submissionId": "9",
       "uploadedBy": "4"
     },
@@ -18809,7 +21997,7 @@
       "semester": 2,
       "level": 400,
       "score": 61,
-      "published": false,
+      "published": true,
       "submissionId": "10",
       "uploadedBy": "5"
     },
@@ -18821,33 +22009,9 @@
       "semester": 2,
       "level": 400,
       "score": 60,
-      "published": false,
+      "published": true,
       "submissionId": "10",
       "uploadedBy": "5"
-    },
-    {
-      "id": "501",
-      "studentId": 21,
-      "courseId": 66,
-      "session": "2024/2025",
-      "semester": 2,
-      "level": 100,
-      "score": 89,
-      "published": false,
-      "submissionId": "11",
-      "uploadedBy": "6"
-    },
-    {
-      "id": "502",
-      "studentId": 22,
-      "courseId": 66,
-      "session": "2024/2025",
-      "semester": 2,
-      "level": 100,
-      "score": 71,
-      "published": false,
-      "submissionId": "11",
-      "uploadedBy": "6"
     },
     {
       "id": "503",
@@ -26788,13 +29952,3333 @@
       "level": 100,
       "score": 27,
       "published": true
+    },
+    {
+      "id": "1297",
+      "studentId": 1,
+      "courseId": 5,
+      "session": "2025/2026",
+      "semester": 2,
+      "level": 100,
+      "score": 84,
+      "published": true,
+      "submissionId": "16",
+      "uploadedBy": 1
+    },
+    {
+      "id": "1298",
+      "studentId": 2,
+      "courseId": 5,
+      "session": "2025/2026",
+      "semester": 2,
+      "level": 100,
+      "score": 82,
+      "published": true,
+      "submissionId": "16",
+      "uploadedBy": 1
+    },
+    {
+      "id": "1299",
+      "studentId": 3,
+      "courseId": 5,
+      "session": "2025/2026",
+      "semester": 2,
+      "level": 100,
+      "score": 52,
+      "published": true,
+      "submissionId": "16",
+      "uploadedBy": 1
+    },
+    {
+      "id": "1300",
+      "studentId": 4,
+      "courseId": 13,
+      "session": "2025/2026",
+      "semester": 2,
+      "level": 200,
+      "score": 53,
+      "published": false,
+      "submissionId": "17",
+      "uploadedBy": 1
+    },
+    {
+      "id": "1301",
+      "studentId": 5,
+      "courseId": 13,
+      "session": "2025/2026",
+      "semester": 2,
+      "level": 200,
+      "score": 84,
+      "published": false,
+      "submissionId": "17",
+      "uploadedBy": 1
+    },
+    {
+      "id": "1302",
+      "studentId": 6,
+      "courseId": 13,
+      "session": "2025/2026",
+      "semester": 2,
+      "level": 200,
+      "score": 61,
+      "published": false,
+      "submissionId": "17",
+      "uploadedBy": 1
+    },
+    {
+      "id": "1303",
+      "studentId": 8,
+      "courseId": 13,
+      "session": "2025/2026",
+      "semester": 2,
+      "level": 200,
+      "score": 76,
+      "published": false,
+      "submissionId": "17",
+      "uploadedBy": 1
+    },
+    {
+      "id": "1304",
+      "studentId": 7,
+      "courseId": 21,
+      "session": "2025/2026",
+      "semester": 2,
+      "level": 300,
+      "score": 49,
+      "published": false,
+      "uploadedBy": 1
+    },
+    {
+      "id": "1305",
+      "studentId": 8,
+      "courseId": 21,
+      "session": "2025/2026",
+      "semester": 2,
+      "level": 300,
+      "score": 59,
+      "published": false,
+      "uploadedBy": 1
+    },
+    {
+      "id": "1306",
+      "studentId": 9,
+      "courseId": 21,
+      "session": "2025/2026",
+      "semester": 2,
+      "level": 300,
+      "score": 77,
+      "published": false,
+      "uploadedBy": 1
+    },
+    {
+      "id": "1307",
+      "studentId": 4,
+      "courseId": 9,
+      "session": "2025/2026",
+      "level": 200,
+      "semester": 1,
+      "score": 89,
+      "published": true,
+      "submissionId": "5"
+    },
+    {
+      "id": "1308",
+      "studentId": 5,
+      "courseId": 9,
+      "session": "2025/2026",
+      "level": 200,
+      "semester": 1,
+      "score": 51,
+      "published": true,
+      "submissionId": "5"
+    },
+    {
+      "id": "1309",
+      "studentId": 6,
+      "courseId": 9,
+      "session": "2025/2026",
+      "level": 200,
+      "semester": 1,
+      "score": 61,
+      "published": true,
+      "submissionId": "5"
+    },
+    {
+      "id": "1310",
+      "studentId": 4,
+      "courseId": 1,
+      "session": "2024/2025",
+      "level": 100,
+      "semester": 2,
+      "score": 83,
+      "published": true,
+      "submissionId": "6"
+    },
+    {
+      "id": "1311",
+      "studentId": 5,
+      "courseId": 1,
+      "session": "2024/2025",
+      "level": 100,
+      "semester": 2,
+      "score": 71,
+      "published": true,
+      "submissionId": "6"
+    },
+    {
+      "id": "1312",
+      "studentId": 6,
+      "courseId": 1,
+      "session": "2024/2025",
+      "level": 100,
+      "semester": 2,
+      "score": 65,
+      "published": true,
+      "submissionId": "6"
+    },
+    {
+      "id": "1313",
+      "studentId": 14,
+      "courseId": 1,
+      "session": "2024/2025",
+      "level": 100,
+      "semester": 2,
+      "score": 88,
+      "published": true,
+      "submissionId": "6"
+    },
+    {
+      "id": "1314",
+      "studentId": 15,
+      "courseId": 1,
+      "session": "2024/2025",
+      "level": 100,
+      "semester": 2,
+      "score": 64,
+      "published": true,
+      "submissionId": "6"
+    },
+    {
+      "id": "1315",
+      "studentId": 16,
+      "courseId": 1,
+      "session": "2024/2025",
+      "level": 100,
+      "semester": 2,
+      "score": 69,
+      "published": true,
+      "submissionId": "6"
+    },
+    {
+      "id": "1316",
+      "studentId": 23,
+      "courseId": 1,
+      "session": "2024/2025",
+      "level": 100,
+      "semester": 2,
+      "score": 83,
+      "published": true,
+      "submissionId": "6"
+    },
+    {
+      "id": "1317",
+      "studentId": 24,
+      "courseId": 1,
+      "session": "2024/2025",
+      "level": 100,
+      "semester": 2,
+      "score": 62,
+      "published": true,
+      "submissionId": "6"
+    },
+    {
+      "id": "1318",
+      "studentId": 33,
+      "courseId": 1,
+      "session": "2024/2025",
+      "level": 100,
+      "semester": 2,
+      "score": 55,
+      "published": true,
+      "submissionId": "6"
+    },
+    {
+      "id": "1319",
+      "studentId": 34,
+      "courseId": 1,
+      "session": "2024/2025",
+      "level": 100,
+      "semester": 2,
+      "score": 83,
+      "published": true,
+      "submissionId": "6"
+    },
+    {
+      "id": "1320",
+      "studentId": 4,
+      "courseId": 4,
+      "session": "2024/2025",
+      "level": 100,
+      "semester": 2,
+      "score": 46,
+      "published": true,
+      "submissionId": "7"
+    },
+    {
+      "id": "1321",
+      "studentId": 5,
+      "courseId": 4,
+      "session": "2024/2025",
+      "level": 100,
+      "semester": 2,
+      "score": 72,
+      "published": true,
+      "submissionId": "7"
+    },
+    {
+      "id": "1322",
+      "studentId": 6,
+      "courseId": 4,
+      "session": "2024/2025",
+      "level": 100,
+      "semester": 2,
+      "score": 68,
+      "published": true,
+      "submissionId": "7"
+    },
+    {
+      "id": "1323",
+      "studentId": 14,
+      "courseId": 4,
+      "session": "2024/2025",
+      "level": 100,
+      "semester": 2,
+      "score": 69,
+      "published": true,
+      "submissionId": "7"
+    },
+    {
+      "id": "1324",
+      "studentId": 15,
+      "courseId": 4,
+      "session": "2024/2025",
+      "level": 100,
+      "semester": 2,
+      "score": 72,
+      "published": true,
+      "submissionId": "7"
+    },
+    {
+      "id": "1325",
+      "studentId": 16,
+      "courseId": 4,
+      "session": "2024/2025",
+      "level": 100,
+      "semester": 2,
+      "score": 86,
+      "published": true,
+      "submissionId": "7"
+    },
+    {
+      "id": "1326",
+      "studentId": 23,
+      "courseId": 4,
+      "session": "2024/2025",
+      "level": 100,
+      "semester": 2,
+      "score": 57,
+      "published": true,
+      "submissionId": "7"
+    },
+    {
+      "id": "1327",
+      "studentId": 24,
+      "courseId": 4,
+      "session": "2024/2025",
+      "level": 100,
+      "semester": 2,
+      "score": 83,
+      "published": true,
+      "submissionId": "7"
+    },
+    {
+      "id": "1328",
+      "studentId": 33,
+      "courseId": 4,
+      "session": "2024/2025",
+      "level": 100,
+      "semester": 2,
+      "score": 46,
+      "published": true,
+      "submissionId": "7"
+    },
+    {
+      "id": "1329",
+      "studentId": 34,
+      "courseId": 4,
+      "session": "2024/2025",
+      "level": 100,
+      "semester": 2,
+      "score": 71,
+      "published": true,
+      "submissionId": "7"
+    },
+    {
+      "id": "1330",
+      "studentId": 1,
+      "courseId": 3,
+      "session": "2025/2026",
+      "level": 100,
+      "semester": 1,
+      "score": 57,
+      "published": true
+    },
+    {
+      "id": "1331",
+      "studentId": 1,
+      "courseId": 4,
+      "session": "2025/2026",
+      "level": 100,
+      "semester": 1,
+      "score": 54,
+      "published": true
+    },
+    {
+      "id": "1332",
+      "studentId": 1,
+      "courseId": 149,
+      "session": "2025/2026",
+      "level": 100,
+      "semester": 1,
+      "score": 74,
+      "published": true
+    },
+    {
+      "id": "1333",
+      "studentId": 1,
+      "courseId": 150,
+      "session": "2025/2026",
+      "level": 100,
+      "semester": 1,
+      "score": 74,
+      "published": true
+    },
+    {
+      "id": "1334",
+      "studentId": 1,
+      "courseId": 151,
+      "session": "2025/2026",
+      "level": 100,
+      "semester": 1,
+      "score": 52,
+      "published": true
+    },
+    {
+      "id": "1335",
+      "studentId": 1,
+      "courseId": 152,
+      "session": "2025/2026",
+      "level": 100,
+      "semester": 1,
+      "score": 47,
+      "published": true
+    },
+    {
+      "id": "1336",
+      "studentId": 2,
+      "courseId": 3,
+      "session": "2025/2026",
+      "level": 100,
+      "semester": 1,
+      "score": 58,
+      "published": true
+    },
+    {
+      "id": "1337",
+      "studentId": 2,
+      "courseId": 4,
+      "session": "2025/2026",
+      "level": 100,
+      "semester": 1,
+      "score": 78,
+      "published": true
+    },
+    {
+      "id": "1338",
+      "studentId": 2,
+      "courseId": 149,
+      "session": "2025/2026",
+      "level": 100,
+      "semester": 1,
+      "score": 82,
+      "published": true
+    },
+    {
+      "id": "1339",
+      "studentId": 2,
+      "courseId": 150,
+      "session": "2025/2026",
+      "level": 100,
+      "semester": 1,
+      "score": 40,
+      "published": true
+    },
+    {
+      "id": "1340",
+      "studentId": 2,
+      "courseId": 151,
+      "session": "2025/2026",
+      "level": 100,
+      "semester": 1,
+      "score": 85,
+      "published": true
+    },
+    {
+      "id": "1341",
+      "studentId": 2,
+      "courseId": 152,
+      "session": "2025/2026",
+      "level": 100,
+      "semester": 1,
+      "score": 79,
+      "published": true
+    },
+    {
+      "id": "1342",
+      "studentId": 3,
+      "courseId": 3,
+      "session": "2025/2026",
+      "level": 100,
+      "semester": 1,
+      "score": 71,
+      "published": true
+    },
+    {
+      "id": "1343",
+      "studentId": 3,
+      "courseId": 4,
+      "session": "2025/2026",
+      "level": 100,
+      "semester": 1,
+      "score": 69,
+      "published": true
+    },
+    {
+      "id": "1344",
+      "studentId": 3,
+      "courseId": 149,
+      "session": "2025/2026",
+      "level": 100,
+      "semester": 1,
+      "score": 79,
+      "published": true
+    },
+    {
+      "id": "1345",
+      "studentId": 3,
+      "courseId": 150,
+      "session": "2025/2026",
+      "level": 100,
+      "semester": 1,
+      "score": 61,
+      "published": true
+    },
+    {
+      "id": "1346",
+      "studentId": 3,
+      "courseId": 151,
+      "session": "2025/2026",
+      "level": 100,
+      "semester": 1,
+      "score": 91,
+      "published": true
+    },
+    {
+      "id": "1347",
+      "studentId": 3,
+      "courseId": 152,
+      "session": "2025/2026",
+      "level": 100,
+      "semester": 1,
+      "score": 54,
+      "published": true
+    },
+    {
+      "id": "1348",
+      "studentId": 4,
+      "courseId": 10,
+      "session": "2025/2026",
+      "level": 200,
+      "semester": 1,
+      "score": 77,
+      "published": true
+    },
+    {
+      "id": "1349",
+      "studentId": 4,
+      "courseId": 11,
+      "session": "2025/2026",
+      "level": 200,
+      "semester": 1,
+      "score": 63,
+      "published": true
+    },
+    {
+      "id": "1350",
+      "studentId": 4,
+      "courseId": 12,
+      "session": "2025/2026",
+      "level": 200,
+      "semester": 1,
+      "score": 55,
+      "published": true
+    },
+    {
+      "id": "1351",
+      "studentId": 4,
+      "courseId": 157,
+      "session": "2025/2026",
+      "level": 200,
+      "semester": 1,
+      "score": 43,
+      "published": true
+    },
+    {
+      "id": "1352",
+      "studentId": 4,
+      "courseId": 158,
+      "session": "2025/2026",
+      "level": 200,
+      "semester": 1,
+      "score": 83,
+      "published": true
+    },
+    {
+      "id": "1353",
+      "studentId": 4,
+      "courseId": 159,
+      "session": "2025/2026",
+      "level": 200,
+      "semester": 1,
+      "score": 55,
+      "published": true
+    },
+    {
+      "id": "1354",
+      "studentId": 4,
+      "courseId": 160,
+      "session": "2025/2026",
+      "level": 200,
+      "semester": 1,
+      "score": 54,
+      "published": true
+    },
+    {
+      "id": "1355",
+      "studentId": 5,
+      "courseId": 10,
+      "session": "2025/2026",
+      "level": 200,
+      "semester": 1,
+      "score": 80,
+      "published": true
+    },
+    {
+      "id": "1356",
+      "studentId": 5,
+      "courseId": 11,
+      "session": "2025/2026",
+      "level": 200,
+      "semester": 1,
+      "score": 82,
+      "published": true
+    },
+    {
+      "id": "1357",
+      "studentId": 5,
+      "courseId": 12,
+      "session": "2025/2026",
+      "level": 200,
+      "semester": 1,
+      "score": 81,
+      "published": true
+    },
+    {
+      "id": "1358",
+      "studentId": 5,
+      "courseId": 157,
+      "session": "2025/2026",
+      "level": 200,
+      "semester": 1,
+      "score": 40,
+      "published": true
+    },
+    {
+      "id": "1359",
+      "studentId": 5,
+      "courseId": 158,
+      "session": "2025/2026",
+      "level": 200,
+      "semester": 1,
+      "score": 77,
+      "published": true
+    },
+    {
+      "id": "1360",
+      "studentId": 5,
+      "courseId": 159,
+      "session": "2025/2026",
+      "level": 200,
+      "semester": 1,
+      "score": 68,
+      "published": true
+    },
+    {
+      "id": "1361",
+      "studentId": 5,
+      "courseId": 160,
+      "session": "2025/2026",
+      "level": 200,
+      "semester": 1,
+      "score": 81,
+      "published": true
+    },
+    {
+      "id": "1362",
+      "studentId": 6,
+      "courseId": 10,
+      "session": "2025/2026",
+      "level": 200,
+      "semester": 1,
+      "score": 73,
+      "published": true
+    },
+    {
+      "id": "1363",
+      "studentId": 6,
+      "courseId": 11,
+      "session": "2025/2026",
+      "level": 200,
+      "semester": 1,
+      "score": 80,
+      "published": true
+    },
+    {
+      "id": "1364",
+      "studentId": 6,
+      "courseId": 12,
+      "session": "2025/2026",
+      "level": 200,
+      "semester": 1,
+      "score": 49,
+      "published": true
+    },
+    {
+      "id": "1365",
+      "studentId": 6,
+      "courseId": 157,
+      "session": "2025/2026",
+      "level": 200,
+      "semester": 1,
+      "score": 75,
+      "published": true
+    },
+    {
+      "id": "1366",
+      "studentId": 6,
+      "courseId": 158,
+      "session": "2025/2026",
+      "level": 200,
+      "semester": 1,
+      "score": 76,
+      "published": true
+    },
+    {
+      "id": "1367",
+      "studentId": 6,
+      "courseId": 159,
+      "session": "2025/2026",
+      "level": 200,
+      "semester": 1,
+      "score": 72,
+      "published": true
+    },
+    {
+      "id": "1368",
+      "studentId": 6,
+      "courseId": 160,
+      "session": "2025/2026",
+      "level": 200,
+      "semester": 1,
+      "score": 48,
+      "published": true
+    },
+    {
+      "id": "1369",
+      "studentId": 7,
+      "courseId": 17,
+      "session": "2025/2026",
+      "level": 300,
+      "semester": 1,
+      "score": 52,
+      "published": true
+    },
+    {
+      "id": "1370",
+      "studentId": 7,
+      "courseId": 18,
+      "session": "2025/2026",
+      "level": 300,
+      "semester": 1,
+      "score": 59,
+      "published": true
+    },
+    {
+      "id": "1371",
+      "studentId": 7,
+      "courseId": 19,
+      "session": "2025/2026",
+      "level": 300,
+      "semester": 1,
+      "score": 85,
+      "published": true
+    },
+    {
+      "id": "1372",
+      "studentId": 7,
+      "courseId": 20,
+      "session": "2025/2026",
+      "level": 300,
+      "semester": 1,
+      "score": 66,
+      "published": true
+    },
+    {
+      "id": "1373",
+      "studentId": 7,
+      "courseId": 165,
+      "session": "2025/2026",
+      "level": 300,
+      "semester": 1,
+      "score": 69,
+      "published": true
+    },
+    {
+      "id": "1374",
+      "studentId": 7,
+      "courseId": 166,
+      "session": "2025/2026",
+      "level": 300,
+      "semester": 1,
+      "score": 67,
+      "published": true
+    },
+    {
+      "id": "1375",
+      "studentId": 7,
+      "courseId": 167,
+      "session": "2025/2026",
+      "level": 300,
+      "semester": 1,
+      "score": 73,
+      "published": true
+    },
+    {
+      "id": "1376",
+      "studentId": 7,
+      "courseId": 168,
+      "session": "2025/2026",
+      "level": 300,
+      "semester": 1,
+      "score": 56,
+      "published": true
+    },
+    {
+      "id": "1377",
+      "studentId": 8,
+      "courseId": 17,
+      "session": "2025/2026",
+      "level": 300,
+      "semester": 1,
+      "score": 57,
+      "published": true
+    },
+    {
+      "id": "1378",
+      "studentId": 8,
+      "courseId": 18,
+      "session": "2025/2026",
+      "level": 300,
+      "semester": 1,
+      "score": 65,
+      "published": true
+    },
+    {
+      "id": "1379",
+      "studentId": 8,
+      "courseId": 19,
+      "session": "2025/2026",
+      "level": 300,
+      "semester": 1,
+      "score": 62,
+      "published": true
+    },
+    {
+      "id": "1380",
+      "studentId": 8,
+      "courseId": 20,
+      "session": "2025/2026",
+      "level": 300,
+      "semester": 1,
+      "score": 93,
+      "published": true
+    },
+    {
+      "id": "1381",
+      "studentId": 8,
+      "courseId": 165,
+      "session": "2025/2026",
+      "level": 300,
+      "semester": 1,
+      "score": 69,
+      "published": true
+    },
+    {
+      "id": "1382",
+      "studentId": 8,
+      "courseId": 166,
+      "session": "2025/2026",
+      "level": 300,
+      "semester": 1,
+      "score": 71,
+      "published": true
+    },
+    {
+      "id": "1383",
+      "studentId": 8,
+      "courseId": 167,
+      "session": "2025/2026",
+      "level": 300,
+      "semester": 1,
+      "score": 84,
+      "published": true
+    },
+    {
+      "id": "1384",
+      "studentId": 8,
+      "courseId": 168,
+      "session": "2025/2026",
+      "level": 300,
+      "semester": 1,
+      "score": 80,
+      "published": true
+    },
+    {
+      "id": "1385",
+      "studentId": 9,
+      "courseId": 25,
+      "session": "2025/2026",
+      "level": 400,
+      "semester": 1,
+      "score": 83,
+      "published": true
+    },
+    {
+      "id": "1386",
+      "studentId": 9,
+      "courseId": 26,
+      "session": "2025/2026",
+      "level": 400,
+      "semester": 1,
+      "score": 78,
+      "published": true
+    },
+    {
+      "id": "1387",
+      "studentId": 9,
+      "courseId": 27,
+      "session": "2025/2026",
+      "level": 400,
+      "semester": 1,
+      "score": 75,
+      "published": true
+    },
+    {
+      "id": "1388",
+      "studentId": 9,
+      "courseId": 28,
+      "session": "2025/2026",
+      "level": 400,
+      "semester": 1,
+      "score": 66,
+      "published": true
+    },
+    {
+      "id": "1389",
+      "studentId": 9,
+      "courseId": 173,
+      "session": "2025/2026",
+      "level": 400,
+      "semester": 1,
+      "score": 68,
+      "published": true
+    },
+    {
+      "id": "1390",
+      "studentId": 9,
+      "courseId": 174,
+      "session": "2025/2026",
+      "level": 400,
+      "semester": 1,
+      "score": 61,
+      "published": true
+    },
+    {
+      "id": "1391",
+      "studentId": 9,
+      "courseId": 175,
+      "session": "2025/2026",
+      "level": 400,
+      "semester": 1,
+      "score": 63,
+      "published": true
+    },
+    {
+      "id": "1392",
+      "studentId": 9,
+      "courseId": 176,
+      "session": "2025/2026",
+      "level": 400,
+      "semester": 1,
+      "score": 69,
+      "published": true
+    },
+    {
+      "id": "1393",
+      "studentId": 10,
+      "courseId": 25,
+      "session": "2025/2026",
+      "level": 400,
+      "semester": 1,
+      "score": 76,
+      "published": true
+    },
+    {
+      "id": "1394",
+      "studentId": 10,
+      "courseId": 26,
+      "session": "2025/2026",
+      "level": 400,
+      "semester": 1,
+      "score": 75,
+      "published": true
+    },
+    {
+      "id": "1395",
+      "studentId": 10,
+      "courseId": 27,
+      "session": "2025/2026",
+      "level": 400,
+      "semester": 1,
+      "score": 89,
+      "published": true
+    },
+    {
+      "id": "1396",
+      "studentId": 10,
+      "courseId": 28,
+      "session": "2025/2026",
+      "level": 400,
+      "semester": 1,
+      "score": 60,
+      "published": true
+    },
+    {
+      "id": "1397",
+      "studentId": 10,
+      "courseId": 173,
+      "session": "2025/2026",
+      "level": 400,
+      "semester": 1,
+      "score": 78,
+      "published": true
+    },
+    {
+      "id": "1398",
+      "studentId": 10,
+      "courseId": 174,
+      "session": "2025/2026",
+      "level": 400,
+      "semester": 1,
+      "score": 61,
+      "published": true
+    },
+    {
+      "id": "1399",
+      "studentId": 10,
+      "courseId": 175,
+      "session": "2025/2026",
+      "level": 400,
+      "semester": 1,
+      "score": 81,
+      "published": true
+    },
+    {
+      "id": "1400",
+      "studentId": 10,
+      "courseId": 176,
+      "session": "2025/2026",
+      "level": 400,
+      "semester": 1,
+      "score": 59,
+      "published": true
+    },
+    {
+      "id": "1401",
+      "studentId": 11,
+      "courseId": 33,
+      "session": "2025/2026",
+      "level": 100,
+      "semester": 1,
+      "score": 78,
+      "published": true
+    },
+    {
+      "id": "1402",
+      "studentId": 11,
+      "courseId": 34,
+      "session": "2025/2026",
+      "level": 100,
+      "semester": 1,
+      "score": 57,
+      "published": true
+    },
+    {
+      "id": "1403",
+      "studentId": 11,
+      "courseId": 35,
+      "session": "2025/2026",
+      "level": 100,
+      "semester": 1,
+      "score": 79,
+      "published": true
+    },
+    {
+      "id": "1404",
+      "studentId": 11,
+      "courseId": 36,
+      "session": "2025/2026",
+      "level": 100,
+      "semester": 1,
+      "score": 95,
+      "published": true
+    },
+    {
+      "id": "1405",
+      "studentId": 11,
+      "courseId": 181,
+      "session": "2025/2026",
+      "level": 100,
+      "semester": 1,
+      "score": 51,
+      "published": true
+    },
+    {
+      "id": "1406",
+      "studentId": 11,
+      "courseId": 182,
+      "session": "2025/2026",
+      "level": 100,
+      "semester": 1,
+      "score": 83,
+      "published": true
+    },
+    {
+      "id": "1407",
+      "studentId": 11,
+      "courseId": 183,
+      "session": "2025/2026",
+      "level": 100,
+      "semester": 1,
+      "score": 94,
+      "published": true
+    },
+    {
+      "id": "1408",
+      "studentId": 11,
+      "courseId": 184,
+      "session": "2025/2026",
+      "level": 100,
+      "semester": 1,
+      "score": 51,
+      "published": true
+    },
+    {
+      "id": "1409",
+      "studentId": 12,
+      "courseId": 33,
+      "session": "2025/2026",
+      "level": 100,
+      "semester": 1,
+      "score": 84,
+      "published": true
+    },
+    {
+      "id": "1410",
+      "studentId": 12,
+      "courseId": 34,
+      "session": "2025/2026",
+      "level": 100,
+      "semester": 1,
+      "score": 79,
+      "published": true
+    },
+    {
+      "id": "1411",
+      "studentId": 12,
+      "courseId": 35,
+      "session": "2025/2026",
+      "level": 100,
+      "semester": 1,
+      "score": 53,
+      "published": true
+    },
+    {
+      "id": "1412",
+      "studentId": 12,
+      "courseId": 36,
+      "session": "2025/2026",
+      "level": 100,
+      "semester": 1,
+      "score": 68,
+      "published": true
+    },
+    {
+      "id": "1413",
+      "studentId": 12,
+      "courseId": 181,
+      "session": "2025/2026",
+      "level": 100,
+      "semester": 1,
+      "score": 87,
+      "published": true
+    },
+    {
+      "id": "1414",
+      "studentId": 12,
+      "courseId": 182,
+      "session": "2025/2026",
+      "level": 100,
+      "semester": 1,
+      "score": 80,
+      "published": true
+    },
+    {
+      "id": "1415",
+      "studentId": 12,
+      "courseId": 183,
+      "session": "2025/2026",
+      "level": 100,
+      "semester": 1,
+      "score": 55,
+      "published": true
+    },
+    {
+      "id": "1416",
+      "studentId": 12,
+      "courseId": 184,
+      "session": "2025/2026",
+      "level": 100,
+      "semester": 1,
+      "score": 79,
+      "published": true
+    },
+    {
+      "id": "1417",
+      "studentId": 13,
+      "courseId": 33,
+      "session": "2025/2026",
+      "level": 100,
+      "semester": 1,
+      "score": 86,
+      "published": true
+    },
+    {
+      "id": "1418",
+      "studentId": 13,
+      "courseId": 34,
+      "session": "2025/2026",
+      "level": 100,
+      "semester": 1,
+      "score": 70,
+      "published": true
+    },
+    {
+      "id": "1419",
+      "studentId": 13,
+      "courseId": 35,
+      "session": "2025/2026",
+      "level": 100,
+      "semester": 1,
+      "score": 40,
+      "published": true
+    },
+    {
+      "id": "1420",
+      "studentId": 13,
+      "courseId": 36,
+      "session": "2025/2026",
+      "level": 100,
+      "semester": 1,
+      "score": 78,
+      "published": true
+    },
+    {
+      "id": "1421",
+      "studentId": 13,
+      "courseId": 181,
+      "session": "2025/2026",
+      "level": 100,
+      "semester": 1,
+      "score": 66,
+      "published": true
+    },
+    {
+      "id": "1422",
+      "studentId": 13,
+      "courseId": 182,
+      "session": "2025/2026",
+      "level": 100,
+      "semester": 1,
+      "score": 86,
+      "published": true
+    },
+    {
+      "id": "1423",
+      "studentId": 13,
+      "courseId": 183,
+      "session": "2025/2026",
+      "level": 100,
+      "semester": 1,
+      "score": 69,
+      "published": true
+    },
+    {
+      "id": "1424",
+      "studentId": 13,
+      "courseId": 184,
+      "session": "2025/2026",
+      "level": 100,
+      "semester": 1,
+      "score": 70,
+      "published": true
+    },
+    {
+      "id": "1425",
+      "studentId": 14,
+      "courseId": 41,
+      "session": "2025/2026",
+      "level": 200,
+      "semester": 1,
+      "score": 42,
+      "published": true
+    },
+    {
+      "id": "1426",
+      "studentId": 14,
+      "courseId": 42,
+      "session": "2025/2026",
+      "level": 200,
+      "semester": 1,
+      "score": 58,
+      "published": true
+    },
+    {
+      "id": "1427",
+      "studentId": 14,
+      "courseId": 43,
+      "session": "2025/2026",
+      "level": 200,
+      "semester": 1,
+      "score": 64,
+      "published": true
+    },
+    {
+      "id": "1428",
+      "studentId": 14,
+      "courseId": 44,
+      "session": "2025/2026",
+      "level": 200,
+      "semester": 1,
+      "score": 74,
+      "published": true
+    },
+    {
+      "id": "1429",
+      "studentId": 14,
+      "courseId": 189,
+      "session": "2025/2026",
+      "level": 200,
+      "semester": 1,
+      "score": 83,
+      "published": true
+    },
+    {
+      "id": "1430",
+      "studentId": 14,
+      "courseId": 190,
+      "session": "2025/2026",
+      "level": 200,
+      "semester": 1,
+      "score": 44,
+      "published": true
+    },
+    {
+      "id": "1431",
+      "studentId": 14,
+      "courseId": 191,
+      "session": "2025/2026",
+      "level": 200,
+      "semester": 1,
+      "score": 84,
+      "published": true
+    },
+    {
+      "id": "1432",
+      "studentId": 14,
+      "courseId": 192,
+      "session": "2025/2026",
+      "level": 200,
+      "semester": 1,
+      "score": 72,
+      "published": true
+    },
+    {
+      "id": "1433",
+      "studentId": 15,
+      "courseId": 41,
+      "session": "2025/2026",
+      "level": 200,
+      "semester": 1,
+      "score": 66,
+      "published": true
+    },
+    {
+      "id": "1434",
+      "studentId": 15,
+      "courseId": 42,
+      "session": "2025/2026",
+      "level": 200,
+      "semester": 1,
+      "score": 60,
+      "published": true
+    },
+    {
+      "id": "1435",
+      "studentId": 15,
+      "courseId": 43,
+      "session": "2025/2026",
+      "level": 200,
+      "semester": 1,
+      "score": 40,
+      "published": true
+    },
+    {
+      "id": "1436",
+      "studentId": 15,
+      "courseId": 44,
+      "session": "2025/2026",
+      "level": 200,
+      "semester": 1,
+      "score": 59,
+      "published": true
+    },
+    {
+      "id": "1437",
+      "studentId": 15,
+      "courseId": 189,
+      "session": "2025/2026",
+      "level": 200,
+      "semester": 1,
+      "score": 52,
+      "published": true
+    },
+    {
+      "id": "1438",
+      "studentId": 15,
+      "courseId": 190,
+      "session": "2025/2026",
+      "level": 200,
+      "semester": 1,
+      "score": 80,
+      "published": true
+    },
+    {
+      "id": "1439",
+      "studentId": 15,
+      "courseId": 191,
+      "session": "2025/2026",
+      "level": 200,
+      "semester": 1,
+      "score": 77,
+      "published": true
+    },
+    {
+      "id": "1440",
+      "studentId": 15,
+      "courseId": 192,
+      "session": "2025/2026",
+      "level": 200,
+      "semester": 1,
+      "score": 71,
+      "published": true
+    },
+    {
+      "id": "1441",
+      "studentId": 16,
+      "courseId": 41,
+      "session": "2025/2026",
+      "level": 200,
+      "semester": 1,
+      "score": 71,
+      "published": true
+    },
+    {
+      "id": "1442",
+      "studentId": 16,
+      "courseId": 42,
+      "session": "2025/2026",
+      "level": 200,
+      "semester": 1,
+      "score": 45,
+      "published": true
+    },
+    {
+      "id": "1443",
+      "studentId": 16,
+      "courseId": 43,
+      "session": "2025/2026",
+      "level": 200,
+      "semester": 1,
+      "score": 66,
+      "published": true
+    },
+    {
+      "id": "1444",
+      "studentId": 16,
+      "courseId": 44,
+      "session": "2025/2026",
+      "level": 200,
+      "semester": 1,
+      "score": 84,
+      "published": true
+    },
+    {
+      "id": "1445",
+      "studentId": 16,
+      "courseId": 189,
+      "session": "2025/2026",
+      "level": 200,
+      "semester": 1,
+      "score": 82,
+      "published": true
+    },
+    {
+      "id": "1446",
+      "studentId": 16,
+      "courseId": 190,
+      "session": "2025/2026",
+      "level": 200,
+      "semester": 1,
+      "score": 61,
+      "published": true
+    },
+    {
+      "id": "1447",
+      "studentId": 16,
+      "courseId": 191,
+      "session": "2025/2026",
+      "level": 200,
+      "semester": 1,
+      "score": 64,
+      "published": true
+    },
+    {
+      "id": "1448",
+      "studentId": 16,
+      "courseId": 192,
+      "session": "2025/2026",
+      "level": 200,
+      "semester": 1,
+      "score": 69,
+      "published": true
+    },
+    {
+      "id": "1449",
+      "studentId": 17,
+      "courseId": 49,
+      "session": "2025/2026",
+      "level": 300,
+      "semester": 1,
+      "score": 76,
+      "published": true
+    },
+    {
+      "id": "1450",
+      "studentId": 17,
+      "courseId": 50,
+      "session": "2025/2026",
+      "level": 300,
+      "semester": 1,
+      "score": 42,
+      "published": true
+    },
+    {
+      "id": "1451",
+      "studentId": 17,
+      "courseId": 51,
+      "session": "2025/2026",
+      "level": 300,
+      "semester": 1,
+      "score": 64,
+      "published": true
+    },
+    {
+      "id": "1452",
+      "studentId": 17,
+      "courseId": 52,
+      "session": "2025/2026",
+      "level": 300,
+      "semester": 1,
+      "score": 61,
+      "published": true
+    },
+    {
+      "id": "1453",
+      "studentId": 17,
+      "courseId": 197,
+      "session": "2025/2026",
+      "level": 300,
+      "semester": 1,
+      "score": 55,
+      "published": true
+    },
+    {
+      "id": "1454",
+      "studentId": 17,
+      "courseId": 198,
+      "session": "2025/2026",
+      "level": 300,
+      "semester": 1,
+      "score": 82,
+      "published": true
+    },
+    {
+      "id": "1455",
+      "studentId": 17,
+      "courseId": 199,
+      "session": "2025/2026",
+      "level": 300,
+      "semester": 1,
+      "score": 54,
+      "published": true
+    },
+    {
+      "id": "1456",
+      "studentId": 17,
+      "courseId": 200,
+      "session": "2025/2026",
+      "level": 300,
+      "semester": 1,
+      "score": 60,
+      "published": true
+    },
+    {
+      "id": "1457",
+      "studentId": 18,
+      "courseId": 49,
+      "session": "2025/2026",
+      "level": 300,
+      "semester": 1,
+      "score": 55,
+      "published": true
+    },
+    {
+      "id": "1458",
+      "studentId": 18,
+      "courseId": 50,
+      "session": "2025/2026",
+      "level": 300,
+      "semester": 1,
+      "score": 68,
+      "published": true
+    },
+    {
+      "id": "1459",
+      "studentId": 18,
+      "courseId": 51,
+      "session": "2025/2026",
+      "level": 300,
+      "semester": 1,
+      "score": 67,
+      "published": true
+    },
+    {
+      "id": "1460",
+      "studentId": 18,
+      "courseId": 52,
+      "session": "2025/2026",
+      "level": 300,
+      "semester": 1,
+      "score": 78,
+      "published": true
+    },
+    {
+      "id": "1461",
+      "studentId": 18,
+      "courseId": 197,
+      "session": "2025/2026",
+      "level": 300,
+      "semester": 1,
+      "score": 52,
+      "published": true
+    },
+    {
+      "id": "1462",
+      "studentId": 18,
+      "courseId": 198,
+      "session": "2025/2026",
+      "level": 300,
+      "semester": 1,
+      "score": 84,
+      "published": true
+    },
+    {
+      "id": "1463",
+      "studentId": 18,
+      "courseId": 199,
+      "session": "2025/2026",
+      "level": 300,
+      "semester": 1,
+      "score": 63,
+      "published": true
+    },
+    {
+      "id": "1464",
+      "studentId": 18,
+      "courseId": 200,
+      "session": "2025/2026",
+      "level": 300,
+      "semester": 1,
+      "score": 50,
+      "published": true
+    },
+    {
+      "id": "1465",
+      "studentId": 19,
+      "courseId": 57,
+      "session": "2025/2026",
+      "level": 400,
+      "semester": 1,
+      "score": 61,
+      "published": true
+    },
+    {
+      "id": "1466",
+      "studentId": 19,
+      "courseId": 58,
+      "session": "2025/2026",
+      "level": 400,
+      "semester": 1,
+      "score": 77,
+      "published": true
+    },
+    {
+      "id": "1467",
+      "studentId": 19,
+      "courseId": 59,
+      "session": "2025/2026",
+      "level": 400,
+      "semester": 1,
+      "score": 83,
+      "published": true
+    },
+    {
+      "id": "1468",
+      "studentId": 19,
+      "courseId": 60,
+      "session": "2025/2026",
+      "level": 400,
+      "semester": 1,
+      "score": 78,
+      "published": true
+    },
+    {
+      "id": "1469",
+      "studentId": 19,
+      "courseId": 205,
+      "session": "2025/2026",
+      "level": 400,
+      "semester": 1,
+      "score": 66,
+      "published": true
+    },
+    {
+      "id": "1470",
+      "studentId": 19,
+      "courseId": 206,
+      "session": "2025/2026",
+      "level": 400,
+      "semester": 1,
+      "score": 88,
+      "published": true
+    },
+    {
+      "id": "1471",
+      "studentId": 19,
+      "courseId": 207,
+      "session": "2025/2026",
+      "level": 400,
+      "semester": 1,
+      "score": 68,
+      "published": true
+    },
+    {
+      "id": "1472",
+      "studentId": 19,
+      "courseId": 208,
+      "session": "2025/2026",
+      "level": 400,
+      "semester": 1,
+      "score": 51,
+      "published": true
+    },
+    {
+      "id": "1473",
+      "studentId": 20,
+      "courseId": 57,
+      "session": "2025/2026",
+      "level": 400,
+      "semester": 1,
+      "score": 69,
+      "published": true
+    },
+    {
+      "id": "1474",
+      "studentId": 20,
+      "courseId": 58,
+      "session": "2025/2026",
+      "level": 400,
+      "semester": 1,
+      "score": 68,
+      "published": true
+    },
+    {
+      "id": "1475",
+      "studentId": 20,
+      "courseId": 59,
+      "session": "2025/2026",
+      "level": 400,
+      "semester": 1,
+      "score": 81,
+      "published": true
+    },
+    {
+      "id": "1476",
+      "studentId": 20,
+      "courseId": 60,
+      "session": "2025/2026",
+      "level": 400,
+      "semester": 1,
+      "score": 90,
+      "published": true
+    },
+    {
+      "id": "1477",
+      "studentId": 20,
+      "courseId": 205,
+      "session": "2025/2026",
+      "level": 400,
+      "semester": 1,
+      "score": 90,
+      "published": true
+    },
+    {
+      "id": "1478",
+      "studentId": 20,
+      "courseId": 206,
+      "session": "2025/2026",
+      "level": 400,
+      "semester": 1,
+      "score": 51,
+      "published": true
+    },
+    {
+      "id": "1479",
+      "studentId": 20,
+      "courseId": 207,
+      "session": "2025/2026",
+      "level": 400,
+      "semester": 1,
+      "score": 83,
+      "published": true
+    },
+    {
+      "id": "1480",
+      "studentId": 20,
+      "courseId": 208,
+      "session": "2025/2026",
+      "level": 400,
+      "semester": 1,
+      "score": 87,
+      "published": true
+    },
+    {
+      "id": "1481",
+      "studentId": 21,
+      "courseId": 65,
+      "session": "2025/2026",
+      "level": 100,
+      "semester": 1,
+      "score": 77,
+      "published": true
+    },
+    {
+      "id": "1482",
+      "studentId": 21,
+      "courseId": 66,
+      "session": "2025/2026",
+      "level": 100,
+      "semester": 1,
+      "score": 59,
+      "published": true
+    },
+    {
+      "id": "1483",
+      "studentId": 21,
+      "courseId": 67,
+      "session": "2025/2026",
+      "level": 100,
+      "semester": 1,
+      "score": 62,
+      "published": true
+    },
+    {
+      "id": "1484",
+      "studentId": 21,
+      "courseId": 68,
+      "session": "2025/2026",
+      "level": 100,
+      "semester": 1,
+      "score": 51,
+      "published": true
+    },
+    {
+      "id": "1485",
+      "studentId": 21,
+      "courseId": 213,
+      "session": "2025/2026",
+      "level": 100,
+      "semester": 1,
+      "score": 71,
+      "published": true
+    },
+    {
+      "id": "1486",
+      "studentId": 21,
+      "courseId": 214,
+      "session": "2025/2026",
+      "level": 100,
+      "semester": 1,
+      "score": 54,
+      "published": true
+    },
+    {
+      "id": "1487",
+      "studentId": 21,
+      "courseId": 215,
+      "session": "2025/2026",
+      "level": 100,
+      "semester": 1,
+      "score": 58,
+      "published": true
+    },
+    {
+      "id": "1488",
+      "studentId": 21,
+      "courseId": 216,
+      "session": "2025/2026",
+      "level": 100,
+      "semester": 1,
+      "score": 57,
+      "published": true
+    },
+    {
+      "id": "1489",
+      "studentId": 22,
+      "courseId": 65,
+      "session": "2025/2026",
+      "level": 100,
+      "semester": 1,
+      "score": 66,
+      "published": true
+    },
+    {
+      "id": "1490",
+      "studentId": 22,
+      "courseId": 66,
+      "session": "2025/2026",
+      "level": 100,
+      "semester": 1,
+      "score": 66,
+      "published": true
+    },
+    {
+      "id": "1491",
+      "studentId": 22,
+      "courseId": 67,
+      "session": "2025/2026",
+      "level": 100,
+      "semester": 1,
+      "score": 66,
+      "published": true
+    },
+    {
+      "id": "1492",
+      "studentId": 22,
+      "courseId": 68,
+      "session": "2025/2026",
+      "level": 100,
+      "semester": 1,
+      "score": 57,
+      "published": true
+    },
+    {
+      "id": "1493",
+      "studentId": 22,
+      "courseId": 213,
+      "session": "2025/2026",
+      "level": 100,
+      "semester": 1,
+      "score": 80,
+      "published": true
+    },
+    {
+      "id": "1494",
+      "studentId": 22,
+      "courseId": 214,
+      "session": "2025/2026",
+      "level": 100,
+      "semester": 1,
+      "score": 64,
+      "published": true
+    },
+    {
+      "id": "1495",
+      "studentId": 22,
+      "courseId": 215,
+      "session": "2025/2026",
+      "level": 100,
+      "semester": 1,
+      "score": 71,
+      "published": true
+    },
+    {
+      "id": "1496",
+      "studentId": 22,
+      "courseId": 216,
+      "session": "2025/2026",
+      "level": 100,
+      "semester": 1,
+      "score": 85,
+      "published": true
+    },
+    {
+      "id": "1497",
+      "studentId": 23,
+      "courseId": 73,
+      "session": "2025/2026",
+      "level": 200,
+      "semester": 1,
+      "score": 56,
+      "published": true
+    },
+    {
+      "id": "1498",
+      "studentId": 23,
+      "courseId": 74,
+      "session": "2025/2026",
+      "level": 200,
+      "semester": 1,
+      "score": 60,
+      "published": true
+    },
+    {
+      "id": "1499",
+      "studentId": 23,
+      "courseId": 75,
+      "session": "2025/2026",
+      "level": 200,
+      "semester": 1,
+      "score": 64,
+      "published": true
+    },
+    {
+      "id": "1500",
+      "studentId": 23,
+      "courseId": 76,
+      "session": "2025/2026",
+      "level": 200,
+      "semester": 1,
+      "score": 76,
+      "published": true
+    },
+    {
+      "id": "1501",
+      "studentId": 23,
+      "courseId": 221,
+      "session": "2025/2026",
+      "level": 200,
+      "semester": 1,
+      "score": 92,
+      "published": true
+    },
+    {
+      "id": "1502",
+      "studentId": 23,
+      "courseId": 222,
+      "session": "2025/2026",
+      "level": 200,
+      "semester": 1,
+      "score": 87,
+      "published": true
+    },
+    {
+      "id": "1503",
+      "studentId": 23,
+      "courseId": 223,
+      "session": "2025/2026",
+      "level": 200,
+      "semester": 1,
+      "score": 50,
+      "published": true
+    },
+    {
+      "id": "1504",
+      "studentId": 23,
+      "courseId": 224,
+      "session": "2025/2026",
+      "level": 200,
+      "semester": 1,
+      "score": 86,
+      "published": true
+    },
+    {
+      "id": "1505",
+      "studentId": 24,
+      "courseId": 73,
+      "session": "2025/2026",
+      "level": 200,
+      "semester": 1,
+      "score": 78,
+      "published": true
+    },
+    {
+      "id": "1506",
+      "studentId": 24,
+      "courseId": 74,
+      "session": "2025/2026",
+      "level": 200,
+      "semester": 1,
+      "score": 41,
+      "published": true
+    },
+    {
+      "id": "1507",
+      "studentId": 24,
+      "courseId": 75,
+      "session": "2025/2026",
+      "level": 200,
+      "semester": 1,
+      "score": 67,
+      "published": true
+    },
+    {
+      "id": "1508",
+      "studentId": 24,
+      "courseId": 76,
+      "session": "2025/2026",
+      "level": 200,
+      "semester": 1,
+      "score": 72,
+      "published": true
+    },
+    {
+      "id": "1509",
+      "studentId": 24,
+      "courseId": 221,
+      "session": "2025/2026",
+      "level": 200,
+      "semester": 1,
+      "score": 64,
+      "published": true
+    },
+    {
+      "id": "1510",
+      "studentId": 24,
+      "courseId": 222,
+      "session": "2025/2026",
+      "level": 200,
+      "semester": 1,
+      "score": 80,
+      "published": true
+    },
+    {
+      "id": "1511",
+      "studentId": 24,
+      "courseId": 223,
+      "session": "2025/2026",
+      "level": 200,
+      "semester": 1,
+      "score": 56,
+      "published": true
+    },
+    {
+      "id": "1512",
+      "studentId": 24,
+      "courseId": 224,
+      "session": "2025/2026",
+      "level": 200,
+      "semester": 1,
+      "score": 65,
+      "published": true
+    },
+    {
+      "id": "1513",
+      "studentId": 25,
+      "courseId": 81,
+      "session": "2025/2026",
+      "level": 300,
+      "semester": 1,
+      "score": 67,
+      "published": true
+    },
+    {
+      "id": "1514",
+      "studentId": 25,
+      "courseId": 82,
+      "session": "2025/2026",
+      "level": 300,
+      "semester": 1,
+      "score": 51,
+      "published": true
+    },
+    {
+      "id": "1515",
+      "studentId": 25,
+      "courseId": 83,
+      "session": "2025/2026",
+      "level": 300,
+      "semester": 1,
+      "score": 68,
+      "published": true
+    },
+    {
+      "id": "1516",
+      "studentId": 25,
+      "courseId": 84,
+      "session": "2025/2026",
+      "level": 300,
+      "semester": 1,
+      "score": 53,
+      "published": true
+    },
+    {
+      "id": "1517",
+      "studentId": 25,
+      "courseId": 229,
+      "session": "2025/2026",
+      "level": 300,
+      "semester": 1,
+      "score": 87,
+      "published": true
+    },
+    {
+      "id": "1518",
+      "studentId": 25,
+      "courseId": 230,
+      "session": "2025/2026",
+      "level": 300,
+      "semester": 1,
+      "score": 54,
+      "published": true
+    },
+    {
+      "id": "1519",
+      "studentId": 25,
+      "courseId": 231,
+      "session": "2025/2026",
+      "level": 300,
+      "semester": 1,
+      "score": 91,
+      "published": true
+    },
+    {
+      "id": "1520",
+      "studentId": 25,
+      "courseId": 232,
+      "session": "2025/2026",
+      "level": 300,
+      "semester": 1,
+      "score": 84,
+      "published": true
+    },
+    {
+      "id": "1521",
+      "studentId": 26,
+      "courseId": 81,
+      "session": "2025/2026",
+      "level": 300,
+      "semester": 1,
+      "score": 57,
+      "published": true
+    },
+    {
+      "id": "1522",
+      "studentId": 26,
+      "courseId": 82,
+      "session": "2025/2026",
+      "level": 300,
+      "semester": 1,
+      "score": 70,
+      "published": true
+    },
+    {
+      "id": "1523",
+      "studentId": 26,
+      "courseId": 83,
+      "session": "2025/2026",
+      "level": 300,
+      "semester": 1,
+      "score": 54,
+      "published": true
+    },
+    {
+      "id": "1524",
+      "studentId": 26,
+      "courseId": 84,
+      "session": "2025/2026",
+      "level": 300,
+      "semester": 1,
+      "score": 50,
+      "published": true
+    },
+    {
+      "id": "1525",
+      "studentId": 26,
+      "courseId": 229,
+      "session": "2025/2026",
+      "level": 300,
+      "semester": 1,
+      "score": 52,
+      "published": true
+    },
+    {
+      "id": "1526",
+      "studentId": 26,
+      "courseId": 230,
+      "session": "2025/2026",
+      "level": 300,
+      "semester": 1,
+      "score": 79,
+      "published": true
+    },
+    {
+      "id": "1527",
+      "studentId": 26,
+      "courseId": 231,
+      "session": "2025/2026",
+      "level": 300,
+      "semester": 1,
+      "score": 75,
+      "published": true
+    },
+    {
+      "id": "1528",
+      "studentId": 26,
+      "courseId": 232,
+      "session": "2025/2026",
+      "level": 300,
+      "semester": 1,
+      "score": 62,
+      "published": true
+    },
+    {
+      "id": "1529",
+      "studentId": 27,
+      "courseId": 89,
+      "session": "2025/2026",
+      "level": 400,
+      "semester": 1,
+      "score": 47,
+      "published": true
+    },
+    {
+      "id": "1530",
+      "studentId": 27,
+      "courseId": 90,
+      "session": "2025/2026",
+      "level": 400,
+      "semester": 1,
+      "score": 72,
+      "published": true
+    },
+    {
+      "id": "1531",
+      "studentId": 27,
+      "courseId": 91,
+      "session": "2025/2026",
+      "level": 400,
+      "semester": 1,
+      "score": 60,
+      "published": true
+    },
+    {
+      "id": "1532",
+      "studentId": 27,
+      "courseId": 92,
+      "session": "2025/2026",
+      "level": 400,
+      "semester": 1,
+      "score": 75,
+      "published": true
+    },
+    {
+      "id": "1533",
+      "studentId": 27,
+      "courseId": 237,
+      "session": "2025/2026",
+      "level": 400,
+      "semester": 1,
+      "score": 51,
+      "published": true
+    },
+    {
+      "id": "1534",
+      "studentId": 27,
+      "courseId": 238,
+      "session": "2025/2026",
+      "level": 400,
+      "semester": 1,
+      "score": 50,
+      "published": true
+    },
+    {
+      "id": "1535",
+      "studentId": 27,
+      "courseId": 239,
+      "session": "2025/2026",
+      "level": 400,
+      "semester": 1,
+      "score": 88,
+      "published": true
+    },
+    {
+      "id": "1536",
+      "studentId": 27,
+      "courseId": 240,
+      "session": "2025/2026",
+      "level": 400,
+      "semester": 1,
+      "score": 78,
+      "published": true
+    },
+    {
+      "id": "1537",
+      "studentId": 28,
+      "courseId": 89,
+      "session": "2025/2026",
+      "level": 400,
+      "semester": 1,
+      "score": 73,
+      "published": true
+    },
+    {
+      "id": "1538",
+      "studentId": 28,
+      "courseId": 90,
+      "session": "2025/2026",
+      "level": 400,
+      "semester": 1,
+      "score": 85,
+      "published": true
+    },
+    {
+      "id": "1539",
+      "studentId": 28,
+      "courseId": 91,
+      "session": "2025/2026",
+      "level": 400,
+      "semester": 1,
+      "score": 64,
+      "published": true
+    },
+    {
+      "id": "1540",
+      "studentId": 28,
+      "courseId": 92,
+      "session": "2025/2026",
+      "level": 400,
+      "semester": 1,
+      "score": 68,
+      "published": true
+    },
+    {
+      "id": "1541",
+      "studentId": 28,
+      "courseId": 237,
+      "session": "2025/2026",
+      "level": 400,
+      "semester": 1,
+      "score": 90,
+      "published": true
+    },
+    {
+      "id": "1542",
+      "studentId": 28,
+      "courseId": 238,
+      "session": "2025/2026",
+      "level": 400,
+      "semester": 1,
+      "score": 82,
+      "published": true
+    },
+    {
+      "id": "1543",
+      "studentId": 28,
+      "courseId": 239,
+      "session": "2025/2026",
+      "level": 400,
+      "semester": 1,
+      "score": 78,
+      "published": true
+    },
+    {
+      "id": "1544",
+      "studentId": 28,
+      "courseId": 240,
+      "session": "2025/2026",
+      "level": 400,
+      "semester": 1,
+      "score": 54,
+      "published": true
+    },
+    {
+      "id": "1545",
+      "studentId": 29,
+      "courseId": 97,
+      "session": "2025/2026",
+      "level": 500,
+      "semester": 1,
+      "score": 71,
+      "published": true
+    },
+    {
+      "id": "1546",
+      "studentId": 29,
+      "courseId": 98,
+      "session": "2025/2026",
+      "level": 500,
+      "semester": 1,
+      "score": 86,
+      "published": true
+    },
+    {
+      "id": "1547",
+      "studentId": 29,
+      "courseId": 99,
+      "session": "2025/2026",
+      "level": 500,
+      "semester": 1,
+      "score": 78,
+      "published": true
+    },
+    {
+      "id": "1548",
+      "studentId": 29,
+      "courseId": 100,
+      "session": "2025/2026",
+      "level": 500,
+      "semester": 1,
+      "score": 80,
+      "published": true
+    },
+    {
+      "id": "1549",
+      "studentId": 30,
+      "courseId": 97,
+      "session": "2025/2026",
+      "level": 500,
+      "semester": 1,
+      "score": 48,
+      "published": true
+    },
+    {
+      "id": "1550",
+      "studentId": 30,
+      "courseId": 98,
+      "session": "2025/2026",
+      "level": 500,
+      "semester": 1,
+      "score": 91,
+      "published": true
+    },
+    {
+      "id": "1551",
+      "studentId": 30,
+      "courseId": 99,
+      "session": "2025/2026",
+      "level": 500,
+      "semester": 1,
+      "score": 84,
+      "published": true
+    },
+    {
+      "id": "1552",
+      "studentId": 30,
+      "courseId": 100,
+      "session": "2025/2026",
+      "level": 500,
+      "semester": 1,
+      "score": 84,
+      "published": true
+    },
+    {
+      "id": "1553",
+      "studentId": 31,
+      "courseId": 105,
+      "session": "2025/2026",
+      "level": 100,
+      "semester": 1,
+      "score": 93,
+      "published": true
+    },
+    {
+      "id": "1554",
+      "studentId": 31,
+      "courseId": 106,
+      "session": "2025/2026",
+      "level": 100,
+      "semester": 1,
+      "score": 50,
+      "published": true
+    },
+    {
+      "id": "1555",
+      "studentId": 31,
+      "courseId": 107,
+      "session": "2025/2026",
+      "level": 100,
+      "semester": 1,
+      "score": 75,
+      "published": true
+    },
+    {
+      "id": "1556",
+      "studentId": 31,
+      "courseId": 108,
+      "session": "2025/2026",
+      "level": 100,
+      "semester": 1,
+      "score": 88,
+      "published": true
+    },
+    {
+      "id": "1557",
+      "studentId": 31,
+      "courseId": 245,
+      "session": "2025/2026",
+      "level": 100,
+      "semester": 1,
+      "score": 67,
+      "published": true
+    },
+    {
+      "id": "1558",
+      "studentId": 31,
+      "courseId": 246,
+      "session": "2025/2026",
+      "level": 100,
+      "semester": 1,
+      "score": 80,
+      "published": true
+    },
+    {
+      "id": "1559",
+      "studentId": 31,
+      "courseId": 247,
+      "session": "2025/2026",
+      "level": 100,
+      "semester": 1,
+      "score": 60,
+      "published": true
+    },
+    {
+      "id": "1560",
+      "studentId": 31,
+      "courseId": 248,
+      "session": "2025/2026",
+      "level": 100,
+      "semester": 1,
+      "score": 82,
+      "published": true
+    },
+    {
+      "id": "1561",
+      "studentId": 32,
+      "courseId": 105,
+      "session": "2025/2026",
+      "level": 100,
+      "semester": 1,
+      "score": 56,
+      "published": true
+    },
+    {
+      "id": "1562",
+      "studentId": 32,
+      "courseId": 106,
+      "session": "2025/2026",
+      "level": 100,
+      "semester": 1,
+      "score": 78,
+      "published": true
+    },
+    {
+      "id": "1563",
+      "studentId": 32,
+      "courseId": 107,
+      "session": "2025/2026",
+      "level": 100,
+      "semester": 1,
+      "score": 69,
+      "published": true
+    },
+    {
+      "id": "1564",
+      "studentId": 32,
+      "courseId": 108,
+      "session": "2025/2026",
+      "level": 100,
+      "semester": 1,
+      "score": 78,
+      "published": true
+    },
+    {
+      "id": "1565",
+      "studentId": 32,
+      "courseId": 245,
+      "session": "2025/2026",
+      "level": 100,
+      "semester": 1,
+      "score": 62,
+      "published": true
+    },
+    {
+      "id": "1566",
+      "studentId": 32,
+      "courseId": 246,
+      "session": "2025/2026",
+      "level": 100,
+      "semester": 1,
+      "score": 75,
+      "published": true
+    },
+    {
+      "id": "1567",
+      "studentId": 32,
+      "courseId": 247,
+      "session": "2025/2026",
+      "level": 100,
+      "semester": 1,
+      "score": 53,
+      "published": true
+    },
+    {
+      "id": "1568",
+      "studentId": 32,
+      "courseId": 248,
+      "session": "2025/2026",
+      "level": 100,
+      "semester": 1,
+      "score": 82,
+      "published": true
+    },
+    {
+      "id": "1569",
+      "studentId": 33,
+      "courseId": 113,
+      "session": "2025/2026",
+      "level": 200,
+      "semester": 1,
+      "score": 65,
+      "published": true
+    },
+    {
+      "id": "1570",
+      "studentId": 33,
+      "courseId": 114,
+      "session": "2025/2026",
+      "level": 200,
+      "semester": 1,
+      "score": 78,
+      "published": true
+    },
+    {
+      "id": "1571",
+      "studentId": 33,
+      "courseId": 115,
+      "session": "2025/2026",
+      "level": 200,
+      "semester": 1,
+      "score": 54,
+      "published": true
+    },
+    {
+      "id": "1572",
+      "studentId": 33,
+      "courseId": 116,
+      "session": "2025/2026",
+      "level": 200,
+      "semester": 1,
+      "score": 59,
+      "published": true
+    },
+    {
+      "id": "1573",
+      "studentId": 33,
+      "courseId": 253,
+      "session": "2025/2026",
+      "level": 200,
+      "semester": 1,
+      "score": 70,
+      "published": true
+    },
+    {
+      "id": "1574",
+      "studentId": 33,
+      "courseId": 254,
+      "session": "2025/2026",
+      "level": 200,
+      "semester": 1,
+      "score": 84,
+      "published": true
+    },
+    {
+      "id": "1575",
+      "studentId": 33,
+      "courseId": 255,
+      "session": "2025/2026",
+      "level": 200,
+      "semester": 1,
+      "score": 59,
+      "published": true
+    },
+    {
+      "id": "1576",
+      "studentId": 33,
+      "courseId": 256,
+      "session": "2025/2026",
+      "level": 200,
+      "semester": 1,
+      "score": 80,
+      "published": true
+    },
+    {
+      "id": "1577",
+      "studentId": 34,
+      "courseId": 113,
+      "session": "2025/2026",
+      "level": 200,
+      "semester": 1,
+      "score": 54,
+      "published": true
+    },
+    {
+      "id": "1578",
+      "studentId": 34,
+      "courseId": 114,
+      "session": "2025/2026",
+      "level": 200,
+      "semester": 1,
+      "score": 51,
+      "published": true
+    },
+    {
+      "id": "1579",
+      "studentId": 34,
+      "courseId": 115,
+      "session": "2025/2026",
+      "level": 200,
+      "semester": 1,
+      "score": 74,
+      "published": true
+    },
+    {
+      "id": "1580",
+      "studentId": 34,
+      "courseId": 116,
+      "session": "2025/2026",
+      "level": 200,
+      "semester": 1,
+      "score": 65,
+      "published": true
+    },
+    {
+      "id": "1581",
+      "studentId": 34,
+      "courseId": 253,
+      "session": "2025/2026",
+      "level": 200,
+      "semester": 1,
+      "score": 70,
+      "published": true
+    },
+    {
+      "id": "1582",
+      "studentId": 34,
+      "courseId": 254,
+      "session": "2025/2026",
+      "level": 200,
+      "semester": 1,
+      "score": 56,
+      "published": true
+    },
+    {
+      "id": "1583",
+      "studentId": 34,
+      "courseId": 255,
+      "session": "2025/2026",
+      "level": 200,
+      "semester": 1,
+      "score": 78,
+      "published": true
+    },
+    {
+      "id": "1584",
+      "studentId": 34,
+      "courseId": 256,
+      "session": "2025/2026",
+      "level": 200,
+      "semester": 1,
+      "score": 75,
+      "published": true
+    },
+    {
+      "id": "1585",
+      "studentId": 35,
+      "courseId": 121,
+      "session": "2025/2026",
+      "level": 300,
+      "semester": 1,
+      "score": 83,
+      "published": true
+    },
+    {
+      "id": "1586",
+      "studentId": 35,
+      "courseId": 122,
+      "session": "2025/2026",
+      "level": 300,
+      "semester": 1,
+      "score": 81,
+      "published": true
+    },
+    {
+      "id": "1587",
+      "studentId": 35,
+      "courseId": 123,
+      "session": "2025/2026",
+      "level": 300,
+      "semester": 1,
+      "score": 77,
+      "published": true
+    },
+    {
+      "id": "1588",
+      "studentId": 35,
+      "courseId": 124,
+      "session": "2025/2026",
+      "level": 300,
+      "semester": 1,
+      "score": 79,
+      "published": true
+    },
+    {
+      "id": "1589",
+      "studentId": 35,
+      "courseId": 261,
+      "session": "2025/2026",
+      "level": 300,
+      "semester": 1,
+      "score": 66,
+      "published": true
+    },
+    {
+      "id": "1590",
+      "studentId": 35,
+      "courseId": 262,
+      "session": "2025/2026",
+      "level": 300,
+      "semester": 1,
+      "score": 72,
+      "published": true
+    },
+    {
+      "id": "1591",
+      "studentId": 35,
+      "courseId": 263,
+      "session": "2025/2026",
+      "level": 300,
+      "semester": 1,
+      "score": 55,
+      "published": true
+    },
+    {
+      "id": "1592",
+      "studentId": 35,
+      "courseId": 264,
+      "session": "2025/2026",
+      "level": 300,
+      "semester": 1,
+      "score": 71,
+      "published": true
+    },
+    {
+      "id": "1593",
+      "studentId": 36,
+      "courseId": 121,
+      "session": "2025/2026",
+      "level": 300,
+      "semester": 1,
+      "score": 50,
+      "published": true
+    },
+    {
+      "id": "1594",
+      "studentId": 36,
+      "courseId": 122,
+      "session": "2025/2026",
+      "level": 300,
+      "semester": 1,
+      "score": 93,
+      "published": true
+    },
+    {
+      "id": "1595",
+      "studentId": 36,
+      "courseId": 123,
+      "session": "2025/2026",
+      "level": 300,
+      "semester": 1,
+      "score": 74,
+      "published": true
+    },
+    {
+      "id": "1596",
+      "studentId": 36,
+      "courseId": 124,
+      "session": "2025/2026",
+      "level": 300,
+      "semester": 1,
+      "score": 57,
+      "published": true
+    },
+    {
+      "id": "1597",
+      "studentId": 36,
+      "courseId": 261,
+      "session": "2025/2026",
+      "level": 300,
+      "semester": 1,
+      "score": 67,
+      "published": true
+    },
+    {
+      "id": "1598",
+      "studentId": 36,
+      "courseId": 262,
+      "session": "2025/2026",
+      "level": 300,
+      "semester": 1,
+      "score": 82,
+      "published": true
+    },
+    {
+      "id": "1599",
+      "studentId": 36,
+      "courseId": 263,
+      "session": "2025/2026",
+      "level": 300,
+      "semester": 1,
+      "score": 47,
+      "published": true
+    },
+    {
+      "id": "1600",
+      "studentId": 36,
+      "courseId": 264,
+      "session": "2025/2026",
+      "level": 300,
+      "semester": 1,
+      "score": 54,
+      "published": true
+    },
+    {
+      "id": "1601",
+      "studentId": 37,
+      "courseId": 129,
+      "session": "2025/2026",
+      "level": 400,
+      "semester": 1,
+      "score": 44,
+      "published": true
+    },
+    {
+      "id": "1602",
+      "studentId": 37,
+      "courseId": 130,
+      "session": "2025/2026",
+      "level": 400,
+      "semester": 1,
+      "score": 60,
+      "published": true
+    },
+    {
+      "id": "1603",
+      "studentId": 37,
+      "courseId": 131,
+      "session": "2025/2026",
+      "level": 400,
+      "semester": 1,
+      "score": 80,
+      "published": true
+    },
+    {
+      "id": "1604",
+      "studentId": 37,
+      "courseId": 132,
+      "session": "2025/2026",
+      "level": 400,
+      "semester": 1,
+      "score": 70,
+      "published": true
+    },
+    {
+      "id": "1605",
+      "studentId": 37,
+      "courseId": 269,
+      "session": "2025/2026",
+      "level": 400,
+      "semester": 1,
+      "score": 80,
+      "published": true
+    },
+    {
+      "id": "1606",
+      "studentId": 37,
+      "courseId": 270,
+      "session": "2025/2026",
+      "level": 400,
+      "semester": 1,
+      "score": 76,
+      "published": true
+    },
+    {
+      "id": "1607",
+      "studentId": 37,
+      "courseId": 271,
+      "session": "2025/2026",
+      "level": 400,
+      "semester": 1,
+      "score": 72,
+      "published": true
+    },
+    {
+      "id": "1608",
+      "studentId": 37,
+      "courseId": 272,
+      "session": "2025/2026",
+      "level": 400,
+      "semester": 1,
+      "score": 75,
+      "published": true
+    },
+    {
+      "id": "1609",
+      "studentId": 38,
+      "courseId": 129,
+      "session": "2025/2026",
+      "level": 400,
+      "semester": 1,
+      "score": 79,
+      "published": true
+    },
+    {
+      "id": "1610",
+      "studentId": 38,
+      "courseId": 130,
+      "session": "2025/2026",
+      "level": 400,
+      "semester": 1,
+      "score": 58,
+      "published": true
+    },
+    {
+      "id": "1611",
+      "studentId": 38,
+      "courseId": 131,
+      "session": "2025/2026",
+      "level": 400,
+      "semester": 1,
+      "score": 71,
+      "published": true
+    },
+    {
+      "id": "1612",
+      "studentId": 38,
+      "courseId": 132,
+      "session": "2025/2026",
+      "level": 400,
+      "semester": 1,
+      "score": 80,
+      "published": true
+    },
+    {
+      "id": "1613",
+      "studentId": 38,
+      "courseId": 269,
+      "session": "2025/2026",
+      "level": 400,
+      "semester": 1,
+      "score": 55,
+      "published": true
+    },
+    {
+      "id": "1614",
+      "studentId": 38,
+      "courseId": 270,
+      "session": "2025/2026",
+      "level": 400,
+      "semester": 1,
+      "score": 56,
+      "published": true
+    },
+    {
+      "id": "1615",
+      "studentId": 38,
+      "courseId": 271,
+      "session": "2025/2026",
+      "level": 400,
+      "semester": 1,
+      "score": 91,
+      "published": true
+    },
+    {
+      "id": "1616",
+      "studentId": 38,
+      "courseId": 272,
+      "session": "2025/2026",
+      "level": 400,
+      "semester": 1,
+      "score": 83,
+      "published": true
+    },
+    {
+      "id": "1617",
+      "studentId": 39,
+      "courseId": 137,
+      "session": "2025/2026",
+      "level": 500,
+      "semester": 1,
+      "score": 85,
+      "published": true
+    },
+    {
+      "id": "1618",
+      "studentId": 39,
+      "courseId": 138,
+      "session": "2025/2026",
+      "level": 500,
+      "semester": 1,
+      "score": 66,
+      "published": true
+    },
+    {
+      "id": "1619",
+      "studentId": 39,
+      "courseId": 139,
+      "session": "2025/2026",
+      "level": 500,
+      "semester": 1,
+      "score": 87,
+      "published": true
+    },
+    {
+      "id": "1620",
+      "studentId": 39,
+      "courseId": 140,
+      "session": "2025/2026",
+      "level": 500,
+      "semester": 1,
+      "score": 69,
+      "published": true
+    },
+    {
+      "id": "1621",
+      "studentId": 40,
+      "courseId": 137,
+      "session": "2025/2026",
+      "level": 500,
+      "semester": 1,
+      "score": 92,
+      "published": true
+    },
+    {
+      "id": "1622",
+      "studentId": 40,
+      "courseId": 138,
+      "session": "2025/2026",
+      "level": 500,
+      "semester": 1,
+      "score": 95,
+      "published": true
+    },
+    {
+      "id": "1623",
+      "studentId": 40,
+      "courseId": 139,
+      "session": "2025/2026",
+      "level": 500,
+      "semester": 1,
+      "score": 63,
+      "published": true
+    },
+    {
+      "id": "1624",
+      "studentId": 40,
+      "courseId": 140,
+      "session": "2025/2026",
+      "level": 500,
+      "semester": 1,
+      "score": 78,
+      "published": true
     }
   ],
   "lecturers": [
     {
       "id": "1",
       "staffId": "STF/CSC/001",
-      "name": "Dr. Grace Abubakar",
+      "name": "Grace Abubakar",
       "email": "grace.abubakar@edutech.ng",
       "password": "Lecturer123",
       "departmentId": "1",
@@ -26805,7 +33289,7 @@
     {
       "id": "2",
       "staffId": "STF/CSC/002",
-      "name": "Dr. Michael Bello",
+      "name": "Michael Bello",
       "email": "michael.bello@edutech.ng",
       "password": "Lecturer123",
       "departmentId": "1",
@@ -26816,7 +33300,7 @@
     {
       "id": "3",
       "staffId": "STF/MTH/003",
-      "name": "Prof. Ifeoma Suleiman",
+      "name": "Ifeoma Suleiman",
       "email": "ifeoma.suleiman@edutech.ng",
       "password": "Lecturer123",
       "departmentId": "2",
@@ -26827,7 +33311,7 @@
     {
       "id": "4",
       "staffId": "STF/MTH/004",
-      "name": "Engr. Dr. Peter Okoro",
+      "name": "Peter Okoro",
       "email": "peter.okoro@edutech.ng",
       "password": "Lecturer123",
       "departmentId": "2",
@@ -26838,7 +33322,7 @@
     {
       "id": "5",
       "staffId": "STF/CVE/005",
-      "name": "Dr. Michael Brown",
+      "name": "Michael Brown",
       "email": "michael.brown@edutech.ng",
       "password": "Lecturer123",
       "departmentId": "3",
@@ -26849,7 +33333,7 @@
     {
       "id": "6",
       "staffId": "STF/CVE/006",
-      "name": "Engr. Dr. Precious Williams",
+      "name": "Precious Williams",
       "email": "precious.williams@edutech.ng",
       "password": "Lecturer123",
       "departmentId": "3",
@@ -26860,7 +33344,7 @@
     {
       "id": "7",
       "staffId": "STF/CVE/007",
-      "name": "Engr. Dr. Grace Nwosu",
+      "name": "Grace Nwosu",
       "email": "grace.nwosu@edutech.ng",
       "password": "Lecturer123",
       "departmentId": "3",
@@ -26871,7 +33355,7 @@
     {
       "id": "8",
       "staffId": "STF/EEE/008",
-      "name": "Prof. Jane Johnson",
+      "name": "Jane Johnson",
       "email": "jane.johnson@edutech.ng",
       "password": "Lecturer123",
       "departmentId": "4",
@@ -26882,7 +33366,7 @@
     {
       "id": "9",
       "staffId": "STF/EEE/009",
-      "name": "Prof. Godwin Balogun",
+      "name": "Godwin Balogun",
       "email": "godwin.balogun@edutech.ng",
       "password": "Lecturer123",
       "departmentId": "4",
@@ -26893,7 +33377,7 @@
     {
       "id": "10",
       "staffId": "STF/EEE/010",
-      "name": "Engr. Dr. Kunle Nwosu",
+      "name": "Kunle Nwosu",
       "email": "kunle.nwosu@edutech.ng",
       "password": "Lecturer123",
       "departmentId": "4",
@@ -27798,6 +34282,874 @@
       "courseId": 132,
       "session": "2024/2025",
       "semester": 1
+    },
+    {
+      "id": "129",
+      "lecturerId": 1,
+      "courseId": 5,
+      "session": "2025/2026",
+      "semester": 2
+    },
+    {
+      "id": "130",
+      "lecturerId": 1,
+      "courseId": 13,
+      "session": "2025/2026",
+      "semester": 2
+    },
+    {
+      "id": "131",
+      "lecturerId": 1,
+      "courseId": 21,
+      "session": "2025/2026",
+      "semester": 2
+    },
+    {
+      "id": "132",
+      "lecturerId": 1,
+      "courseId": 29,
+      "session": "2025/2026",
+      "semester": 2
+    },
+    {
+      "id": "133",
+      "lecturerId": 3,
+      "courseId": 37,
+      "session": "2025/2026",
+      "semester": 2
+    },
+    {
+      "id": "134",
+      "lecturerId": 3,
+      "courseId": 45,
+      "session": "2025/2026",
+      "semester": 2
+    },
+    {
+      "id": "135",
+      "lecturerId": 3,
+      "courseId": 53,
+      "session": "2025/2026",
+      "semester": 2
+    },
+    {
+      "id": "136",
+      "lecturerId": 3,
+      "courseId": 61,
+      "session": "2025/2026",
+      "semester": 2
+    },
+    {
+      "id": "137",
+      "lecturerId": 5,
+      "courseId": 69,
+      "session": "2025/2026",
+      "semester": 2
+    },
+    {
+      "id": "138",
+      "lecturerId": 6,
+      "courseId": 77,
+      "session": "2025/2026",
+      "semester": 2
+    },
+    {
+      "id": "139",
+      "lecturerId": 7,
+      "courseId": 85,
+      "session": "2025/2026",
+      "semester": 2
+    },
+    {
+      "id": "140",
+      "lecturerId": 5,
+      "courseId": 93,
+      "session": "2025/2026",
+      "semester": 2
+    },
+    {
+      "id": "141",
+      "lecturerId": 8,
+      "courseId": 109,
+      "session": "2025/2026",
+      "semester": 2
+    },
+    {
+      "id": "142",
+      "lecturerId": 9,
+      "courseId": 117,
+      "session": "2025/2026",
+      "semester": 2
+    },
+    {
+      "id": "143",
+      "lecturerId": 10,
+      "courseId": 125,
+      "session": "2025/2026",
+      "semester": 2
+    },
+    {
+      "id": "144",
+      "lecturerId": 8,
+      "courseId": 133,
+      "session": "2025/2026",
+      "semester": 2
+    },
+    {
+      "id": "145",
+      "lecturerId": 2,
+      "courseId": 6,
+      "session": "2025/2026",
+      "semester": 2
+    },
+    {
+      "id": "146",
+      "lecturerId": 1,
+      "courseId": 7,
+      "session": "2025/2026",
+      "semester": 2
+    },
+    {
+      "id": "147",
+      "lecturerId": 2,
+      "courseId": 8,
+      "session": "2025/2026",
+      "semester": 2
+    },
+    {
+      "id": "148",
+      "lecturerId": 1,
+      "courseId": 14,
+      "session": "2025/2026",
+      "semester": 2
+    },
+    {
+      "id": "149",
+      "lecturerId": 2,
+      "courseId": 15,
+      "session": "2025/2026",
+      "semester": 2
+    },
+    {
+      "id": "150",
+      "lecturerId": 1,
+      "courseId": 16,
+      "session": "2025/2026",
+      "semester": 2
+    },
+    {
+      "id": "151",
+      "lecturerId": 2,
+      "courseId": 22,
+      "session": "2025/2026",
+      "semester": 2
+    },
+    {
+      "id": "152",
+      "lecturerId": 1,
+      "courseId": 23,
+      "session": "2025/2026",
+      "semester": 2
+    },
+    {
+      "id": "153",
+      "lecturerId": 2,
+      "courseId": 24,
+      "session": "2025/2026",
+      "semester": 2
+    },
+    {
+      "id": "154",
+      "lecturerId": 1,
+      "courseId": 30,
+      "session": "2025/2026",
+      "semester": 2
+    },
+    {
+      "id": "155",
+      "lecturerId": 2,
+      "courseId": 31,
+      "session": "2025/2026",
+      "semester": 2
+    },
+    {
+      "id": "156",
+      "lecturerId": 1,
+      "courseId": 32,
+      "session": "2025/2026",
+      "semester": 2
+    },
+    {
+      "id": "157",
+      "lecturerId": 4,
+      "courseId": 38,
+      "session": "2025/2026",
+      "semester": 2
+    },
+    {
+      "id": "158",
+      "lecturerId": 3,
+      "courseId": 39,
+      "session": "2025/2026",
+      "semester": 2
+    },
+    {
+      "id": "159",
+      "lecturerId": 4,
+      "courseId": 40,
+      "session": "2025/2026",
+      "semester": 2
+    },
+    {
+      "id": "160",
+      "lecturerId": 3,
+      "courseId": 46,
+      "session": "2025/2026",
+      "semester": 2
+    },
+    {
+      "id": "161",
+      "lecturerId": 4,
+      "courseId": 47,
+      "session": "2025/2026",
+      "semester": 2
+    },
+    {
+      "id": "162",
+      "lecturerId": 3,
+      "courseId": 48,
+      "session": "2025/2026",
+      "semester": 2
+    },
+    {
+      "id": "163",
+      "lecturerId": 4,
+      "courseId": 54,
+      "session": "2025/2026",
+      "semester": 2
+    },
+    {
+      "id": "164",
+      "lecturerId": 3,
+      "courseId": 55,
+      "session": "2025/2026",
+      "semester": 2
+    },
+    {
+      "id": "165",
+      "lecturerId": 4,
+      "courseId": 56,
+      "session": "2025/2026",
+      "semester": 2
+    },
+    {
+      "id": "166",
+      "lecturerId": 3,
+      "courseId": 62,
+      "session": "2025/2026",
+      "semester": 2
+    },
+    {
+      "id": "167",
+      "lecturerId": 4,
+      "courseId": 63,
+      "session": "2025/2026",
+      "semester": 2
+    },
+    {
+      "id": "168",
+      "lecturerId": 3,
+      "courseId": 64,
+      "session": "2025/2026",
+      "semester": 2
+    },
+    {
+      "id": "169",
+      "lecturerId": 7,
+      "courseId": 70,
+      "session": "2025/2026",
+      "semester": 2
+    },
+    {
+      "id": "170",
+      "lecturerId": 5,
+      "courseId": 71,
+      "session": "2025/2026",
+      "semester": 2
+    },
+    {
+      "id": "171",
+      "lecturerId": 6,
+      "courseId": 72,
+      "session": "2025/2026",
+      "semester": 2
+    },
+    {
+      "id": "172",
+      "lecturerId": 7,
+      "courseId": 78,
+      "session": "2025/2026",
+      "semester": 2
+    },
+    {
+      "id": "173",
+      "lecturerId": 5,
+      "courseId": 79,
+      "session": "2025/2026",
+      "semester": 2
+    },
+    {
+      "id": "174",
+      "lecturerId": 6,
+      "courseId": 80,
+      "session": "2025/2026",
+      "semester": 2
+    },
+    {
+      "id": "175",
+      "lecturerId": 7,
+      "courseId": 86,
+      "session": "2025/2026",
+      "semester": 2
+    },
+    {
+      "id": "176",
+      "lecturerId": 5,
+      "courseId": 87,
+      "session": "2025/2026",
+      "semester": 2
+    },
+    {
+      "id": "177",
+      "lecturerId": 6,
+      "courseId": 88,
+      "session": "2025/2026",
+      "semester": 2
+    },
+    {
+      "id": "178",
+      "lecturerId": 7,
+      "courseId": 94,
+      "session": "2025/2026",
+      "semester": 2
+    },
+    {
+      "id": "179",
+      "lecturerId": 5,
+      "courseId": 95,
+      "session": "2025/2026",
+      "semester": 2
+    },
+    {
+      "id": "180",
+      "lecturerId": 6,
+      "courseId": 96,
+      "session": "2025/2026",
+      "semester": 2
+    },
+    {
+      "id": "181",
+      "lecturerId": 7,
+      "courseId": 101,
+      "session": "2025/2026",
+      "semester": 2
+    },
+    {
+      "id": "182",
+      "lecturerId": 5,
+      "courseId": 102,
+      "session": "2025/2026",
+      "semester": 2
+    },
+    {
+      "id": "183",
+      "lecturerId": 6,
+      "courseId": 103,
+      "session": "2025/2026",
+      "semester": 2
+    },
+    {
+      "id": "184",
+      "lecturerId": 7,
+      "courseId": 104,
+      "session": "2025/2026",
+      "semester": 2
+    },
+    {
+      "id": "185",
+      "lecturerId": 9,
+      "courseId": 110,
+      "session": "2025/2026",
+      "semester": 2
+    },
+    {
+      "id": "186",
+      "lecturerId": 8,
+      "courseId": 111,
+      "session": "2025/2026",
+      "semester": 2
+    },
+    {
+      "id": "187",
+      "lecturerId": 10,
+      "courseId": 112,
+      "session": "2025/2026",
+      "semester": 2
+    },
+    {
+      "id": "188",
+      "lecturerId": 9,
+      "courseId": 118,
+      "session": "2025/2026",
+      "semester": 2
+    },
+    {
+      "id": "189",
+      "lecturerId": 8,
+      "courseId": 119,
+      "session": "2025/2026",
+      "semester": 2
+    },
+    {
+      "id": "190",
+      "lecturerId": 10,
+      "courseId": 120,
+      "session": "2025/2026",
+      "semester": 2
+    },
+    {
+      "id": "191",
+      "lecturerId": 9,
+      "courseId": 126,
+      "session": "2025/2026",
+      "semester": 2
+    },
+    {
+      "id": "192",
+      "lecturerId": 8,
+      "courseId": 127,
+      "session": "2025/2026",
+      "semester": 2
+    },
+    {
+      "id": "193",
+      "lecturerId": 10,
+      "courseId": 128,
+      "session": "2025/2026",
+      "semester": 2
+    },
+    {
+      "id": "194",
+      "lecturerId": 9,
+      "courseId": 134,
+      "session": "2025/2026",
+      "semester": 2
+    },
+    {
+      "id": "195",
+      "lecturerId": 8,
+      "courseId": 135,
+      "session": "2025/2026",
+      "semester": 2
+    },
+    {
+      "id": "196",
+      "lecturerId": 10,
+      "courseId": 136,
+      "session": "2025/2026",
+      "semester": 2
+    },
+    {
+      "id": "197",
+      "lecturerId": 9,
+      "courseId": 141,
+      "session": "2025/2026",
+      "semester": 2
+    },
+    {
+      "id": "198",
+      "lecturerId": 8,
+      "courseId": 142,
+      "session": "2025/2026",
+      "semester": 2
+    },
+    {
+      "id": "199",
+      "lecturerId": 10,
+      "courseId": 143,
+      "session": "2025/2026",
+      "semester": 2
+    },
+    {
+      "id": "200",
+      "lecturerId": 9,
+      "courseId": 144,
+      "session": "2025/2026",
+      "semester": 2
+    },
+    {
+      "id": "201",
+      "lecturerId": 2,
+      "courseId": 153,
+      "session": "2025/2026",
+      "semester": 2
+    },
+    {
+      "id": "202",
+      "lecturerId": 1,
+      "courseId": 154,
+      "session": "2025/2026",
+      "semester": 2
+    },
+    {
+      "id": "203",
+      "lecturerId": 2,
+      "courseId": 155,
+      "session": "2025/2026",
+      "semester": 2
+    },
+    {
+      "id": "204",
+      "lecturerId": 1,
+      "courseId": 156,
+      "session": "2025/2026",
+      "semester": 2
+    },
+    {
+      "id": "205",
+      "lecturerId": 2,
+      "courseId": 161,
+      "session": "2025/2026",
+      "semester": 2
+    },
+    {
+      "id": "206",
+      "lecturerId": 1,
+      "courseId": 162,
+      "session": "2025/2026",
+      "semester": 2
+    },
+    {
+      "id": "207",
+      "lecturerId": 2,
+      "courseId": 169,
+      "session": "2025/2026",
+      "semester": 2
+    },
+    {
+      "id": "208",
+      "lecturerId": 1,
+      "courseId": 170,
+      "session": "2025/2026",
+      "semester": 2
+    },
+    {
+      "id": "209",
+      "lecturerId": 2,
+      "courseId": 177,
+      "session": "2025/2026",
+      "semester": 2
+    },
+    {
+      "id": "210",
+      "lecturerId": 1,
+      "courseId": 178,
+      "session": "2025/2026",
+      "semester": 2
+    },
+    {
+      "id": "211",
+      "lecturerId": 4,
+      "courseId": 185,
+      "session": "2025/2026",
+      "semester": 2
+    },
+    {
+      "id": "212",
+      "lecturerId": 3,
+      "courseId": 186,
+      "session": "2025/2026",
+      "semester": 2
+    },
+    {
+      "id": "213",
+      "lecturerId": 4,
+      "courseId": 193,
+      "session": "2025/2026",
+      "semester": 2
+    },
+    {
+      "id": "214",
+      "lecturerId": 3,
+      "courseId": 194,
+      "session": "2025/2026",
+      "semester": 2
+    },
+    {
+      "id": "215",
+      "lecturerId": 4,
+      "courseId": 196,
+      "session": "2025/2026",
+      "semester": 2
+    },
+    {
+      "id": "216",
+      "lecturerId": 3,
+      "courseId": 201,
+      "session": "2025/2026",
+      "semester": 2
+    },
+    {
+      "id": "217",
+      "lecturerId": 4,
+      "courseId": 202,
+      "session": "2025/2026",
+      "semester": 2
+    },
+    {
+      "id": "218",
+      "lecturerId": 3,
+      "courseId": 209,
+      "session": "2025/2026",
+      "semester": 2
+    },
+    {
+      "id": "219",
+      "lecturerId": 4,
+      "courseId": 210,
+      "session": "2025/2026",
+      "semester": 2
+    },
+    {
+      "id": "220",
+      "lecturerId": 5,
+      "courseId": 217,
+      "session": "2025/2026",
+      "semester": 2
+    },
+    {
+      "id": "221",
+      "lecturerId": 6,
+      "courseId": 218,
+      "session": "2025/2026",
+      "semester": 2
+    },
+    {
+      "id": "222",
+      "lecturerId": 7,
+      "courseId": 225,
+      "session": "2025/2026",
+      "semester": 2
+    },
+    {
+      "id": "223",
+      "lecturerId": 5,
+      "courseId": 226,
+      "session": "2025/2026",
+      "semester": 2
+    },
+    {
+      "id": "224",
+      "lecturerId": 6,
+      "courseId": 227,
+      "session": "2025/2026",
+      "semester": 2
+    },
+    {
+      "id": "225",
+      "lecturerId": 7,
+      "courseId": 228,
+      "session": "2025/2026",
+      "semester": 2
+    },
+    {
+      "id": "226",
+      "lecturerId": 5,
+      "courseId": 233,
+      "session": "2025/2026",
+      "semester": 2
+    },
+    {
+      "id": "227",
+      "lecturerId": 6,
+      "courseId": 234,
+      "session": "2025/2026",
+      "semester": 2
+    },
+    {
+      "id": "228",
+      "lecturerId": 7,
+      "courseId": 235,
+      "session": "2025/2026",
+      "semester": 2
+    },
+    {
+      "id": "229",
+      "lecturerId": 5,
+      "courseId": 241,
+      "session": "2025/2026",
+      "semester": 2
+    },
+    {
+      "id": "230",
+      "lecturerId": 6,
+      "courseId": 242,
+      "session": "2025/2026",
+      "semester": 2
+    },
+    {
+      "id": "231",
+      "lecturerId": 8,
+      "courseId": 249,
+      "session": "2025/2026",
+      "semester": 2
+    },
+    {
+      "id": "232",
+      "lecturerId": 10,
+      "courseId": 250,
+      "session": "2025/2026",
+      "semester": 2
+    },
+    {
+      "id": "233",
+      "lecturerId": 9,
+      "courseId": 252,
+      "session": "2025/2026",
+      "semester": 2
+    },
+    {
+      "id": "234",
+      "lecturerId": 8,
+      "courseId": 257,
+      "session": "2025/2026",
+      "semester": 2
+    },
+    {
+      "id": "235",
+      "lecturerId": 10,
+      "courseId": 258,
+      "session": "2025/2026",
+      "semester": 2
+    },
+    {
+      "id": "236",
+      "lecturerId": 9,
+      "courseId": 260,
+      "session": "2025/2026",
+      "semester": 2
+    },
+    {
+      "id": "237",
+      "lecturerId": 8,
+      "courseId": 265,
+      "session": "2025/2026",
+      "semester": 2
+    },
+    {
+      "id": "238",
+      "lecturerId": 10,
+      "courseId": 266,
+      "session": "2025/2026",
+      "semester": 2
+    },
+    {
+      "id": "239",
+      "lecturerId": 9,
+      "courseId": 268,
+      "session": "2025/2026",
+      "semester": 2
+    },
+    {
+      "id": "240",
+      "lecturerId": 8,
+      "courseId": 273,
+      "session": "2025/2026",
+      "semester": 2
+    },
+    {
+      "id": "241",
+      "lecturerId": 10,
+      "courseId": 274,
+      "session": "2025/2026",
+      "semester": 2
+    },
+    {
+      "id": "242",
+      "lecturerId": 2,
+      "courseId": 309,
+      "session": "2025/2026",
+      "semester": 2
+    },
+    {
+      "id": "243",
+      "lecturerId": 1,
+      "courseId": 310,
+      "session": "2025/2026",
+      "semester": 2
+    },
+    {
+      "id": "244",
+      "lecturerId": 3,
+      "courseId": 311,
+      "session": "2025/2026",
+      "semester": 2
+    },
+    {
+      "id": "245",
+      "lecturerId": 4,
+      "courseId": 312,
+      "session": "2025/2026",
+      "semester": 2
+    },
+    {
+      "id": "246",
+      "lecturerId": 7,
+      "courseId": 313,
+      "session": "2025/2026",
+      "semester": 2
+    },
+    {
+      "id": "247",
+      "lecturerId": 5,
+      "courseId": 314,
+      "session": "2025/2026",
+      "semester": 2
+    },
+    {
+      "id": "248",
+      "lecturerId": 6,
+      "courseId": 315,
+      "session": "2025/2026",
+      "semester": 2
+    },
+    {
+      "id": "249",
+      "lecturerId": 9,
+      "courseId": 316,
+      "session": "2025/2026",
+      "semester": 2
+    },
+    {
+      "id": "250",
+      "lecturerId": 8,
+      "courseId": 317,
+      "session": "2025/2026",
+      "semester": 2
+    },
+    {
+      "id": "251",
+      "lecturerId": 10,
+      "courseId": 318,
+      "session": "2025/2026",
+      "semester": 2
+    },
+    {
+      "id": "252",
+      "lecturerId": 9,
+      "courseId": 319,
+      "session": "2025/2026",
+      "semester": 2
     }
   ],
   "resultSubmissions": [
@@ -27808,10 +35160,10 @@
       "session": "2025/2026",
       "semester": 1,
       "level": 100,
-      "status": "pending",
+      "status": "approved",
       "submittedAt": "2026-01-15T09:00:00Z",
-      "reviewedBy": null,
-      "reviewedAt": null,
+      "reviewedBy": "1",
+      "reviewedAt": "2026-01-10T09:00:00Z",
       "rejectionReason": null,
       "version": 1
     },
@@ -27822,10 +35174,10 @@
       "session": "2025/2026",
       "semester": 1,
       "level": 100,
-      "status": "pending",
+      "status": "approved",
       "submittedAt": "2026-01-15T09:00:00Z",
-      "reviewedBy": null,
-      "reviewedAt": null,
+      "reviewedBy": "1",
+      "reviewedAt": "2026-01-10T09:00:00Z",
       "rejectionReason": null,
       "version": 1
     },
@@ -27836,11 +35188,11 @@
       "session": "2025/2026",
       "semester": 1,
       "level": 200,
-      "status": "rejected",
+      "status": "approved",
       "submittedAt": "2026-01-12T11:00:00Z",
       "reviewedBy": "1",
-      "reviewedAt": "2026-01-13T16:00:00Z",
-      "rejectionReason": "Some scores appear inconsistent. Please review and resubmit.",
+      "reviewedAt": "2026-01-10T09:00:00Z",
+      "rejectionReason": null,
       "version": 1
     },
     {
@@ -27892,10 +35244,10 @@
       "session": "2024/2025",
       "semester": 2,
       "level": 200,
-      "status": "pending",
+      "status": "approved",
       "submittedAt": "2025-04-08T09:00:00.000Z",
-      "reviewedBy": null,
-      "reviewedAt": null,
+      "reviewedBy": "1",
+      "reviewedAt": "2025-06-01T10:00:00.000Z",
       "rejectionReason": null,
       "version": 1
     },
@@ -27906,10 +35258,10 @@
       "session": "2024/2025",
       "semester": 2,
       "level": 400,
-      "status": "pending",
+      "status": "approved",
       "submittedAt": "2025-04-09T09:00:00.000Z",
-      "reviewedBy": null,
-      "reviewedAt": null,
+      "reviewedBy": "1",
+      "reviewedAt": "2025-06-01T10:00:00.000Z",
       "rejectionReason": null,
       "version": 1
     },
@@ -27920,11 +35272,11 @@
       "session": "2024/2025",
       "semester": 2,
       "level": 100,
-      "status": "pending",
+      "status": "rejected",
       "submittedAt": "2025-04-10T09:00:00.000Z",
-      "reviewedBy": null,
-      "reviewedAt": null,
-      "rejectionReason": null,
+      "reviewedBy": "1",
+      "reviewedAt": "2025-06-01T10:00:00.000Z",
+      "rejectionReason": "Not processed — superseded by re-upload",
       "version": 1
     },
     {
@@ -27981,6 +35333,48 @@
       "reviewedBy": "1",
       "reviewedAt": "2025-04-16T13:00:00.000Z",
       "rejectionReason": "Some scores appear inconsistent. Please review.",
+      "version": 1
+    },
+    {
+      "id": "16",
+      "lecturerId": 1,
+      "courseId": 5,
+      "session": "2025/2026",
+      "semester": 2,
+      "level": 100,
+      "status": "approved",
+      "submittedAt": "2026-02-10T10:00:00Z",
+      "reviewedBy": "1",
+      "reviewedAt": "2026-07-29T10:10:38.555Z",
+      "rejectionReason": null,
+      "version": 1
+    },
+    {
+      "id": "17",
+      "lecturerId": 1,
+      "courseId": 13,
+      "session": "2025/2026",
+      "semester": 2,
+      "level": 200,
+      "status": "pending",
+      "submittedAt": "2026-02-10T10:00:00Z",
+      "reviewedBy": null,
+      "reviewedAt": null,
+      "rejectionReason": null,
+      "version": 1
+    },
+    {
+      "id": "18",
+      "lecturerId": 1,
+      "courseId": 21,
+      "session": "2025/2026",
+      "semester": 2,
+      "level": 300,
+      "status": "rejected",
+      "submittedAt": "2026-02-10T10:00:00Z",
+      "reviewedBy": 1,
+      "reviewedAt": "2026-02-12T14:00:00Z",
+      "rejectionReason": "Please verify the scores for entries 3 and 7.",
       "version": 1
     }
   ],
@@ -28112,7 +35506,242 @@
         "studentsAffected": 10
       },
       "note": "Generated Sem 1 2025/2026 core + carry-over registrations for 300L Computer Science."
+    },
+    {
+      "entityType": "resultSubmission",
+      "entityId": "16",
+      "action": "approved",
+      "actorId": "1",
+      "actorRole": "admin",
+      "timestamp": "2026-07-29T10:10:38.618Z",
+      "previousValue": {
+        "status": "pending"
+      },
+      "newValue": {
+        "status": "approved",
+        "resultsPublished": 3
+      },
+      "note": "Approved and published 3 result(s).",
+      "id": "l6YO4RQ_23o"
     }
   ],
-  "$schema": "Edutech Student Result Portal - extended schema with units, hybrid registration, audit trail"
+  "registrationBatches": [
+    {
+      "id": "1",
+      "session": "2025/2026",
+      "semester": 2,
+      "departmentId": "1",
+      "departmentName": "Computer Science",
+      "level": 100,
+      "generatedAt": "2026-02-01T08:00:00.000Z",
+      "generatedBy": "1",
+      "studentCount": 3,
+      "courseCount": 6
+    },
+    {
+      "id": "2",
+      "session": "2025/2026",
+      "semester": 2,
+      "departmentId": "1",
+      "departmentName": "Computer Science",
+      "level": 200,
+      "generatedAt": "2026-02-01T08:00:00.000Z",
+      "generatedBy": "1",
+      "studentCount": 3,
+      "courseCount": 8
+    },
+    {
+      "id": "3",
+      "session": "2025/2026",
+      "semester": 2,
+      "departmentId": "1",
+      "departmentName": "Computer Science",
+      "level": 300,
+      "generatedAt": "2026-02-01T08:00:00.000Z",
+      "generatedBy": "1",
+      "studentCount": 2,
+      "courseCount": 11
+    },
+    {
+      "id": "4",
+      "session": "2025/2026",
+      "semester": 2,
+      "departmentId": "1",
+      "departmentName": "Computer Science",
+      "level": 400,
+      "generatedAt": "2026-02-01T08:00:00.000Z",
+      "generatedBy": "1",
+      "studentCount": 2,
+      "courseCount": 13
+    },
+    {
+      "id": "5",
+      "session": "2025/2026",
+      "semester": 2,
+      "departmentId": "2",
+      "departmentName": "Mathematics",
+      "level": 100,
+      "generatedAt": "2026-02-01T08:00:00.000Z",
+      "generatedBy": "1",
+      "studentCount": 3,
+      "courseCount": 6
+    },
+    {
+      "id": "6",
+      "session": "2025/2026",
+      "semester": 2,
+      "departmentId": "2",
+      "departmentName": "Mathematics",
+      "level": 200,
+      "generatedAt": "2026-02-01T08:00:00.000Z",
+      "generatedBy": "1",
+      "studentCount": 3,
+      "courseCount": 8
+    },
+    {
+      "id": "7",
+      "session": "2025/2026",
+      "semester": 2,
+      "departmentId": "2",
+      "departmentName": "Mathematics",
+      "level": 300,
+      "generatedAt": "2026-02-01T08:00:00.000Z",
+      "generatedBy": "1",
+      "studentCount": 2,
+      "courseCount": 9
+    },
+    {
+      "id": "8",
+      "session": "2025/2026",
+      "semester": 2,
+      "departmentId": "2",
+      "departmentName": "Mathematics",
+      "level": 400,
+      "generatedAt": "2026-02-01T08:00:00.000Z",
+      "generatedBy": "1",
+      "studentCount": 2,
+      "courseCount": 11
+    },
+    {
+      "id": "9",
+      "session": "2025/2026",
+      "semester": 2,
+      "departmentId": "3",
+      "departmentName": "Civil Engineering",
+      "level": 100,
+      "generatedAt": "2026-02-01T08:00:00.000Z",
+      "generatedBy": "1",
+      "studentCount": 2,
+      "courseCount": 6
+    },
+    {
+      "id": "10",
+      "session": "2025/2026",
+      "semester": 2,
+      "departmentId": "3",
+      "departmentName": "Civil Engineering",
+      "level": 200,
+      "generatedAt": "2026-02-01T08:00:00.000Z",
+      "generatedBy": "1",
+      "studentCount": 2,
+      "courseCount": 7
+    },
+    {
+      "id": "11",
+      "session": "2025/2026",
+      "semester": 2,
+      "departmentId": "3",
+      "departmentName": "Civil Engineering",
+      "level": 300,
+      "generatedAt": "2026-02-01T08:00:00.000Z",
+      "generatedBy": "1",
+      "studentCount": 2,
+      "courseCount": 10
+    },
+    {
+      "id": "12",
+      "session": "2025/2026",
+      "semester": 2,
+      "departmentId": "3",
+      "departmentName": "Civil Engineering",
+      "level": 400,
+      "generatedAt": "2026-02-01T08:00:00.000Z",
+      "generatedBy": "1",
+      "studentCount": 2,
+      "courseCount": 9
+    },
+    {
+      "id": "13",
+      "session": "2025/2026",
+      "semester": 2,
+      "departmentId": "3",
+      "departmentName": "Civil Engineering",
+      "level": 500,
+      "generatedAt": "2026-02-01T08:00:00.000Z",
+      "generatedBy": "1",
+      "studentCount": 2,
+      "courseCount": 8
+    },
+    {
+      "id": "14",
+      "session": "2025/2026",
+      "semester": 2,
+      "departmentId": "4",
+      "departmentName": "Electrical Engineering",
+      "level": 100,
+      "generatedAt": "2026-02-01T08:00:00.000Z",
+      "generatedBy": "1",
+      "studentCount": 2,
+      "courseCount": 6
+    },
+    {
+      "id": "15",
+      "session": "2025/2026",
+      "semester": 2,
+      "departmentId": "4",
+      "departmentName": "Electrical Engineering",
+      "level": 200,
+      "generatedAt": "2026-02-01T08:00:00.000Z",
+      "generatedBy": "1",
+      "studentCount": 2,
+      "courseCount": 6
+    },
+    {
+      "id": "16",
+      "session": "2025/2026",
+      "semester": 2,
+      "departmentId": "4",
+      "departmentName": "Electrical Engineering",
+      "level": 300,
+      "generatedAt": "2026-02-01T08:00:00.000Z",
+      "generatedBy": "1",
+      "studentCount": 2,
+      "courseCount": 10
+    },
+    {
+      "id": "17",
+      "session": "2025/2026",
+      "semester": 2,
+      "departmentId": "4",
+      "departmentName": "Electrical Engineering",
+      "level": 400,
+      "generatedAt": "2026-02-01T08:00:00.000Z",
+      "generatedBy": "1",
+      "studentCount": 2,
+      "courseCount": 10
+    },
+    {
+      "id": "18",
+      "session": "2025/2026",
+      "semester": 2,
+      "departmentId": "4",
+      "departmentName": "Electrical Engineering",
+      "level": 500,
+      "generatedAt": "2026-02-01T08:00:00.000Z",
+      "generatedBy": "1",
+      "studentCount": 2,
+      "courseCount": 8
+    }
+  ],
+  "$schema": "./node_modules/json-server/schema.json"
 }

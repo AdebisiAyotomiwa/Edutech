@@ -127,23 +127,32 @@
               </div>
             </div>
 
-            <!-- Student list for current semester -->
-            <div id="currStudentArea" class="d-none">
+            <!-- Course overview for current semester -->
+            <div id="currStudentArea">
               <div class="d-flex align-items-center gap-2 mb-3 flex-wrap">
                 <div class="input-group" style="max-width:280px;">
                   <span class="input-group-text bg-white"><i class="bi bi-search text-muted"></i></span>
-                  <input type="text" class="form-control border-start-0" id="rCurrSearch" placeholder="Search student…">
+                  <input type="text" class="form-control border-start-0" id="rCurrSearch" placeholder="Search course…">
                 </div>
                 <span class="text-muted small ms-auto" id="rCurrStudentCount"></span>
               </div>
+
+              <!-- Info banner explaining the workflow -->
+              <div class="alert py-2 px-3 mb-3 small d-flex align-items-start gap-2" style="background:var(--brand-100);color:var(--brand-900);border:1px solid var(--brand-500)30;">
+                <i class="bi bi-info-circle-fill mt-1 flex-shrink-0"></i>
+                <span>Courses with a lecturer submission should be reviewed via the <a href="/assets/pages/admin/admin-approvals.html" class="fw-semibold" style="color:var(--brand-900);">Approvals page</a>. Direct score entry is only for courses with no lecturer submission.</span>
+              </div>
+
               <div class="admin-table-card mb-3">
+                <div class="table-scroll-wrap">
                 <div class="table-responsive">
-                  <table class="table admin-table">
-                    <thead><tr><th>Student</th><th>Matric No.</th><th>Pending</th><th>Published</th><th class="text-end">Action</th></tr></thead>
+                  <table class="table admin-table table-sticky-first">
+                    <thead><tr><th>Code</th><th>Course Title</th><th>Level</th><th>Students</th><th>Submission</th><th class="text-end">Action</th></tr></thead>
                     <tbody id="currStudentsTbody"></tbody>
                   </table>
                 </div>
-                <div class="admin-empty-state d-none" id="currStudentsEmpty"><i class="bi bi-people"></i><p class="mt-2 mb-0">No students found for the selected filters.</p></div>
+                </div>
+                <div class="admin-empty-state d-none" id="currStudentsEmpty"><i class="bi bi-journal"></i><p class="mt-2 mb-0">No courses found for the selected filters.</p></div>
               </div>
               <div class="d-flex justify-content-between align-items-center flex-wrap gap-2">
                 <div class="text-muted small" id="currPaginationInfo"></div>
@@ -153,7 +162,7 @@
 
             <div id="currFilterPrompt" class="admin-empty-state d-none">
               <i class="bi bi-funnel"></i>
-              <p class="mt-2 mb-0">Use the filters above to narrow down students.</p>
+              <p class="mt-2 mb-0">Use the filters above to narrow down courses.</p>
             </div>
 
             <!-- Score entry panel (shown when a student is selected) -->

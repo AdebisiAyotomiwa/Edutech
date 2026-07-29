@@ -5,7 +5,6 @@ import {
   approveSubmission, rejectSubmission,
 } from "../api.js";
 import { scoreToGrade } from "../utils.js";
-import { renderHistory } from "../historyComponent.js";
 
 requireAdminAuth();
 
@@ -22,12 +21,12 @@ let filtered    = [];
 let openSubmissionId = null;
 
 /* ── DOM refs ───────────────────────────────────────────── */
-const pageState       = document.getElementById("pageState");
-const pageContent     = document.getElementById("pageContent");
+const pageState        = document.getElementById("pageState");
+const pageContent      = document.getElementById("pageContent");
 const sidebarToggleBtn = document.getElementById("sidebarToggleBtn");
-const appSidebar      = document.getElementById("appSidebar");
-const appSidebarScrim = document.getElementById("appSidebarScrim");
-const logoutBtn       = document.getElementById("logoutBtn");
+const appSidebar       = document.getElementById("appSidebar");
+const appSidebarScrim  = document.getElementById("appSidebarScrim");
+const logoutBtn        = document.getElementById("logoutBtn");
 
 /* ── Boot ───────────────────────────────────────────────── */
 document.addEventListener("DOMContentLoaded", init);
@@ -35,10 +34,7 @@ document.addEventListener("DOMContentLoaded", init);
 async function init() {
   try {
     admin = getCurrentAdmin();
-    if (!admin) {
-      window.location.href = "/assets/pages/admin/admin-login.html";
-      return;
-    }
+    if (!admin) { window.location.href = "/assets/pages/admin/admin-login.html"; return; }
 
     setupSidebar();
     setupLogout();
@@ -46,6 +42,7 @@ async function init() {
 
     buildSessionFilter();
     bindFilters();
+    bindTabs();
     renderMetrics();
 
     pageState.classList.add("d-none");
@@ -67,7 +64,6 @@ async function loadData() {
     getStudents(),
     getResults(),
   ]);
-  // Newest first
   submissions.sort((a, b) => new Date(b.submittedAt) - new Date(a.submittedAt));
 }
 
@@ -78,13 +74,9 @@ function setupSidebar() {
   document.getElementById("sidebarUserName").textContent       = admin.name || "Admin";
   document.getElementById("sidebarUserMeta").textContent       = admin.email;
 
-  // Show pending count badge in sidebar
   const pendingCount = submissions.filter(s => s.status === "pending").length;
   const badge = document.getElementById("sidebarPendingBadge");
-  if (pendingCount > 0) {
-    badge.textContent = pendingCount;
-    badge.style.display = "";
-  }
+  if (pendingCount > 0) { badge.textContent = pendingCount; badge.style.display = ""; }
 
   sidebarToggleBtn.addEventListener("click", () => {
     const open = appSidebar.classList.toggle("is-open");
@@ -102,8 +94,21 @@ function setupLogout() {
   const modal = new bootstrap.Modal(document.getElementById("logoutConfirmModal"));
   logoutBtn.addEventListener("click", () => modal.show());
   document.getElementById("confirmLogoutBtn").addEventListener("click", () => {
-    adminLogout();
-    window.location.href = "/assets/pages/admin/admin-login.html";
+    adminLogout(); window.location.href = "/assets/pages/admin/admin-login.html";
+  });
+}
+
+/* ── Tabs ───────────────────────────────────────────────── */
+function bindTabs() {
+  document.getElementById("approvalsTabs").querySelectorAll(".nav-link").forEach(btn => {
+    btn.addEventListener("click", () => {
+      document.getElementById("approvalsTabs").querySelectorAll(".nav-link").forEach(b => b.classList.remove("active"));
+      btn.classList.add("active");
+      const tab = btn.dataset.tab;
+      document.getElementById("queueTab").classList.toggle("d-none", tab !== "queue");
+      document.getElementById("logTab").classList.toggle("d-none",   tab !== "log");
+      if (tab === "log") buildLogFilters(), renderLog();
+    });
   });
 }
 
@@ -122,7 +127,7 @@ function buildSessionFilter() {
     sessions.map(s => `<option value="${s}">${s}</option>`).join("");
 }
 
-/* ── Filters ────────────────────────────────────────────── */
+/* ── Queue filters ───────────────────────────────────────── */
 function bindFilters() {
   ["filterStatus", "filterSession", "filterSemester"].forEach(id =>
     document.getElementById(id).addEventListener("change", applyFilters)
@@ -142,9 +147,14 @@ function applyFilters() {
   });
 
   renderQueue();
-  // Close detail panel when filters change
   document.getElementById("detailPanel").classList.add("d-none");
   document.getElementById("queuePanel").classList.remove("d-none");
+}
+
+/* ── Lecturer name helper (no title prefix) ──────────────── */
+function lecturerName(id) {
+  const l = lecturers.find(l => String(l.id) === String(id));
+  return l ? l.name : "—";
 }
 
 /* ── Queue table ─────────────────────────────────────────── */
@@ -152,35 +162,25 @@ function renderQueue() {
   const tbody = document.getElementById("queueTbody");
   const empty = document.getElementById("queueEmpty");
 
-  if (filtered.length === 0) {
-    tbody.innerHTML = "";
-    empty.classList.remove("d-none");
-    return;
-  }
+  if (filtered.length === 0) { tbody.innerHTML = ""; empty.classList.remove("d-none"); return; }
   empty.classList.add("d-none");
 
   tbody.innerHTML = filtered.map(sub => {
-    const course   = courses.find(c => String(c.id) === String(sub.courseId));
-    const lecturer = lecturers.find(l => String(l.id) === String(sub.lecturerId));
-
-    // Count result rows linked to this submission
-    const resultCount = results.filter(r =>
-      String(r.submissionId) === String(sub.id)
-    ).length;
-
-    const date = new Date(sub.submittedAt).toLocaleDateString("en-GB", {
-      day: "numeric", month: "short", year: "numeric"
-    });
-
-    const badgeStyle = {
+    const course      = courses.find(c => String(c.id) === String(sub.courseId));
+    const resultCount = results.filter(r => String(r.submissionId) === String(sub.id)).length;
+    const date        = new Date(sub.submittedAt).toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric" });
+    const badgeStyle  = {
       pending:  "background:var(--warn-100);color:var(--warn);",
       approved: "background:var(--success-100);color:var(--success);",
       rejected: "background:var(--danger-100);color:var(--danger);",
     }[sub.status] || "";
 
+    // Course column: code only (no title prefix to save space)
+    const courseCell = course ? course.courseCode : "—";
+
     return `<tr>
-      <td class="fw-semibold">${course ? course.courseCode + " — " + course.courseTitle : "—"}</td>
-      <td>${lecturer ? lecturer.name : "—"}</td>
+      <td class="fw-semibold">${courseCell}</td>
+      <td>${lecturerName(sub.lecturerId)}</td>
       <td>${sub.level}</td>
       <td>${sub.session} / Sem ${sub.semester}</td>
       <td>${resultCount}</td>
@@ -195,7 +195,6 @@ function renderQueue() {
     </tr>`;
   }).join("");
 
-  // Bind Review buttons
   tbody.querySelectorAll("[data-action='review']").forEach(btn =>
     btn.addEventListener("click", () => openDetail(btn.dataset.id))
   );
@@ -204,11 +203,10 @@ function renderQueue() {
 /* ── Detail view ─────────────────────────────────────────── */
 function openDetail(submissionId) {
   openSubmissionId = submissionId;
-  const sub      = submissions.find(s => String(s.id) === String(submissionId));
-  const course   = courses.find(c => String(c.id) === String(sub.courseId));
-  const lecturer = lecturers.find(l => String(l.id) === String(sub.lecturerId));
+  const sub    = submissions.find(s => String(s.id) === String(submissionId));
+  const course = courses.find(c => String(c.id) === String(sub.courseId));
+  const lName  = lecturerName(sub.lecturerId);
 
-  // Build header card
   document.getElementById("detailHeader").innerHTML = `
     <div class="d-flex align-items-start justify-content-between gap-3 flex-wrap">
       <div>
@@ -216,14 +214,14 @@ function openDetail(submissionId) {
           ${course ? course.courseCode + " — " + course.courseTitle : "Unknown Course"}
         </div>
         <div class="text-muted small mt-1">
-          Lecturer: <strong>${lecturer ? lecturer.name : "Unknown"}</strong>
+          Lecturer: <strong>${lName}</strong>
           &nbsp;·&nbsp; ${sub.session}, Semester ${sub.semester}
           &nbsp;·&nbsp; ${sub.level} Level
           &nbsp;·&nbsp; Submitted: ${new Date(sub.submittedAt).toLocaleString("en-GB")}
           &nbsp;·&nbsp; Version ${sub.version}
         </div>
         ${sub.status === "rejected" && sub.rejectionReason
-          ? `<div class="text-danger small mt-1"><i class="bi bi-exclamation-circle me-1"></i>Prev. rejection: ${sub.rejectionReason}</div>`
+          ? `<div class="text-danger small mt-1"><i class="bi bi-exclamation-circle me-1"></i>Rejection reason: ${sub.rejectionReason}</div>`
           : ""}
         ${sub.status === "approved" && sub.reviewedAt
           ? `<div class="text-success small mt-1"><i class="bi bi-check-circle me-1"></i>Approved on ${new Date(sub.reviewedAt).toLocaleString("en-GB")}</div>`
@@ -231,8 +229,7 @@ function openDetail(submissionId) {
       </div>
     </div>`;
 
-  // Fill scores table
-  const subResults = results.filter(r => String(r.submissionId) === String(sub.id));
+  const subResults  = results.filter(r => String(r.submissionId) === String(sub.id));
   const detailTbody = document.getElementById("detailScoresTbody");
   const detailEmpty = document.getElementById("detailEmpty");
 
@@ -254,29 +251,19 @@ function openDetail(submissionId) {
     }).join("");
   }
 
-  // Show / hide review action panel depending on status
   const reviewPanel = document.getElementById("reviewActionPanel");
   if (sub.status === "pending") {
     reviewPanel.classList.remove("d-none");
     hideReviewAlert();
     document.getElementById("rejectReasonInput").value = "";
-    // Bind approve/reject once (remove old listeners first by replacing element)
     bindReviewActions(sub, subResults);
   } else {
     reviewPanel.classList.add("d-none");
   }
 
-  // Show detail, hide queue
   document.getElementById("queuePanel").classList.add("d-none");
   document.getElementById("detailPanel").classList.remove("d-none");
 
-  renderHistory(document.getElementById("historyContainer"), {
-    entityType: "resultSubmission",
-    entityId: sub.id,
-    title: "Submission history",
-  });
-
-  // Back button
   document.getElementById("backToQueueBtn").onclick = () => {
     document.getElementById("detailPanel").classList.add("d-none");
     document.getElementById("queuePanel").classList.remove("d-none");
@@ -285,17 +272,13 @@ function openDetail(submissionId) {
 
 /* ── Review actions ──────────────────────────────────────── */
 function bindReviewActions(sub, subResults) {
-  const resultIds = subResults.map(r => r.id);
-
+  const resultIds  = subResults.map(r => r.id);
   const approveBtn = document.getElementById("approveBtn");
   const rejectBtn  = document.getElementById("rejectBtn");
-
-  // Clone to remove any previously attached listeners
   const newApprove = approveBtn.cloneNode(true);
   const newReject  = rejectBtn.cloneNode(true);
   approveBtn.replaceWith(newApprove);
   rejectBtn.replaceWith(newReject);
-
   newApprove.addEventListener("click", () => handleApprove(sub.id, resultIds));
   newReject.addEventListener("click",  () => handleReject(sub.id));
 }
@@ -305,34 +288,16 @@ async function handleApprove(submissionId, resultIds) {
   approveBtn.disabled = true;
   approveBtn.innerHTML = `<span class="spinner-border spinner-border-sm me-1"></span> Approving…`;
   hideReviewAlert();
-
   try {
-    /*
-     * APPROVAL CASCADE (client-side sequential PATCHes):
-     * See api.js approveSubmission() for the full explanation.
-     * 1. Flip every result row to published: true
-     * 2. Mark submission as approved
-     * This order means if step 1 fails, the submission stays
-     * "pending" and the admin can safely retry.
-     */
     await approveSubmission(submissionId, resultIds, admin.id);
-
-    // Update local state so the UI reflects the change immediately
-    const idx = submissions.findIndex(s => String(s.id) === String(submissionId));
-    if (idx !== -1) {
-      submissions[idx].status     = "approved";
-      submissions[idx].reviewedBy = admin.id;
-      submissions[idx].reviewedAt = new Date().toISOString();
-    }
-
+    await loadData();
     renderMetrics();
     applyFilters();
-
     showReviewAlert("✓ Submission approved. Results are now published to students.", "success");
     document.getElementById("reviewActionPanel").classList.add("d-none");
   } catch (err) {
     console.error(err);
-    showReviewAlert("Approval failed. Some result rows may not have been published. Please try again.", "danger");
+    showReviewAlert("Approval failed. Please try again.", "danger");
   } finally {
     approveBtn.disabled = false;
     approveBtn.innerHTML = `<i class="bi bi-check-circle-fill"></i> Approve &amp; Publish`;
@@ -346,28 +311,16 @@ async function handleReject(submissionId) {
     document.getElementById("rejectReasonInput").focus();
     return;
   }
-
   const rejectBtn = document.getElementById("rejectBtn");
   rejectBtn.disabled = true;
   rejectBtn.innerHTML = `<span class="spinner-border spinner-border-sm me-1"></span> Rejecting…`;
   hideReviewAlert();
-
   try {
     await rejectSubmission(submissionId, admin.id, reason);
-
-    // Update local state
-    const idx = submissions.findIndex(s => String(s.id) === String(submissionId));
-    if (idx !== -1) {
-      submissions[idx].status          = "rejected";
-      submissions[idx].reviewedBy      = admin.id;
-      submissions[idx].reviewedAt      = new Date().toISOString();
-      submissions[idx].rejectionReason = reason;
-    }
-
+    await loadData();
     renderMetrics();
     applyFilters();
-
-    showReviewAlert(`Submission rejected. The lecturer will be notified and can resubmit.`, "warning");
+    showReviewAlert("Submission rejected. The lecturer can now resubmit.", "warning");
     document.getElementById("reviewActionPanel").classList.add("d-none");
   } catch (err) {
     console.error(err);
@@ -389,4 +342,132 @@ function hideReviewAlert() {
   const el = document.getElementById("reviewAlert");
   el.textContent = "";
   el.classList.add("d-none");
+}
+
+/* ════════════════════════════════════════════════════════
+   SUBMISSION LOG TAB
+   — Per-lecturer accordion, shows ALL versions (all statuses),
+     grouped by lecturer → session → semester.
+     Each version row shows: course, submitted date, status,
+     rejection reason if any, and all student scores.
+   ════════════════════════════════════════════════════════ */
+function buildLogFilters() {
+  const sessions = [...new Set(submissions.map(s => s.session))].sort().reverse();
+  document.getElementById("logFilterSession").innerHTML =
+    `<option value="">All Sessions</option>` +
+    sessions.map(s => `<option value="${s}">${s}</option>`).join("");
+
+  document.getElementById("logFilterLecturer").innerHTML =
+    `<option value="">All Lecturers</option>` +
+    lecturers.map(l => `<option value="${l.id}">${l.name}</option>`).join("");
+
+  ["logFilterLecturer", "logFilterSession", "logFilterSemester", "logFilterStatus"].forEach(id =>
+    document.getElementById(id).addEventListener("change", renderLog)
+  );
+}
+
+function renderLog() {
+  const lecId    = document.getElementById("logFilterLecturer").value;
+  const session  = document.getElementById("logFilterSession").value;
+  const semester = document.getElementById("logFilterSemester").value;
+  const status   = document.getElementById("logFilterStatus").value;
+
+  // Filter submissions
+  const filtered = submissions.filter(s => {
+    if (lecId    && String(s.lecturerId) !== String(lecId)) return false;
+    if (session  && s.session !== session) return false;
+    if (semester && Number(s.semester) !== Number(semester)) return false;
+    if (status   && s.status !== status) return false;
+    return true;
+  });
+
+  const container = document.getElementById("logAccordion");
+  const empty     = document.getElementById("logEmpty");
+
+  if (filtered.length === 0) {
+    container.innerHTML = "";
+    empty.classList.remove("d-none");
+    return;
+  }
+  empty.classList.add("d-none");
+
+  // Group by lecturer
+  const byLecturer = new Map();
+  filtered.forEach(sub => {
+    const lid = String(sub.lecturerId);
+    if (!byLecturer.has(lid)) byLecturer.set(lid, []);
+    byLecturer.get(lid).push(sub);
+  });
+
+  container.innerHTML = Array.from(byLecturer.entries()).map(([lid, subs]) => {
+    const lec      = lecturers.find(l => String(l.id) === lid);
+    const lName    = lec ? lec.name : "Unknown";
+    const initials = lName.split(" ").map(p => p[0]).join("").slice(0, 2).toUpperCase();
+    const dept     = lec ? (function(){ const d = subs[0]; return ""; })() : "";
+    const collapseId = `logCol_${lid}`;
+
+    const subsHtml = subs.map(sub => {
+      const course = courses.find(c => String(c.id) === String(sub.courseId));
+      const subResults = results.filter(r => String(r.submissionId) === String(sub.id));
+      const date   = new Date(sub.submittedAt).toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric" });
+      const badgeStyle = {
+        pending:  "background:var(--warn-100);color:var(--warn);",
+        approved: "background:var(--success-100);color:var(--success);",
+        rejected: "background:var(--danger-100);color:var(--danger);",
+      }[sub.status] || "";
+
+      const scoresHtml = subResults.length === 0
+        ? `<p class="text-muted small mb-0 px-2">No score rows linked to this submission.</p>`
+        : `<div class="table-responsive mt-2">
+            <table class="table table-sm admin-table mb-0" style="min-width:360px;">
+              <thead><tr><th>Student</th><th>Matric</th><th>Score</th><th>Grade</th></tr></thead>
+              <tbody>
+                ${subResults.map(r => {
+                  const st = students.find(s => String(s.id) === String(r.studentId));
+                  const { grade } = scoreToGrade(r.score);
+                  return `<tr>
+                    <td>${st ? st.firstName + " " + st.lastName : "Unknown"}</td>
+                    <td class="text-muted-cell">${st ? st.matricNumber : "—"}</td>
+                    <td class="fw-semibold">${r.score}</td>
+                    <td><span class="badge-grade badge-grade--${grade.toLowerCase()}">${grade}</span></td>
+                  </tr>`;
+                }).join("")}
+              </tbody>
+            </table>
+           </div>`;
+
+      return `<div class="card-surface mb-3" style="border-left:3px solid ${sub.status === 'approved' ? 'var(--success)' : sub.status === 'rejected' ? 'var(--danger)' : 'var(--warn)'};">
+        <div class="d-flex align-items-start justify-content-between gap-2 flex-wrap mb-2">
+          <div>
+            <div class="fw-semibold">${course ? course.courseCode + " — " + course.courseTitle : "Unknown Course"}</div>
+            <div class="text-muted small">${sub.session} · Sem ${sub.semester} · ${sub.level} Level · ${date} · v${sub.version}</div>
+            ${sub.rejectionReason ? `<div class="text-danger small mt-1"><i class="bi bi-exclamation-circle me-1"></i>${sub.rejectionReason}</div>` : ""}
+            ${sub.reviewedAt && sub.status === "approved" ? `<div class="text-success small mt-1"><i class="bi bi-check-circle me-1"></i>Approved ${new Date(sub.reviewedAt).toLocaleDateString("en-GB")}</div>` : ""}
+          </div>
+          <span class="status-badge flex-shrink-0" style="${badgeStyle}">${sub.status}</span>
+        </div>
+        <details>
+          <summary class="text-muted small" style="cursor:pointer;">${subResults.length} score${subResults.length === 1 ? "" : "s"} — click to view</summary>
+          ${scoresHtml}
+        </details>
+      </div>`;
+    }).join("");
+
+    return `<div class="hist-student-card mb-3">
+      <button class="hist-student-header" type="button"
+        data-bs-toggle="collapse" data-bs-target="#${collapseId}" aria-expanded="false">
+        <span class="d-flex align-items-center gap-2">
+          <span class="student-avatar-mini">${initials}</span>
+          <span class="fw-semibold">${lName}</span>
+        </span>
+        <span class="hist-student-meta">
+          <span class="badge bg-secondary">${subs.length} submission${subs.length === 1 ? "" : "s"}</span>
+          <i class="bi bi-chevron-down hist-chevron ms-2"></i>
+        </span>
+      </button>
+      <div class="collapse" id="${collapseId}">
+        <div class="hist-student-body">${subsHtml}</div>
+      </div>
+    </div>`;
+  }).join("");
 }

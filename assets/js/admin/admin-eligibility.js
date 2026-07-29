@@ -39,6 +39,8 @@ async function init() {
     if (!admin) { window.location.href = "/assets/pages/admin/admin-login.html"; return; }
     setupSidebar();
     setupLogout();
+    markEligibleModal = new bootstrap.Modal(document.getElementById("markEligibleModal"));
+    document.getElementById("confirmMarkEligibleBtn")?.addEventListener("click", handleMarkEligible);
     await loadData();
     buildRows();
     populateFilterSelects();
@@ -143,18 +145,34 @@ function statusDetail(row) {
   return parts.length ? parts.join(" · ") : "Meets requirements";
 }
 
+/* ── State for pagination ─────────────────────────────────── */
+const ELIG_PAGE_SIZE = 10;
+let eligPage = 1;
+
 /* ── Render table ─────────────────────────────────────────── */
 function renderTable() {
-  if (filteredRows.length === 0) {
+  const total = filteredRows.length;
+  if (total === 0) {
     eligTbody.innerHTML = "";
     emptyState.classList.remove("d-none");
     resultCount.textContent = "";
+    renderEligPagination(0);
     return;
   }
   emptyState.classList.add("d-none");
-  resultCount.textContent = `${filteredRows.length} student${filteredRows.length === 1 ? "" : "s"}`;
 
-  eligTbody.innerHTML = filteredRows.map((row) => {
+  const totalPages = Math.max(1, Math.ceil(total / ELIG_PAGE_SIZE));
+  if (eligPage > totalPages) eligPage = totalPages;
+  const start = (eligPage - 1) * ELIG_PAGE_SIZE;
+  const paged = filteredRows.slice(start, start + ELIG_PAGE_SIZE);
+
+  resultCount.textContent = `${total} student${total === 1 ? "" : "s"}`;
+  const paginationInfo = document.getElementById("eligPaginationInfo");
+  if (paginationInfo) paginationInfo.textContent = total
+    ? `Showing ${start + 1}–${Math.min(start + ELIG_PAGE_SIZE, total)} of ${total}`
+    : "";
+
+  eligTbody.innerHTML = paged.map((row) => {
     const s   = row.student;
     const e   = row.eligibility;
     const cls = STATUS_CLASS[e.status];
@@ -175,7 +193,7 @@ function renderTable() {
       <tr>
         <td>${s.firstName} ${s.lastName}</td>
         <td>${s.matricNumber}</td>
-        <td>${s.programme || "—"}</td>
+        <td class="cell-wrap">${s.programme || "—"}</td>
         <td>${s.level}L</td>
         <td>${e.totalUnits} / ${e.minTotalUnits}</td>
         <td>${e.coreUnits} / ${e.minCoreUnits}</td>
@@ -191,6 +209,26 @@ function renderTable() {
   /* Wire Mark Eligible buttons */
   eligTbody.querySelectorAll("[data-mark-id]").forEach(btn =>
     btn.addEventListener("click", () => openMarkEligibleModal(btn.dataset.markId)));
+
+  renderEligPagination(totalPages);
+}
+
+function renderEligPagination(totalPages) {
+  const list = document.getElementById("eligPaginationList");
+  if (!list) return;
+  if (totalPages <= 1) { list.innerHTML = ""; return; }
+  let html = `<li class="page-item${eligPage===1?" disabled":""}"><button class="page-link" data-page="${eligPage-1}">&lsaquo;</button></li>`;
+  for (let i = 1; i <= totalPages; i++) {
+    if (totalPages > 7 && Math.abs(i - eligPage) > 2 && i !== 1 && i !== totalPages) {
+      if (i === 2 || i === totalPages - 1) html += `<li class="page-item disabled"><span class="page-link">…</span></li>`;
+      continue;
+    }
+    html += `<li class="page-item${i===eligPage?" active":""}"><button class="page-link" data-page="${i}">${i}</button></li>`;
+  }
+  html += `<li class="page-item${eligPage===totalPages?" disabled":""}"><button class="page-link" data-page="${eligPage+1}">&rsaquo;</button></li>`;
+  list.innerHTML = html;
+  list.querySelectorAll("[data-page]").forEach(btn =>
+    btn.addEventListener("click", () => { eligPage = Number(btn.dataset.page); renderTable(); }));
 }
 
 /* ── Filtering ────────────────────────────────────────────── */
@@ -212,6 +250,7 @@ function applyFilters() {
     return true;
   });
 
+  eligPage = 1;
   renderTable();
 }
 
@@ -231,7 +270,7 @@ function bindEvents() {
 
 /* ── Mark as Eligible ─────────────────────────────────────── */
 let markEligibleStudentId = null;
-const markEligibleModal = new bootstrap.Modal(document.getElementById("markEligibleModal"));
+let markEligibleModal = null;
 
 function openMarkEligibleModal(studentId) {
   const row = rows.find(r => String(r.student.id) === String(studentId));
@@ -245,12 +284,7 @@ function openMarkEligibleModal(studentId) {
   markEligibleModal.show();
 }
 
-document.addEventListener("DOMContentLoaded", () => {
-  const confirmBtn = document.getElementById("confirmMarkEligibleBtn");
-  if (confirmBtn) {
-    confirmBtn.addEventListener("click", handleMarkEligible);
-  }
-});
+/* confirmMarkEligibleBtn is bound inside init() via bindEvents() — no separate DOMContentLoaded needed */
 
 async function handleMarkEligible() {
   if (!markEligibleStudentId) return;

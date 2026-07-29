@@ -34,7 +34,7 @@ const sidebarToggleBtn = document.getElementById("sidebarToggleBtn");
 const appSidebar  = document.getElementById("appSidebar");
 const appSidebarScrim = document.getElementById("appSidebarScrim");
 const logoutBtn   = document.getElementById("logoutBtn");
-const deleteRegModal = new bootstrap.Modal(document.getElementById("deleteRegModal"));
+let deleteRegModal = null;
 
 /* ── Boot ───────────────────────────────────────────────── */
 document.addEventListener("DOMContentLoaded", init);
@@ -43,8 +43,10 @@ async function init() {
   try {
     admin = getCurrentAdmin();
     if (!admin) { window.location.href = "/assets/pages/admin/admin-login.html"; return; }
-    setupSidebar(); setupLogout();
+    setupLogout();
+    deleteRegModal = new bootstrap.Modal(document.getElementById("deleteRegModal"));
     await loadData();
+    setupSidebar();
     buildSessionList();
     populateFacultySelects();
     pageState.classList.add("d-none");
@@ -52,7 +54,6 @@ async function init() {
     bindTabs();
     bindCurrentTab();
     document.getElementById("generateRegBtn").addEventListener("click", openGeneratePreview);
-    document.getElementById("generateNextSemBtn").addEventListener("click", openGenerateNextSemPreview);
     document.getElementById("confirmGenerateBtn").addEventListener("click", handleConfirmGenerate);
     bindHistoryTab();
     /* Auto-load all students for current semester */
@@ -151,16 +152,13 @@ function populateFacultySelects() {
 
   const genBadge   = document.getElementById("currGenBadge");
   const genBtn     = document.getElementById("generateRegBtn");
-  const nextSemBtn = document.getElementById("generateNextSemBtn");
 
   if (isGenerated) {
     genBadge.style.display = "";
     genBtn.disabled   = true;   // already generated for current sem
-    nextSemBtn.disabled = false;
   } else {
     genBadge.style.display = "none";
     genBtn.disabled   = false;
-    nextSemBtn.disabled = true;  // generate current first
   }
 
   /* Render metrics for current semester */
@@ -191,8 +189,6 @@ function bindCurrentTab() {
   document.getElementById("rCurrFaculty").addEventListener("change", onCurrFacultyChange);
   document.getElementById("rCurrDept").addEventListener("change", onCurrDeptChange);
   document.getElementById("rCurrLevel").addEventListener("change", renderCurrStudents);
-  document.getElementById("rCurrSession").addEventListener("change", renderCurrStudents);
-  document.getElementById("rCurrSemester").addEventListener("change", renderCurrStudents);
   document.getElementById("rCurrSearch").addEventListener("input", () => { currPage = 1; renderCurrStudents(); });
   document.getElementById("backToStudentsBtn").addEventListener("click", showStudentList);
   document.getElementById("addCourseToRegBtn").addEventListener("click", openAddCoursePicker);
@@ -306,21 +302,6 @@ async function openGeneratePreview() {
   const session  = calendar.currentSession;
   const semester = Number(calendar.currentSemester);
   await _openGenerateModal({ deptId, level, session, semester, isNext: false });
-}
-
-/* ── Generate next semester ─────────────────────────────── */
-async function openGenerateNextSemPreview() {
-  const { deptId, level } = getCurrFilters();
-  /* Next semester: if current is 1 → next is 2 same session; if 2 → Sem 1 of next session year */
-  let session  = calendar.currentSession;
-  let semester = Number(calendar.currentSemester) + 1;
-  if (semester > 2) {
-    semester = 1;
-    const [startYear] = session.split("/").map(Number);
-    session = `${startYear + 1}/${startYear + 2}`;
-  }
-  document.getElementById("generateRegModalTitle").textContent = `Generate Next Semester — ${session} Sem ${semester}`;
-  await _openGenerateModal({ deptId, level, session, semester, isNext: true });
 }
 
 async function _openGenerateModal({ deptId, level, session, semester, isNext }) {
@@ -486,23 +467,28 @@ function renderRegCourses() {
 
 function showStudentList() {
   document.getElementById("regManagePanel").classList.add("d-none");
+  document.getElementById("addCoursePicker").classList.add("d-none");
   document.getElementById("currStudentArea").classList.remove("d-none");
   currSelectedStudentId = null;
+  currStudentRegs = [];
 }
 
 /* ── Add course to registration ─────────────────────────── */
 function openAddCoursePicker() {
-  const { deptId, level, semester } = getCurrFilters();
+  const { semester } = getCurrFilters();
   const student = students.find(s => String(s.id) === String(currSelectedStudentId));
+  if (!student) return;
 
-  /* Available courses: same dept, same level (student's level), same semester, not already registered */
-  const studentLevel = student?.level;
+  /* Use the student's own dept and level — not the (possibly empty) filter dropdowns */
+  const studentDeptId = String(student.departmentId);
+  const studentLevel  = Number(student.level);
+
   const availableCourses = courses.filter(c => {
-    const inDept    = String(c.departmentId) === String(deptId);
-    const inLevel   = Number(c.level) === Number(studentLevel);
-    const inSem     = Number(c.semester) === Number(semester);
-    const notReg    = !currStudentRegs.some(r => String(r.courseId) === String(c.id));
-    const active    = (c.status || "active") === "active";
+    const inDept  = String(c.departmentId) === studentDeptId;
+    const inLevel = Number(c.level) === studentLevel;
+    const inSem   = Number(c.semester) === Number(semester);
+    const notReg  = !currStudentRegs.some(r => String(r.courseId) === String(c.id));
+    const active  = (c.status || "active") === "active";
     return inDept && inLevel && inSem && notReg && active;
   });
 
@@ -726,7 +712,7 @@ function renderHistAccordion() {
     return `<div class="hist-student-card mb-2">
       <button class="hist-student-header" type="button"
         data-bs-toggle="collapse" data-bs-target="#${collapseId}"
-        aria-expanded="${idx === 0 ? "true" : "false"}" aria-controls="${collapseId}">
+        aria-expanded="false" aria-controls="${collapseId}">
         <span class="d-flex align-items-center gap-2">
           <span class="student-avatar-mini">${initials}</span>
           <span>
@@ -739,7 +725,7 @@ function renderHistAccordion() {
           <i class="bi bi-chevron-down hist-chevron"></i>
         </span>
       </button>
-      <div class="collapse ${idx === 0 ? "show" : ""}" id="${collapseId}">
+      <div class="collapse" id="${collapseId}">
         <div class="hist-student-body">${groupHtml}</div>
       </div>
     </div>`;

@@ -59,8 +59,10 @@
         </button>
         <span class="app-topbar-title"> Dashboard</span>
         <div class="topbar-actions">
-          <a href="/assets/pages/admin/admin-students.html" class="topbar-icon-btn" title="Students"><i class="bi bi-people"></i></a>
-          <a href="/assets/pages/admin/admin-results.html"  class="topbar-icon-btn" title="Results"><i class="bi bi-bar-chart"></i></a>
+          <a href="/assets/pages/admin/admin-approvals.html" class="topbar-icon-btn" title="Pending Approvals" id="topbarApprovalsBtn">
+            <i class="bi bi-shield-check"></i>
+            <span class="topbar-badge" id="topbarApprovalsBadge" style="display:none;"></span>
+          </a>
           <div class="topbar-user-chip">
             <div class="topbar-user-avatar" style="background:var(--brand-100);color:var(--brand-900);">
               <span id="topbarAvatarInitials"></span>
@@ -209,11 +211,10 @@
                 <h2 class="panel-title">Quick Actions</h2>
               </div>
               <div class="panel-body" style="display:flex;flex-direction:column;gap:0.6rem;">
-                <a href="/assets/pages/admin/admin-students.html"      class="btn btn-secondary-outline w-100 text-start"><i class="bi bi-person-plus me-2"></i>Add Student</a>
-                <a href="/assets/pages/admin/admin-courses.html"       class="btn btn-secondary-outline w-100 text-start"><i class="bi bi-journal-plus me-2"></i>Add Course</a>
-                <a href="/assets/pages/admin/admin-results.html"       class="btn btn-secondary-outline w-100 text-start"><i class="bi bi-pencil-square me-2"></i>Enter Results</a>
+                <a href="/assets/pages/admin/admin-approvals.html"    class="btn btn-brand w-100 text-start"><i class="bi bi-shield-check me-2"></i>Review Approvals</a>
                 <a href="/assets/pages/admin/admin-registrations.html" class="btn btn-secondary-outline w-100 text-start"><i class="bi bi-journal-check me-2"></i>Manage Registrations</a>
-                <a href="/assets/pages/admin/admin-courses.html"       class="btn btn-brand w-100 text-start"><i class="bi bi-building me-2"></i>Manage Departments</a>
+                <a href="/assets/pages/admin/admin-results.html"       class="btn btn-secondary-outline w-100 text-start"><i class="bi bi-pencil-square me-2"></i>Enter Results</a>
+                <a href="/assets/pages/admin/admin-students.html"      class="btn btn-secondary-outline w-100 text-start"><i class="bi bi-person-plus me-2"></i>Manage Students</a>
               </div>
             </div>
           </div>
