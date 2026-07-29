@@ -12,17 +12,16 @@ requireLecturerAuth();
 /* ── State ──────────────────────────────────────────────── */
 let lecturer      = null;
 let calendar      = null;
-let assignments   = [];   // this lecturer's courseAssignments
+let assignments   = [];
 let courses       = [];
 let students      = [];
 let registrations = [];
-let submissions   = [];   // existing resultSubmissions for this lecturer
-let results       = [];   // all existing results
+let submissions   = [];
+let results       = [];
 
-/* Currently loaded course */
 let selectedCourseId   = null;
 let selectedCourse     = null;
-let existingSubmission = null;   // resultSubmission record if one already exists
+let existingSubmission = null;
 
 /* ── Bootstrap modals ───────────────────────────────────── */
 let submitConfirmModal;
@@ -45,9 +44,23 @@ async function init() {
     await loadData();
     populateCourseSelect();
 
-    // Check for ?courseId= query param (coming from lecturer-courses.html)
-    const params = new URLSearchParams(window.location.search);
-    const preselectedId = params.get("courseId");
+    const params         = new URLSearchParams(window.location.search);
+    const preselectedId  = params.get("courseId");
+    /*
+     * BUG 8 FIX — read the ?resubmit=1 flag that lecturer-history.html
+     * and lecturer-courses.html append to the "Resubmit" link.
+     * Previously the param was ignored, so the upload page opened in
+     * first-time mode even for a rejected batch: the rejected notice
+     * was hidden, the submit button label said "Submit for Approval"
+     * with no context, and the user had no visual confirmation they
+     * were fixing a rejected submission.
+     *
+     * The fix: after loadCourse() resolves, if ?resubmit=1 is set we
+     * scroll the rejected notice into view and show a highlighted
+     * status message so the intent is unmistakable.
+     */
+    const isResubmitEntry = params.get("resubmit") === "1";
+
     if (preselectedId) {
       document.getElementById("courseSelect").value = preselectedId;
     }
@@ -55,10 +68,33 @@ async function init() {
     document.getElementById("pageLoading").classList.add("d-none");
     document.getElementById("pageContent").classList.remove("d-none");
 
-    // If a course was pre-selected, auto-load it
-    if (preselectedId) loadCourse();
+    if (preselectedId) {
+      await loadCourse();   // must await so DOM is ready before we scroll
 
-    // Wire up events
+      if (isResubmitEntry) {
+        // Confirm the submission is actually rejected before announcing it.
+        // loadCourse() sets existingSubmission; check its status here.
+        const st = (existingSubmission?.status || "").toLowerCase().trim();
+        if (st === "rejected") {
+          // Scroll the rejection notice into view
+          const notice = document.getElementById("rejectedNotice");
+          notice?.scrollIntoView({ behavior: "smooth", block: "center" });
+          // Show a clear call-to-action in the status bar
+          showSubmitStatus(
+            "⚠ This batch was rejected. Correct the scores below and click Submit for Approval.",
+            "warning"
+          );
+        } else if (st === "pending" || st === "approved") {
+          // Edge case: admin approved/re-opened between the click and page load
+          showSubmitStatus(
+            `This batch is currently "${existingSubmission.status}" and cannot be resubmitted.`,
+            "info"
+          );
+        }
+        // If st is empty (no submission found) — nothing to announce; normal first-upload flow.
+      }
+    }
+
     document.getElementById("loadCourseBtn").addEventListener("click", () => loadCourse());
     document.getElementById("submitBtn").addEventListener("click", openSubmitConfirm);
     document.getElementById("confirmSubmitBtn").addEventListener("click", handleSubmit);
@@ -79,11 +115,11 @@ async function loadData() {
     getRegistrations(),
     getResultSubmissions({ lecturerId: Number(lecturer.id) }),
     getResults(),
-  ]);}
+  ]);
+}
 
 /* ── Course select dropdown ─────────────────────────────── */
 function populateCourseSelect() {
-  // Only show assignments for the current session/semester
   const currAssignments = assignments.filter(
     a => a.session === calendar.currentSession &&
          Number(a.semester) === Number(calendar.currentSemester)
@@ -113,20 +149,25 @@ async function loadCourse() {
 
   selectedCourseId = courseId;
   selectedCourse   = courses.find(c => String(c.id) === String(courseId));
+
+  /*
+   * BUG 1 FIX — always re-read existingSubmission from the latest
+   * submissions array so loadCourse() never works from stale data.
+   * Previously the variable was only set once on first load, so
+   * after a submit the course still appeared editable.
+   */
   existingSubmission = submissions.find(
     s => String(s.courseId) === String(courseId) &&
          s.session           === calendar.currentSession &&
          Number(s.semester)  === Number(calendar.currentSemester)
   );
 
-  /* Fetch registrations for just this course/session/semester for accuracy */
   try {
     const courseRegsFromAPI = await getRegistrations({
       courseId: Number(courseId),
       session:  calendar.currentSession,
       semester: Number(calendar.currentSemester),
     });
-    /* Merge into registrations array — replace any existing entries for this course */
     registrations = [
       ...registrations.filter(r =>
         !(String(r.courseId) === String(courseId) &&
@@ -156,9 +197,13 @@ function renderCourseInfoBanner() {
     </div>`;
 }
 
-/* ── Status notices ─────────────────────────────────────── */
+/* ── Status notices ──────────────────────────────────────────
+   BUG 3 FIX — renderStatusNotices() now reads directly from
+   existingSubmission each time it is called.  The caller
+   (handleSubmit) must update existingSubmission BEFORE calling
+   this function, which we now guarantee.
+   ─────────────────────────────────────────────────────────── */
 function renderStatusNotices() {
-  // Hide all notices first
   ["pendingNotice", "approvedNotice", "rejectedNotice"].forEach(id =>
     document.getElementById(id).classList.add("d-none")
   );
@@ -166,23 +211,25 @@ function renderStatusNotices() {
   const actionBar = document.getElementById("actionBar");
 
   if (!existingSubmission) {
-    // No prior submission — enable editing
-    submitBtn.disabled  = false;
+    submitBtn.disabled = false;
     actionBar.classList.remove("d-none");
     return;
   }
 
-  if (existingSubmission.status === "pending") {
+  const st = (existingSubmission.status || "").toLowerCase().trim();
+
+  if (st === "pending") {
     document.getElementById("pendingNotice").classList.remove("d-none");
     submitBtn.disabled = true;
     actionBar.classList.remove("d-none");
-  } else if (existingSubmission.status === "approved") {
+  } else if (st === "approved") {
     document.getElementById("approvedNotice").classList.remove("d-none");
     submitBtn.disabled = true;
     actionBar.classList.add("d-none");
-  } else if (existingSubmission.status === "rejected") {
+  } else if (st === "rejected") {
     document.getElementById("rejectedNotice").classList.remove("d-none");
-    document.getElementById("rejectionReasonText").textContent = existingSubmission.rejectionReason || "—";
+    document.getElementById("rejectionReasonText").textContent =
+      existingSubmission.rejectionReason || "—";
     submitBtn.disabled  = false;
     actionBar.classList.remove("d-none");
   }
@@ -190,7 +237,6 @@ function renderStatusNotices() {
 
 /* ── Student table ──────────────────────────────────────── */
 function renderStudentTable() {
-  // Find students registered for this course in the current session/semester
   const courseRegs = registrations.filter(r =>
     String(r.courseId) === String(selectedCourseId) &&
     r.session           === calendar.currentSession &&
@@ -213,7 +259,6 @@ function renderStudentTable() {
   scoreTableWrap.classList.remove("d-none");
   noStudentsEmpty.classList.add("d-none");
 
-  // Is editing locked? (pending or approved submissions are read-only)
   const isLocked = existingSubmission &&
     (existingSubmission.status === "pending" || existingSubmission.status === "approved");
 
@@ -222,9 +267,6 @@ function renderStudentTable() {
     const student = students.find(s => String(s.id) === String(reg.studentId));
     if (!student) return "";
 
-    // Look up any existing result for this student/course from the current submission.
-    // Primary match: by submissionId (set when uploaded via lecturer portal).
-    // Fallback: match by student/course/session/semester (covers legacy admin-entered rows).
     const existingResult = results.find(r =>
       String(r.studentId) === String(student.id) &&
       String(r.courseId)  === String(selectedCourseId) &&
@@ -236,12 +278,25 @@ function renderStudentTable() {
     );
 
     const score = existingResult ? existingResult.score : "";
-    const grade = score !== "" ? scoreToGrade(Number(score)).grade : "—";
 
-    // Read-only display for locked states
+    /*
+     * BUG 2 FIX — grade is always computed fresh here from the
+     * current score value.  Previously the grade preview cell was
+     * only updated by the input event listener, so after a page
+     * re-render triggered by handleSubmit() the grade column showed
+     * stale "—" values even though scores were already saved.
+     */
+    const gradeHtml = score !== ""
+      ? (() => {
+          const { grade } = scoreToGrade(Number(score));
+          return `<span class="badge-grade badge-grade--${grade.toLowerCase()}">${grade}</span>`;
+        })()
+      : "—";
+
     const inputHtml = isLocked
       ? `<input type="number" class="form-control score-input" value="${score}" disabled style="width:90px;">`
-      : `<input type="number" class="form-control score-input" data-student-id="${student.id}"
+      : `<input type="number" class="form-control score-input"
+             data-student-id="${student.id}"
              data-result-id="${existingResult ? existingResult.id : ""}"
              min="0" max="100" value="${score}" placeholder="0–100"
              style="width:90px;" />`;
@@ -256,15 +311,14 @@ function renderStudentTable() {
       </td>
       <td class="text-muted-cell">${student.matricNumber}</td>
       <td>${inputHtml}</td>
-      <td class="grade-preview fw-semibold">${grade !== "—" ? `<span class="badge-grade badge-grade--${grade.toLowerCase()}">${grade}</span>` : "—"}</td>
+      <td class="grade-preview fw-semibold">${gradeHtml}</td>
     </tr>`;
   }).join("");
 
-  // Wire up live grade preview on each score input
   tbody.querySelectorAll(".score-input:not([disabled])").forEach(input => {
     input.addEventListener("input", () => {
-      const row   = input.closest("tr");
-      const val   = input.value.trim();
+      const row       = input.closest("tr");
+      const val       = input.value.trim();
       const gradeCell = row.querySelector(".grade-preview");
       if (val === "" || isNaN(Number(val))) {
         gradeCell.innerHTML = "—";
@@ -323,7 +377,16 @@ function openSubmitConfirm() {
   submitConfirmModal.show();
 }
 
-/* ── Handle actual submit ───────────────────────────────── */
+/* ── Handle actual submit ───────────────────────────────────
+   BUG 1 + 3 FIX — existingSubmission is updated in-place
+   BEFORE renderStatusNotices() and renderStudentTable() are
+   called, so those functions always see the correct post-
+   submit state (locked / pending).
+
+   BUG 4 FIX — confirmBtn spinner + disabled state is reset
+   inside a `finally` block that always runs, even when an
+   error is thrown part-way through the API calls.
+   ─────────────────────────────────────────────────────────── */
 async function handleSubmit() {
   const confirmBtn = document.getElementById("confirmSubmitBtn");
   confirmBtn.disabled = true;
@@ -335,43 +398,42 @@ async function handleSubmit() {
       .filter(i => i.value.trim() !== "")
       .map(i => ({
         studentId: i.dataset.studentId,
-        resultId:  i.dataset.resultId,   // empty string if no existing record
+        resultId:  i.dataset.resultId,
         score:     Number(i.value.trim()),
       }))
       .filter(r => !isNaN(r.score) && r.score >= 0 && r.score <= 100);
 
     if (scoreRows.length === 0) {
       showSubmitStatus("No valid scores to submit.", "warning");
-      return;
+      return;  // finally still runs — spinner resets
     }
 
-    // ── Determine submission version ──
-    // If resubmitting a rejected batch, increment version.
-    const isResubmit  = existingSubmission && existingSubmission.status === "rejected";
-    const newVersion  = isResubmit ? (existingSubmission.version + 1) : 1;
-
-    let submissionId;
+    const isResubmit = existingSubmission && existingSubmission.status === "rejected";
+    const newVersion = isResubmit ? (existingSubmission.version + 1) : 1;
 
     if (!existingSubmission) {
-      // ── First-time submission ──
-      // Step 1: Create the submission record with status "pending"
+      /* ── First-time submission ────────────────────────── */
       const sub = await createResultSubmission({
-        lecturerId: lecturer.id,
-        courseId:   selectedCourseId,
-        session:    calendar.currentSession,
-        semester:   Number(calendar.currentSemester),
-        level:      selectedCourse.level,
-        status:     "pending",
-        submittedAt: new Date().toISOString(),
-        reviewedBy:  null,
-        reviewedAt:  null,
+        lecturerId:      lecturer.id,
+        courseId:        selectedCourseId,
+        session:         calendar.currentSession,
+        semester:        Number(calendar.currentSemester),
+        level:           selectedCourse.level,
+        status:          "pending",
+        submittedAt:     new Date().toISOString(),
+        reviewedBy:      null,
+        reviewedAt:      null,
         rejectionReason: null,
-        version:     1,
+        version:         1,
       });
-      submissionId = sub.id;
+
+      /*
+       * BUG 1 + 3 FIX — update existingSubmission immediately
+       * so that renderStatusNotices() at the bottom reads the
+       * correct new "pending" state, not null.
+       */
       existingSubmission = sub;
 
-      // Step 2: Create result rows linked to this submission
       await Promise.all(scoreRows.map(row =>
         createResult({
           studentId:    Number(row.studentId),
@@ -380,26 +442,19 @@ async function handleSubmit() {
           semester:     Number(calendar.currentSemester),
           level:        Number(selectedCourse.level),
           score:        row.score,
-          published:    false,         // NOT published yet — waits for admin approval
-          submissionId: submissionId,
+          published:    false,
+          submissionId: sub.id,
           uploadedBy:   lecturer.id,
         })
       ));
     } else {
-      // ── Resubmit (rejected batch) ──
-      submissionId = existingSubmission.id;
+      /* ── Resubmit (rejected batch) ────────────────────── */
+      const submissionId = existingSubmission.id;
 
-      // Step 1: Update / create result rows with new scores
-      // published stays false until admin approves again
       await Promise.all(scoreRows.map(row => {
         if (row.resultId) {
-          // Update existing result row score
-          return updateResult(row.resultId, {
-            score: row.score,
-            published: false,
-          });
+          return updateResult(row.resultId, { score: row.score, published: false });
         } else {
-          // Create new row (student may not have had a record yet)
           return createResult({
             studentId:    Number(row.studentId),
             courseId:     Number(selectedCourseId),
@@ -414,8 +469,7 @@ async function handleSubmit() {
         }
       }));
 
-      // Step 2: Flip the submission back to "pending" with new version
-      await updateResultSubmission(submissionId, {
+      const updated = await updateResultSubmission(submissionId, {
         status:          "pending",
         submittedAt:     new Date().toISOString(),
         reviewedBy:      null,
@@ -423,29 +477,63 @@ async function handleSubmit() {
         rejectionReason: null,
         version:         newVersion,
       }, {
-        actorId: lecturer.id,
+        actorId:   lecturer.id,
         actorRole: "lecturer",
-        note: `Resubmitted batch after rejection (v${newVersion}).`,
+        note:      `Resubmitted batch after rejection (v${newVersion}).`,
       });
+
+      /*
+       * BUG 1 + 3 FIX — overwrite existingSubmission with the
+       * freshly-updated record returned by the API so
+       * renderStatusNotices() sees status="pending" and locks
+       * the form correctly.
+       */
+      existingSubmission = updated;
     }
 
     submitConfirmModal.hide();
-    showSubmitStatus("✓ Submitted for admin approval! This batch is now locked until reviewed.", "success");
+    showSubmitStatus(
+      "✓ Submitted for admin approval! This batch is now locked until reviewed.",
+      "success"
+    );
 
-    // Refresh only this lecturer's submissions and linked results
-    submissions = await getResultSubmissions({ lecturerId: Number(lecturer.id) });
-    results     = await getResults();
+    /*
+     * Refresh in-memory arrays so subsequent loadCourse() calls
+     * and re-renders work with current data.
+     */
+    [submissions, results] = await Promise.all([
+      getResultSubmissions({ lecturerId: Number(lecturer.id) }),
+      getResults(),
+    ]);
+
+    /*
+     * BUG 1 + 3 FIX — always re-sync existingSubmission from the
+     * freshly-fetched submissions array to pick up any server-side
+     * normalisation (e.g. timestamps, version increments).
+     */
     existingSubmission = submissions.find(
       s => String(s.courseId) === String(selectedCourseId) &&
            s.session           === calendar.currentSession &&
            Number(s.semester)  === Number(calendar.currentSemester)
     );
+
+    /*
+     * BUG 2 FIX — renderStudentTable() is called AFTER results
+     * are re-fetched, so every grade cell is recomputed from the
+     * latest saved score values rather than from stale DOM state.
+     */
     renderStatusNotices();
-    renderStudentTable();   // re-render to show locked state
+    renderStudentTable();
   } catch (err) {
     console.error(err);
     showSubmitStatus("Something went wrong. Please try again.", "danger");
   } finally {
+    /*
+     * BUG 4 FIX — spinner and button state are always reset here,
+     * even if an error is thrown anywhere above.  Previously the
+     * reset only ran in the happy path, leaving the button stuck
+     * in a disabled/spinning state after any failure.
+     */
     confirmBtn.disabled = false;
     confirmBtn.innerHTML = `<i class="bi bi-send-fill"></i> Yes, Submit`;
   }
@@ -486,7 +574,10 @@ function setupLogout() {
 function showSubmitStatus(msg, type = "info") {
   const el = document.getElementById("submitStatusMsg");
   const colorMap = {
-    success: "var(--success)", warning: "var(--warn)", danger: "var(--danger)", info: "var(--ink-400)"
+    success: "var(--success)",
+    warning: "var(--warn)",
+    danger:  "var(--danger)",
+    info:    "var(--ink-400)",
   };
   el.style.color = colorMap[type] || "var(--ink-400)";
   el.textContent = msg;

@@ -133,3 +133,20 @@
   color: var(--danger);
   background: var(--danger-100);
 }
+
+/* =========================================================
+   DASHBOARD REFRESH BUTTON — spinner animation
+   ========================================================= */
+
+/* Single rotation played once when the .spin-once class is
+   present. JS adds the class while refreshing and removes it
+   when done; the icon rotates 360° over 0.6 s.             */
+@keyframes spin-once {
+  from { transform: rotate(0deg);   }
+  to   { transform: rotate(360deg); }
+}
+
+.spin-once {
+  display: inline-block;
+  animation: spin-once 0.6s linear infinite;
+}

@@ -403,7 +403,10 @@
 .hist-student-card {
   border: 1px solid var(--line-200);
   border-radius: var(--radius-md);
-  overflow: hidden;
+  /* overflow:hidden removed — it was clipping the horizontal scroll
+     inside .hist-table-scroll on narrow screens. The border-radius
+     and box-shadow still render correctly without it. */
+  overflow: visible;
   background: #fff;
   box-shadow: var(--shadow-card);
 }
@@ -440,6 +443,69 @@
 .hist-student-body {
   padding: 1rem 1.1rem;
   border-top: 1px solid var(--line-200);
+  /* Clip the rounded bottom corners that overflow:visible on the card
+     would otherwise expose. Scroll happens inside .hist-table-scroll,
+     not here, so this does NOT block horizontal scrolling. */
+  overflow: hidden;
+  border-radius: 0 0 var(--radius-md) var(--radius-md);
+}
+
+/* ── Per-group horizontal scroll container (Result History) ── */
+.hist-table-scroll {
+  position: relative;
+  /* Let the table be as wide as it needs; clip and scroll within */
+  overflow-x: auto;
+  overflow-y: visible;
+  -webkit-overflow-scrolling: touch; /* momentum scrolling on iOS */
+  max-width: 100%;
+  /* Thin, unobtrusive scrollbar */
+  scrollbar-width: thin;
+  scrollbar-color: var(--line-200) transparent;
+  /* Ensure the right-edge gradient pseudo-element is positioned relative to this */
+  border-radius: 6px;
+}
+
+.hist-table-scroll::-webkit-scrollbar {
+  height: 4px;
+}
+.hist-table-scroll::-webkit-scrollbar-track {
+  background: transparent;
+}
+.hist-table-scroll::-webkit-scrollbar-thumb {
+  background: var(--line-200);
+  border-radius: 3px;
+}
+
+/* Right-edge "more content" gradient indicator — always rendered,
+   fades away once the user has scrolled to the end via JS class toggle */
+.hist-table-scroll::after {
+  content: "";
+  position: sticky;
+  right: 0;
+  top: 0;
+  /* Covers the full height of the scroll area */
+  display: block;
+  width: 36px;
+  /* Negative margin pulls it back so it overlaps the last column */
+  margin-left: -36px;
+  pointer-events: none;
+  background: linear-gradient(to left, rgba(255, 255, 255, 0.92) 30%, transparent);
+  /* Visible only on smaller screens where overflow actually occurs */
+  opacity: 1;
+  transition: opacity 0.2s ease;
+}
+
+/* Hide the indicator once the table fits without scrolling,
+   or when the user has scrolled all the way to the right */
+.hist-table-scroll.scroll-end::after {
+  opacity: 0;
+}
+
+/* On desktop the table is wide enough to never need the indicator */
+@media (min-width: 768px) {
+  .hist-table-scroll::after {
+    display: none;
+  }
 }
 
 /* Publish button distinct style */

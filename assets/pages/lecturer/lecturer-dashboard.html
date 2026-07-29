@@ -79,12 +79,24 @@
           <div class="page-header-text">
             <h1 id="greetingHeading">Dashboard</h1>
             <p id="greetingSubtitle">Here's your overview for the current session.</p>
+            <p class="text-muted" style="font-size:0.75rem;margin-top:0.1rem;" id="lastUpdatedLabel"></p>
           </div>
           <div class="page-header-actions">
+            <!-- Manual refresh button — also shows last-updated time -->
+            <button class="btn btn-secondary-outline btn-sm" id="refreshBtn" title="Refresh dashboard data">
+              <i class="bi bi-arrow-clockwise" id="refreshIcon"></i>
+              <span id="refreshLabel">Refresh</span>
+            </button>
             <a href="/assets/pages/lecturer/lecturer-upload.html" class="btn btn-brand btn-sm">
               <i class="bi bi-cloud-upload"></i> Upload Results
             </a>
           </div>
+        </div>
+        <!-- Inline error banner (hidden by default, shown on fetch failure) -->
+        <div id="dashboardError" class="alert alert-danger py-2 px-3 mb-3 d-none small" role="alert">
+          <i class="bi bi-exclamation-triangle-fill me-2"></i>
+          <span id="dashboardErrorMsg">Failed to refresh data.</span>
+          <button type="button" class="btn-close btn-close-sm float-end" id="dismissErrorBtn" aria-label="Dismiss"></button>
         </div>
 
         <!-- ── Summary stat cards ── -->
