@@ -33392,6 +33392,30 @@
       "submissionId": "6oIN-2Qv4U4",
       "uploadedBy": "3",
       "id": "j-qfJt8cK8U"
+    },
+    {
+      "studentId": 25,
+      "courseId": 88,
+      "session": "2025/2026",
+      "semester": 2,
+      "level": 300,
+      "score": 50,
+      "published": true,
+      "submissionId": "F3UU05i3HvY",
+      "uploadedBy": "6",
+      "id": "1LCNdunXH0c"
+    },
+    {
+      "studentId": 26,
+      "courseId": 88,
+      "session": "2025/2026",
+      "semester": 2,
+      "level": 300,
+      "score": 68,
+      "published": true,
+      "submissionId": "F3UU05i3HvY",
+      "uploadedBy": "6",
+      "id": "5BHCDAeT5S0"
     }
   ],
   "lecturers": [
@@ -35566,6 +35590,20 @@
       "rejectionReason": null,
       "version": 1,
       "id": "xVLICh4-gWs"
+    },
+    {
+      "lecturerId": 6,
+      "courseId": 88,
+      "session": "2025/2026",
+      "semester": 2,
+      "level": 300,
+      "status": "approved",
+      "submittedAt": "2026-07-29T22:01:00.355Z",
+      "reviewedBy": "1",
+      "reviewedAt": "2026-07-29T22:01:45.462Z",
+      "rejectionReason": null,
+      "version": 1,
+      "id": "F3UU05i3HvY"
     }
   ],
   "auditLog": [
@@ -35815,6 +35853,40 @@
       },
       "note": "Submitted results for review (v1).",
       "id": "JM1gsb-xrTo"
+    },
+    {
+      "entityType": "resultSubmission",
+      "entityId": "F3UU05i3HvY",
+      "action": "submitted",
+      "actorId": 6,
+      "actorRole": "lecturer",
+      "timestamp": "2026-07-29T22:01:00.416Z",
+      "previousValue": null,
+      "newValue": {
+        "courseId": 88,
+        "session": "2025/2026",
+        "semester": 2,
+        "version": 1
+      },
+      "note": "Submitted results for review (v1).",
+      "id": "TTHrPgcau04"
+    },
+    {
+      "entityType": "resultSubmission",
+      "entityId": "F3UU05i3HvY",
+      "action": "approved",
+      "actorId": "1",
+      "actorRole": "admin",
+      "timestamp": "2026-07-29T22:01:45.514Z",
+      "previousValue": {
+        "status": "pending"
+      },
+      "newValue": {
+        "status": "approved",
+        "resultsPublished": 2
+      },
+      "note": "Approved and published 2 result(s).",
+      "id": "iq53IXs-fkw"
     }
   ],
   "registrationBatches": [
