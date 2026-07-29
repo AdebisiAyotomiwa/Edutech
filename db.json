@@ -35498,8 +35498,8 @@
       "version": 1
     },
     {
-      "lecturerId": "3",
-      "courseId": "64",
+      "lecturerId": 3,
+      "courseId": 64,
       "session": "2025/2026",
       "semester": 2,
       "level": 400,
@@ -35512,8 +35512,8 @@
       "id": "HM3-h9UIduA"
     },
     {
-      "lecturerId": "3",
-      "courseId": "61",
+      "lecturerId": 3,
+      "courseId": 61,
       "session": "2025/2026",
       "semester": 2,
       "level": 400,
@@ -35526,8 +35526,8 @@
       "id": "M-6qgCdx8_4"
     },
     {
-      "lecturerId": "3",
-      "courseId": "55",
+      "lecturerId": 3,
+      "courseId": 55,
       "session": "2025/2026",
       "semester": 2,
       "level": 300,
@@ -35540,8 +35540,8 @@
       "id": "l92Fg4q47T8"
     },
     {
-      "lecturerId": "3",
-      "courseId": "37",
+      "lecturerId": 3,
+      "courseId": 37,
       "session": "2025/2026",
       "semester": 2,
       "level": 100,
@@ -35554,8 +35554,8 @@
       "id": "6oIN-2Qv4U4"
     },
     {
-      "lecturerId": "3",
-      "courseId": "48",
+      "lecturerId": 3,
+      "courseId": 48,
       "session": "2025/2026",
       "semester": 2,
       "level": 200,

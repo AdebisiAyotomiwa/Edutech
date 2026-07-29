@@ -464,8 +464,22 @@ async function handleSubmit() {
     if (!existingSubmission) {
       /* ── First-time submission ────────────────────────── */
       const sub = await createResultSubmission({
-        lecturerId:      lecturer.id,
-        courseId:        selectedCourseId,
+        /*
+         * TYPE-CONSISTENCY FIX — every read path (dashboard, courses,
+         * history) filters resultSubmissions with
+         * getResultSubmissions({ lecturerId: Number(lecturer.id), ... })
+         * and json-server's query filter is type-strict: a numeric
+         * `1` does NOT match a string `"1"`. Every other record in
+         * this DB stores lecturerId/courseId as numbers, so writing
+         * them here as raw strings (lecturer.id from auth state,
+         * selectedCourseId from a <select> element's .value — both
+         * always strings) silently created submissions that were
+         * invisible to every lecturer-side query forever, even after
+         * being approved/rejected by an admin. Coerce to Number so
+         * newly created rows match the convention used everywhere else.
+         */
+        lecturerId:      Number(lecturer.id),
+        courseId:        Number(selectedCourseId),
         session:         calendar.currentSession,
         semester:        Number(calendar.currentSemester),
         level:           selectedCourse.level,
