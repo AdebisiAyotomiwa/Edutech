@@ -135,6 +135,281 @@
 }
 
 /* =========================================================
+   FIX 2a — RECENT SUBMISSION CARD MOBILE LAYOUT
+   The .activity-item uses flexbox with a fixed-width icon,
+   a flex-1 body, and a flex-shrink:0 badge. On narrow screens
+   the badge is too wide to sit on the same row and crowds the
+   title. Fix: below 480 px wrap the badge onto its own line
+   and let the title wrap instead of truncating.
+   ========================================================= */
+@media (max-width: 575.98px) {
+  .activity-item {
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+
+  /* Badge drops to a new row below icon+body */
+  .activity-badge {
+    margin-left: calc(34px + 0.75rem); /* icon width + gap = indent to align with body */
+    margin-top: 0;
+    width: fit-content;
+  }
+
+  /* Allow the title to wrap instead of ellipsis-truncating */
+  .activity-title {
+    white-space: normal;
+    overflow: visible;
+    text-overflow: clip;
+    word-break: break-word;
+  }
+}
+
+/* =========================================================
+   COURSE SELECTOR — UPLOAD RESULTS PAGE
+   Custom accessible combobox replacing the native <select>.
+   Native selects on iOS/Android open OS-controlled pickers
+   that cannot be styled. This custom version gives us full
+   control: text wrapping, scroll, width constraint.
+   ========================================================= */
+
+/* Wrapper — establishes the positioning context for the list */
+.course-select-wrap {
+  position: relative;
+  width: 100%;
+}
+
+/* The trigger button that looks like an input field */
+.course-select-btn {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+  padding: 0.62rem 0.9rem;
+  background: #fff;
+  border: 1px solid var(--line-200);
+  border-radius: 10px;
+  font-family: var(--font-body);
+  font-size: 0.92rem;
+  color: var(--ink-900);
+  cursor: pointer;
+  text-align: left;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+  /* Prevent the button from overflowing its container */
+  min-width: 0;
+  overflow: hidden;
+}
+.course-select-btn:hover {
+  border-color: var(--brand-500);
+}
+.course-select-btn:focus,
+.course-select-btn[aria-expanded="true"] {
+  border-color: var(--brand-500);
+  box-shadow: 0 0 0 3px var(--brand-100);
+  outline: none;
+}
+.course-select-btn[aria-expanded="true"] .course-select-chevron {
+  transform: rotate(180deg);
+}
+
+/* Selected value text — truncates on single line when closed */
+.course-select-value {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  color: var(--ink-900);
+}
+/* Placeholder style */
+.course-select-value.is-placeholder {
+  color: var(--ink-400);
+}
+
+/* Chevron icon */
+.course-select-chevron {
+  flex-shrink: 0;
+  font-size: 0.75rem;
+  color: var(--ink-400);
+  transition: transform 0.2s ease;
+}
+
+/* ── The dropdown list ──────────────────────────────────── */
+.course-select-list {
+  /* Positioning */
+  position: absolute;
+  top: calc(100% + 4px);
+  left: 0;
+  z-index: 200;
+
+  /* Width — exactly matches the trigger button width */
+  width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
+
+  /* Scroll behaviour for long lists */
+  max-height: 220px;
+  overflow-y: auto;
+  overscroll-behavior: contain;   /* prevent page scroll bleed on mobile */
+  -webkit-overflow-scrolling: touch;
+
+  /* Thin scrollbar on supporting browsers */
+  scrollbar-width: thin;
+  scrollbar-color: var(--line-200) transparent;
+
+  /* Visual styling */
+  background: #fff;
+  border: 1px solid var(--line-200);
+  border-radius: 12px;
+  box-shadow: 0 8px 24px rgba(11,61,46,0.12), 0 2px 6px rgba(11,61,46,0.06);
+  padding: 0.35rem 0;
+  margin: 0;
+  list-style: none;
+
+  /* Hidden by default */
+  display: none;
+}
+.course-select-list.is-open {
+  display: block;
+}
+
+/* Webkit scrollbar styling */
+.course-select-list::-webkit-scrollbar {
+  width: 4px;
+}
+.course-select-list::-webkit-scrollbar-track {
+  background: transparent;
+}
+.course-select-list::-webkit-scrollbar-thumb {
+  background: var(--line-200);
+  border-radius: 4px;
+}
+
+/* ── Individual option items ────────────────────────────── */
+.course-select-option {
+  padding: 0.65rem 1rem;
+  font-size: 0.9rem;
+  color: var(--ink-900);
+  cursor: pointer;
+  border-radius: 0;
+  transition: background 0.12s ease;
+
+  /* KEY FIX: enable text wrapping for long course titles */
+  white-space: normal;
+  word-break: break-word;
+  overflow-wrap: break-word;
+  line-height: 1.4;
+}
+.course-select-option:hover,
+.course-select-option:focus {
+  background: var(--brand-100);
+  color: var(--brand-900);
+  outline: none;
+}
+.course-select-option[aria-selected="true"] {
+  background: var(--brand-100);
+  color: var(--brand-900);
+  font-weight: 600;
+}
+/* Placeholder / disabled option */
+.course-select-option.is-placeholder {
+  color: var(--ink-400);
+  font-style: italic;
+}
+.course-select-option.is-disabled {
+  color: var(--ink-400);
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+/* Divider between placeholder and real options */
+.course-select-option + .course-select-option:not(.is-placeholder) {
+  border-top: none;
+}
+
+/* =========================================================
+   FIX 2b — UPLOAD RESULT COURSE SELECTOR MOBILE
+   ========================================================= */
+@media (max-width: 575.98px) {
+  /* Trigger button font size — slightly smaller on narrow screens */
+  .course-select-btn {
+    font-size: 0.85rem;
+    padding: 0.58rem 0.85rem;
+  }
+
+  /* List opens below the trigger on mobile — safe default.
+     If near bottom of viewport, JS will add .opens-above */
+  .course-select-list {
+    max-height: 180px;
+    border-radius: 10px;
+    /* Never exceed the viewport width */
+    max-width: calc(100vw - 2rem);
+  }
+  .course-select-list.opens-above {
+    top: auto;
+    bottom: calc(100% + 4px);
+  }
+
+  .course-select-option {
+    font-size: 0.85rem;
+    padding: 0.6rem 0.9rem;
+  }
+
+  /* Load Students button goes full-width on mobile */
+  #loadCourseBtn {
+    width: 100%;
+    justify-content: center;
+  }
+
+  /* Trim card padding */
+  #courseSelectorSection {
+    padding: 0.85rem 0.9rem;
+  }
+
+  /* Submit / action bar — stack vertically */
+  #actionBar {
+    flex-direction: column;
+    align-items: stretch !important;
+  }
+  #actionBar .ms-auto {
+    margin-left: 0 !important;
+  }
+  #actionBar #submitBtn {
+    width: 100%;
+    justify-content: center;
+  }
+}
+
+/* =========================================================
+   FIX 2c — STICKY "MATRIC NO." COLUMN IN SCORE TABLE
+   The score entry table (id="scoreTable") on the Upload
+   Results page uses class "table-sticky-col2" but admin.css
+   is not loaded on lecturer pages. Re-declare it here so the
+   Matric No. column stays visible while scrolling wide tables
+   on narrow mobile screens.
+   ========================================================= */
+.admin-table.table-sticky-col2 thead th:nth-child(2),
+.admin-table.table-sticky-col2 tbody td:nth-child(2) {
+  position: sticky;
+  left: 0;
+  z-index: 2;
+  background: #fff;
+  box-shadow: 2px 0 4px rgba(0, 0, 0, 0.06);
+}
+.admin-table.table-sticky-col2 thead th:nth-child(2) {
+  background: var(--paper-100);
+}
+.admin-table.table-sticky-col2 tbody tr:hover td:nth-child(2) {
+  background: var(--paper-50);
+}
+
+/* Ensure the table wrapper scrolls horizontally on mobile */
+#scoreTableWrap {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+/* =========================================================
    DASHBOARD REFRESH BUTTON — spinner animation
    ========================================================= */
 

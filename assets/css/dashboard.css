@@ -211,7 +211,6 @@
   transition: background var(--transition-fast), color var(--transition-fast);
 }
 .app-sidebar-logout:hover { background: rgba(255,255,255,0.08); color: #fff; }
-
 /* Admin sidebar override — uniform brand-900 */
 .app-sidebar--admin { background: var(--brand-900); }
 .admin-role-tag {
@@ -228,7 +227,10 @@
   vertical-align: middle;
 }
 
-/* Scrim */
+/* Desktop: hide the close button — sidebar is always visible */
+.sidebar-close-btn { display: none; }
+
+/* ── Scrim ── */
 .app-sidebar-scrim {
   position: fixed;
   inset: 0;
@@ -672,16 +674,192 @@
     left: 0;
     top: 0;
     height: 100%;
+    /* ── 220px: tight enough to leave main content visible,
+       wide enough to fit "Confirm Registration" + icon + padding.
+       68vw cap: on a 320px phone → ~218px, still comfortable.  */
+    width: 220px;
+    max-width: 68vw;
     transform: translateX(-100%);
-    transition: transform 0.25s ease;
+    transition: transform 0.28s cubic-bezier(0.4, 0, 0.2, 1);
     z-index: 40;
-    box-shadow: 8px 0 32px rgba(11,61,46,0.2);
+    box-shadow: 8px 0 32px rgba(11,61,46,0.22);
+    overflow-x: visible;
   }
   .app-sidebar.is-open { transform: translateX(0); }
   .app-sidebar-toggle { display: flex; }
   .app-topbar-search { display: none; }
   .dashboard-panels { grid-template-columns: 1fr; }
   .dashboard-panels-3 { grid-template-columns: 1fr; }
+
+  /* ── Tighten internal drawer spacing ──────────────────── */
+  .app-sidebar .brand-lockup {
+    padding: 1rem 0.9rem 0.45rem;
+    gap: 0.55rem;
+  }
+  .app-sidebar .brand-name {
+    font-size: 1rem;
+  }
+  .app-sidebar .brand-mark {
+    width: 30px;
+    height: 30px;
+    font-size: 0.95rem;
+  }
+  .app-sidebar-nav {
+    padding: 0 0.5rem;
+    gap: 0.1rem;
+  }
+  .app-sidebar-link {
+    padding: 0.58rem 0.7rem;
+    font-size: 0.84rem;
+    gap: 0.6rem;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .app-sidebar-link i {
+    width: 16px;
+    font-size: 0.9rem;
+  }
+  .sidebar-section-label {
+    padding: 0.75rem 0.9rem 0.25rem;
+    font-size: 0.63rem;
+  }
+  .app-sidebar-footer {
+    padding: 0.5rem 0.5rem 0.75rem;
+  }
+  .app-sidebar-user {
+    padding: 0.4rem 0.35rem;
+    gap: 0.4rem;
+  }
+  .app-sidebar-user-avatar {
+    width: 30px;
+    height: 30px;
+  }
+  .app-sidebar-user-name {
+    font-size: 0.8rem;
+    max-width: 130px;
+  }
+  .app-sidebar-user-meta {
+    font-size: 0.68rem;
+    max-width: 130px;
+  }
+
+  /* ── Close button ─────────────────────────────────────── */
+  .sidebar-close-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: absolute;
+    top: 0.75rem;
+    right: 0.5rem;
+    width: 26px;
+    height: 26px;
+    border-radius: 7px;
+    border: none;
+    background: rgba(255,255,255,0.1);
+    color: rgba(255,255,255,0.7);
+    font-size: 0.8rem;
+    cursor: pointer;
+    transition: background var(--transition-fast), color var(--transition-fast);
+    z-index: 1;
+  }
+  .sidebar-close-btn:hover {
+    background: rgba(255,255,255,0.18);
+    color: #fff;
+  }
+
+  /* ── Logout button ────────────────────────────────────── */
+  .app-sidebar-logout {
+    padding: 0.55rem 0.7rem;
+    margin-top: 0;
+    font-size: 0.84rem;
+    color: rgba(255, 130, 120, 0.85);
+    border-radius: 9px;
+    white-space: nowrap;
+    gap: 0.6rem;
+  }
+  .app-sidebar-logout:hover {
+    background: rgba(179, 64, 46, 0.15);
+    color: #ff9b92;
+  }
+  .app-sidebar-logout i {
+    font-size: 0.9rem;
+    width: 16px;
+    text-align: center;
+    flex-shrink: 0;
+  }
+
+  /* ── Logout confirmation modal — ultra-compact ────────────
+     Target: 260px wide, ~160px tall.
+     Icon small, title+body tight, buttons 32px height.     */
+  #logoutConfirmModal .modal-dialog {
+    max-width: 260px;
+    width: 260px;
+    margin: auto;
+    display: flex;
+    align-items: center;
+    min-height: calc(100% - 2rem);
+  }
+  #logoutConfirmModal .modal-content {
+    border-radius: 14px;
+    overflow: hidden;
+    box-shadow: 0 12px 40px rgba(11,61,46,0.2);
+  }
+  #logoutConfirmModal .modal-body {
+    padding: 1rem 0.9rem 0.85rem !important;
+    text-align: center;
+  }
+  /* Icon — shrunk to 1.4rem */
+  #logoutConfirmModal .modal-body > i.bi-box-arrow-right,
+  #logoutConfirmModal .modal-body .bi-box-arrow-right.d-block {
+    font-size: 1.4rem !important;
+    margin-bottom: 0.4rem !important;
+    display: block !important;
+  }
+  #logoutConfirmModal .modal-body h5 {
+    font-size: 0.88rem !important;
+    margin-bottom: 0.2rem !important;
+    line-height: 1.3;
+  }
+  #logoutConfirmModal .modal-body p {
+    font-size: 0.75rem !important;
+    margin-bottom: 0.75rem !important;
+    color: var(--ink-400);
+    line-height: 1.4;
+  }
+  /* Button row — tight, side by side */
+  #logoutConfirmModal .modal-body .d-flex {
+    gap: 0.4rem !important;
+    justify-content: center;
+  }
+  /* Both buttons: 32px tall, compact horizontal padding */
+  #logoutConfirmModal .modal-body .btn {
+    height: 32px;
+    padding: 0 0.85rem !important;
+    font-size: 0.78rem !important;
+    border-radius: 8px !important;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex: 1;
+    min-width: 0;
+    line-height: 1;
+  }
+  /* Cancel button */
+  #logoutConfirmModal .btn-secondary-outline {
+    border-color: var(--line-200);
+    color: var(--ink-700);
+    background: #fff;
+  }
+  /* "Yes" button — soft danger, not aggressive */
+  #logoutConfirmModal .btn-danger-soft {
+    background: #fde8e4;
+    color: #b3402e;
+    border: 1px solid #f5c6c0;
+  }
+  #logoutConfirmModal .btn-danger-soft:hover {
+    background: #f5c6c0;
+  }
 }
 
 @media (max-width: 767.98px) {

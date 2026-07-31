@@ -1,4 +1,4 @@
-<!doctype html>
+﻿<!doctype html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
@@ -135,8 +135,75 @@
                   <i class="bi bi-info-circle"></i>
                   Profile information is managed by the school. Contact the registrar's office for corrections.
                 </p>
+
+                <!-- Change Password trigger -->
+                <div class="profile-divider"></div>
+                <div class="d-flex align-items-center justify-content-between flex-wrap gap-2">
+                  <div>
+                    <div class="fw-semibold" style="font-size:.9rem;">Password</div>
+                    <div class="text-muted" style="font-size:.8rem;">Last changed: only you know</div>
+                  </div>
+                  <button class="btn btn-secondary-outline btn-sm" id="changePasswordBtn">
+                    <i class="bi bi-key-fill me-1"></i> Change Password
+                  </button>
+                </div>
               </div>
             </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── Change Password modal ── -->
+    <div class="modal fade" id="changePasswordModal" tabindex="-1" aria-labelledby="changePasswordModalLabel" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+          <div class="modal-header border-0 pb-0">
+            <h5 class="modal-title fw-semibold" id="changePasswordModalLabel">
+              <i class="bi bi-key-fill me-2 text-success"></i>Change Password
+            </h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body pt-2">
+            <div id="pwAlert" class="alert d-none mb-3" role="alert"></div>
+            <form id="changePasswordForm" novalidate autocomplete="off">
+              <div class="mb-3">
+                <label class="form-label" for="pwCurrent">Current Password</label>
+                <div class="input-group">
+                  <input type="password" class="form-control" id="pwCurrent" placeholder="Enter current password" required autocomplete="current-password" />
+                  <button class="btn btn-secondary-outline" type="button" data-pw-toggle="pwCurrent" tabindex="-1" aria-label="Show/hide current password">
+                    <i class="bi bi-eye"></i>
+                  </button>
+                </div>
+              </div>
+              <div class="mb-3">
+                <label class="form-label" for="pwNew">New Password</label>
+                <div class="input-group">
+                  <input type="password" class="form-control" id="pwNew" placeholder="At least 6 characters" required minlength="6" autocomplete="new-password" />
+                  <button class="btn btn-secondary-outline" type="button" data-pw-toggle="pwNew" tabindex="-1" aria-label="Show/hide new password">
+                    <i class="bi bi-eye"></i>
+                  </button>
+                </div>
+              </div>
+              <div class="mb-1">
+                <label class="form-label" for="pwConfirm">Confirm New Password</label>
+                <div class="input-group">
+                  <input type="password" class="form-control" id="pwConfirm" placeholder="Repeat new password" required autocomplete="new-password" />
+                  <button class="btn btn-secondary-outline" type="button" data-pw-toggle="pwConfirm" tabindex="-1" aria-label="Show/hide confirm password">
+                    <i class="bi bi-eye"></i>
+                  </button>
+                </div>
+              </div>
+            </form>
+          </div>
+          <div class="modal-footer border-0 pt-0">
+            <button type="button" class="btn btn-secondary-outline" data-bs-dismiss="modal">Cancel</button>
+            <button type="button" class="btn btn-brand" id="pwSaveBtn">
+              <span id="pwSaveBtnText"><i class="bi bi-check-lg me-1"></i>Save Password</span>
+              <span id="pwSaveBtnSpinner" class="d-none">
+                <span class="spinner-border spinner-border-sm me-1"></span>Saving…
+              </span>
+            </button>
           </div>
         </div>
       </div>
@@ -151,7 +218,7 @@
             <p class="text-muted mb-4">Are you sure you want to log out of your account?</p>
             <div class="d-flex gap-2 justify-content-center">
               <button type="button" class="btn btn-secondary-outline" data-bs-dismiss="modal">Cancel</button>
-              <button type="button" class="btn btn-danger-soft" id="confirmLogoutBtn">Yes, log out</button>
+              <button type="button" class="btn btn-danger-soft" id="confirmLogoutBtn">Yes</button>
             </div>
           </div>
         </div>

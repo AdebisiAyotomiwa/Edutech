@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>My Profile · Lecturer · Edutech</title>
+  <title>My Profile · Admin · Edutech</title>
   <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.3/css/bootstrap.min.css" rel="stylesheet" />
   <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.11.3/font/bootstrap-icons.min.css" rel="stylesheet" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -11,33 +11,30 @@
   <link rel="stylesheet" href="/assets/css/shared.css" />
   <link rel="stylesheet" href="/assets/css/dashboard.css" />
   <link rel="stylesheet" href="/assets/css/profile.css" />
-  <link rel="stylesheet" href="/assets/css/lecturer.css" />
+  <link rel="stylesheet" href="/assets/css/admin.css" />
 </head>
 <body class="app-shell">
 
-  <!-- ═══════════════════════ SIDEBAR ═══════════════════════ -->
-  <aside class="app-sidebar app-sidebar--lecturer" id="appSidebar">
-    <a href="/assets/pages/lecturer/lecturer-dashboard.html" class="brand-lockup">
+  <!-- ══════════════════════ SIDEBAR ══════════════════════ -->
+  <aside class="app-sidebar app-sidebar--admin" id="appSidebar">
+    <a href="/assets/pages/admin/admin-dashboard.html" class="brand-lockup">
       <span class="brand-mark"><i class="bi bi-mortarboard-fill"></i></span>
-      <span class="brand-name">Edutech <span class="lecturer-role-tag">Lecturer</span></span>
+      <span class="brand-name">Edutech <span class="admin-role-tag">Admin</span></span>
     </a>
     <span class="sidebar-section-label">Menu</span>
     <nav class="app-sidebar-nav">
-      <a href="/assets/pages/lecturer/lecturer-dashboard.html" class="app-sidebar-link">
-        <i class="bi bi-grid-1x2-fill"></i> Dashboard
+      <a href="/assets/pages/admin/admin-dashboard.html"     class="app-sidebar-link"><i class="bi bi-grid-1x2-fill"></i> Dashboard</a>
+      <a href="/assets/pages/admin/admin-students.html"      class="app-sidebar-link"><i class="bi bi-people-fill"></i> Students</a>
+      <a href="/assets/pages/admin/admin-courses.html"       class="app-sidebar-link"><i class="bi bi-bookmark-fill"></i> Courses &amp; Depts</a>
+      <a href="/assets/pages/admin/admin-results.html"       class="app-sidebar-link"><i class="bi bi-bar-chart-fill"></i> Results</a>
+      <a href="/assets/pages/admin/admin-registrations.html" class="app-sidebar-link"><i class="bi bi-journal-check"></i> Registrations</a>
+      <a href="/assets/pages/admin/admin-approvals.html"     class="app-sidebar-link">
+        <i class="bi bi-shield-check"></i> Approvals
+        <span class="sidebar-badge" id="sidebarPendingBadge" style="display:none;"></span>
       </a>
-      <a href="/assets/pages/lecturer/lecturer-courses.html" class="app-sidebar-link">
-        <i class="bi bi-bookmark-fill"></i> My Courses
-      </a>
-      <a href="/assets/pages/lecturer/lecturer-upload.html" class="app-sidebar-link">
-        <i class="bi bi-cloud-upload-fill"></i> Upload Results
-      </a>
-      <a href="/assets/pages/lecturer/lecturer-history.html" class="app-sidebar-link">
-        <i class="bi bi-clock-history"></i> Submission History
-      </a>
-      <a href="/assets/pages/lecturer/lecturer-profile.html" class="app-sidebar-link active">
-        <i class="bi bi-person-fill"></i> My Profile
-      </a>
+      <a href="/assets/pages/admin/admin-lecturers.html"     class="app-sidebar-link"><i class="bi bi-person-badge-fill"></i> Lecturers</a>
+      <a href="/assets/pages/admin/admin-eligibility.html"   class="app-sidebar-link"><i class="bi bi-mortarboard-fill"></i> Eligibility</a>
+      <a href="/assets/pages/admin/admin-profile.html"       class="app-sidebar-link active"><i class="bi bi-person-circle"></i> My Profile</a>
     </nav>
     <div class="app-sidebar-footer">
       <div class="app-sidebar-user">
@@ -54,13 +51,27 @@
   </aside>
   <div class="app-sidebar-scrim" id="appSidebarScrim"></div>
 
-  <!-- ═══════════════════════ MAIN ═══════════════════════ -->
+  <!-- ══════════════════════ MAIN ══════════════════════ -->
   <div class="app-main">
     <header class="app-topbar">
       <button class="app-sidebar-toggle" id="sidebarToggleBtn" aria-label="Open menu" aria-expanded="false">
         <i class="bi bi-list"></i>
       </button>
       <span class="app-topbar-title">My Profile</span>
+      <div class="topbar-actions">
+        <a href="/assets/pages/admin/admin-approvals.html" class="topbar-icon-btn" title="Pending Approvals" id="topbarApprovalsBtn">
+          <i class="bi bi-shield-check"></i>
+        </a>
+        <div class="topbar-user-chip">
+          <div class="topbar-user-avatar" style="background:var(--brand-100);color:var(--brand-900);">
+            <span id="topbarAvatarInitials"></span>
+          </div>
+          <div class="topbar-user-info d-none d-sm-block">
+            <div class="topbar-user-name" id="topbarUserName">&nbsp;</div>
+            <div class="topbar-user-sub">Administrator</div>
+          </div>
+        </div>
+      </div>
     </header>
 
     <div class="app-content">
@@ -71,54 +82,32 @@
 
       <div id="pageContent" class="d-none">
 
-        <!-- Personal Information card — matches student profile design -->
+        <!-- Personal Information card -->
         <div class="card shadow-sm profile-card">
           <div class="card-body">
 
-            <!-- Avatar + name header -->
             <div class="profile-header">
               <span class="profile-avatar">
                 <span id="profileAvatarInitials"></span>
               </span>
               <div class="profile-header-text">
                 <h2 id="profileFullName">—</h2>
-                <p id="profileStaffId">—</p>
+                <p id="profileRole">Administrator</p>
               </div>
             </div>
 
             <div class="profile-divider"></div>
 
-            <!-- Detail grid — identical structure to student profile -->
-            <div class="profile-details" id="profileDetails">
-              <div class="profile-detail">
-                <span class="profile-detail-label">Title</span>
-                <span class="profile-detail-value" id="profileTitle">—</span>
-              </div>
+            <div class="profile-details">
               <div class="profile-detail">
                 <span class="profile-detail-label">Full Name</span>
                 <span class="profile-detail-value" id="profileName">—</span>
               </div>
               <div class="profile-detail">
-                <span class="profile-detail-label">Staff ID</span>
-                <span class="profile-detail-value" id="profileStaffIdField">—</span>
-              </div>
-              <div class="profile-detail">
-                <span class="profile-detail-label">Phone</span>
-                <span class="profile-detail-value" id="profilePhone">—</span>
-              </div>
-              <div class="profile-detail">
-                <span class="profile-detail-label">Department</span>
-                <span class="profile-detail-value" id="profileDepartment">—</span>
-              </div>
-              <div class="profile-detail">
-                <span class="profile-detail-label">Faculty</span>
-                <span class="profile-detail-value" id="profileFaculty">—</span>
-              </div>
-              <div class="profile-detail">
                 <span class="profile-detail-label">Role</span>
-                <span class="profile-detail-value">Lecturer</span>
+                <span class="profile-detail-value">Administrator</span>
               </div>
-              <!-- Email spans full width like student profile -->
+              <!-- Email spans full width -->
               <div class="profile-detail" style="grid-column: 1 / -1;">
                 <span class="profile-detail-label">Email</span>
                 <span class="profile-detail-value" id="profileEmail">—</span>
@@ -127,7 +116,7 @@
 
             <p class="profile-note">
               <i class="bi bi-info-circle"></i>
-              Profile information is managed by the school administration. Contact the admin office for corrections.
+              Admin account details are set during system setup. Contact your system administrator for changes.
             </p>
 
             <!-- Change Password trigger -->
@@ -135,26 +124,13 @@
             <div class="d-flex align-items-center justify-content-between flex-wrap gap-2">
               <div>
                 <div class="fw-semibold" style="font-size:.9rem;">Password</div>
-                <div class="text-muted" style="font-size:.8rem;">Keep your account secure</div>
+                <div class="text-muted" style="font-size:.8rem;">Keep your admin account secure</div>
               </div>
               <button class="btn btn-secondary-outline btn-sm" id="changePasswordBtn">
                 <i class="bi bi-key-fill me-1"></i> Change Password
               </button>
             </div>
 
-          </div>
-        </div>
-
-        <!-- Current semester course assignments -->
-        <div class="panel mt-4" id="assignmentsPanel">
-          <div class="panel-header">
-            <h2 class="panel-title">Current Assignments</h2>
-            <span class="text-muted small" id="assignmentsSessionLabel"></span>
-          </div>
-          <div class="panel-body--flush">
-            <div class="activity-list" id="profileAssignmentsList">
-              <!-- filled by JS -->
-            </div>
           </div>
         </div>
 
@@ -216,7 +192,7 @@
         <div class="modal-body text-center py-4">
           <i class="bi bi-box-arrow-right fs-1 text-danger mb-3 d-block"></i>
           <h5 class="fw-semibold mb-2">Log out?</h5>
-          <p class="text-muted mb-4">Are you sure you want to log out of your account?</p>
+          <p class="text-muted mb-4">Are you sure you want to log out of the admin console?</p>
           <div class="d-flex gap-2 justify-content-center">
             <button type="button" class="btn btn-secondary-outline" data-bs-dismiss="modal">Cancel</button>
             <button type="button" class="btn btn-danger-soft" id="confirmLogoutBtn">Yes</button>
@@ -227,6 +203,6 @@
   </div>
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.3/js/bootstrap.bundle.min.js"></script>
-  <script type="module" src="/assets/js/lecturer/lecturer-profile.js"></script>
+  <script type="module" src="/assets/js/admin/admin-profile.js"></script>
 </body>
 </html>

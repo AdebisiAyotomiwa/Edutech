@@ -4,6 +4,7 @@ import {
   createStudent, updateStudent, deleteStudent, resetStudentPassword,
   getResultSubmissions,
 } from "../api.js";
+import { initMobileSidebar } from "../sidebar.js";
 
 requireAdminAuth();
 
@@ -90,16 +91,7 @@ function setupSidebar() {
   const badge = document.getElementById("sidebarPendingBadge");
   if (badge && pendingCount > 0) { badge.textContent = pendingCount; badge.style.display = ""; }
 
-  sidebarToggleBtn.addEventListener("click", () => {
-    const open = appSidebar.classList.toggle("is-open");
-    appSidebarScrim.classList.toggle("is-open");
-    sidebarToggleBtn.setAttribute("aria-expanded", open);
-  });
-  appSidebarScrim.addEventListener("click", () => {
-    appSidebar.classList.remove("is-open");
-    appSidebarScrim.classList.remove("is-open");
-    sidebarToggleBtn.setAttribute("aria-expanded", "false");
-  });
+  initMobileSidebar();
 }
 
 function setupLogout() {

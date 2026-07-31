@@ -21,6 +21,7 @@
   "academicCalendar": {
     "currentSession": "2025/2026",
     "currentSemester": 2,
+    "registrationOpen": false,
     "registrationWindow": {
       "normal": {
         "isOpen": false,
@@ -123,7 +124,7 @@
       "id": "1",
       "matricNumber": "CSC/2025/001",
       "email": "bola.williams1@student.edutech.ng",
-      "password": "Student123",
+      "password": "Bola123",
       "firstName": "Bola",
       "lastName": "Williams",
       "otherName": "",
@@ -33328,7 +33329,7 @@
       "semester": 2,
       "level": 300,
       "score": 98,
-      "published": false,
+      "published": true,
       "submissionId": "l92Fg4q47T8",
       "uploadedBy": "3",
       "id": "YzyMB7jDh7M"
@@ -33340,7 +33341,7 @@
       "semester": 2,
       "level": 300,
       "score": 55,
-      "published": false,
+      "published": true,
       "submissionId": "l92Fg4q47T8",
       "uploadedBy": "3",
       "id": "wXa4FiTb08k"
@@ -33352,7 +33353,7 @@
       "semester": 2,
       "level": 300,
       "score": 49,
-      "published": false,
+      "published": true,
       "submissionId": "l92Fg4q47T8",
       "uploadedBy": "3",
       "id": "Vb_wRJlUf68"
@@ -33416,6 +33417,416 @@
       "submissionId": "F3UU05i3HvY",
       "uploadedBy": "6",
       "id": "5BHCDAeT5S0"
+    },
+    {
+      "studentId": 19,
+      "courseId": 209,
+      "session": "2025/2026",
+      "semester": 2,
+      "level": 400,
+      "score": 67,
+      "published": false,
+      "submissionId": "nvBZdodAR0Y",
+      "uploadedBy": "3",
+      "id": "Yw_JG1NqECs"
+    },
+    {
+      "studentId": 20,
+      "courseId": 209,
+      "session": "2025/2026",
+      "semester": 2,
+      "level": 400,
+      "score": 60,
+      "published": false,
+      "submissionId": "nvBZdodAR0Y",
+      "uploadedBy": "3",
+      "id": "ercmxGMu_H8"
+    },
+    {
+      "studentId": 0,
+      "courseId": 47,
+      "session": "2025/2026",
+      "semester": 2,
+      "level": 200,
+      "score": 73,
+      "published": true,
+      "id": "CIAZ227dtXQ"
+    },
+    {
+      "studentId": 0,
+      "courseId": 47,
+      "session": "2025/2026",
+      "semester": 2,
+      "level": 200,
+      "score": 79,
+      "published": true,
+      "id": "sQMHCJZJoQI"
+    },
+    {
+      "studentId": 0,
+      "courseId": 47,
+      "session": "2025/2026",
+      "semester": 2,
+      "level": 200,
+      "score": 55,
+      "published": true,
+      "id": "zq0-2N6jTtE"
+    },
+    {
+      "studentId": 0,
+      "courseId": 47,
+      "session": "2025/2026",
+      "semester": 2,
+      "level": 200,
+      "score": 79,
+      "published": true,
+      "id": "uLztbEcDxsc"
+    },
+    {
+      "studentId": 0,
+      "courseId": 47,
+      "session": "2025/2026",
+      "semester": 2,
+      "level": 200,
+      "score": 90,
+      "published": true,
+      "id": "Jw6F6ZzkFE0"
+    },
+    {
+      "studentId": 0,
+      "courseId": 47,
+      "session": "2025/2026",
+      "semester": 2,
+      "level": 200,
+      "score": 69,
+      "published": true,
+      "id": "RQe7ryOMNe4"
+    },
+    {
+      "studentId": 0,
+      "courseId": 47,
+      "session": "2025/2026",
+      "semester": 2,
+      "level": 200,
+      "score": 88,
+      "published": true,
+      "id": "B-YVt43d2II"
+    },
+    {
+      "studentId": 14,
+      "courseId": 45,
+      "session": "2025/2026",
+      "semester": 2,
+      "level": 200,
+      "score": 79,
+      "published": true,
+      "submissionId": "Dhiix1njy64",
+      "uploadedBy": "3",
+      "id": "FEQ58VV2g9Q"
+    },
+    {
+      "studentId": 15,
+      "courseId": 45,
+      "session": "2025/2026",
+      "semester": 2,
+      "level": 200,
+      "score": 69,
+      "published": true,
+      "submissionId": "Dhiix1njy64",
+      "uploadedBy": "3",
+      "id": "4INzd2mR_KQ"
+    },
+    {
+      "studentId": 16,
+      "courseId": 45,
+      "session": "2025/2026",
+      "semester": 2,
+      "level": 200,
+      "score": 90,
+      "published": true,
+      "submissionId": "Dhiix1njy64",
+      "uploadedBy": "3",
+      "id": "mvcztNfaczQ"
+    },
+    {
+      "studentId": 0,
+      "courseId": 193,
+      "session": "2025/2026",
+      "semester": 2,
+      "level": 200,
+      "score": 89,
+      "published": true,
+      "id": "CGh4iCRUsDU"
+    },
+    {
+      "studentId": 0,
+      "courseId": 193,
+      "session": "2025/2026",
+      "semester": 2,
+      "level": 200,
+      "score": 87,
+      "published": true,
+      "id": "cQ64Az3LE6c"
+    },
+    {
+      "studentId": 0,
+      "courseId": 193,
+      "session": "2025/2026",
+      "semester": 2,
+      "level": 200,
+      "score": 59,
+      "published": true,
+      "id": "os0UztGFMF4"
+    },
+    {
+      "studentId": 0,
+      "courseId": 193,
+      "session": "2025/2026",
+      "semester": 2,
+      "level": 200,
+      "score": 90,
+      "published": true,
+      "id": "CKoHOe4UY9A"
+    },
+    {
+      "studentId": 7,
+      "courseId": 21,
+      "session": "2025/2026",
+      "semester": 2,
+      "level": 300,
+      "score": 79,
+      "published": true,
+      "submissionId": "18",
+      "uploadedBy": "1",
+      "id": "1fl7wqdf95Q"
+    },
+    {
+      "studentId": 8,
+      "courseId": 21,
+      "session": "2025/2026",
+      "semester": 2,
+      "level": 300,
+      "score": 69,
+      "published": true,
+      "submissionId": "18",
+      "uploadedBy": "1",
+      "id": "NOxeYRvaMzs"
+    },
+    {
+      "studentId": 9,
+      "courseId": 21,
+      "session": "2025/2026",
+      "semester": 2,
+      "level": 300,
+      "score": 80,
+      "published": true,
+      "submissionId": "18",
+      "uploadedBy": "1",
+      "id": "fW-f94-1k0Q"
+    },
+    {
+      "studentId": 7,
+      "courseId": 23,
+      "session": "2025/2026",
+      "semester": 2,
+      "level": 300,
+      "score": 46,
+      "published": false,
+      "submissionId": "hJqjHa84fp0",
+      "uploadedBy": "1",
+      "id": "lsiQ3XY_Mpk"
+    },
+    {
+      "studentId": 8,
+      "courseId": 23,
+      "session": "2025/2026",
+      "semester": 2,
+      "level": 300,
+      "score": 89,
+      "published": false,
+      "submissionId": "hJqjHa84fp0",
+      "uploadedBy": "1",
+      "id": "cKiNjLAGM34"
+    },
+    {
+      "studentId": 25,
+      "courseId": 86,
+      "session": "2025/2026",
+      "semester": 2,
+      "level": 300,
+      "score": 78,
+      "published": false,
+      "submissionId": "lsrA1VCdII8",
+      "uploadedBy": "7",
+      "id": "AcDZqK4TLqg"
+    },
+    {
+      "studentId": 26,
+      "courseId": 86,
+      "session": "2025/2026",
+      "semester": 2,
+      "level": 300,
+      "score": 45,
+      "published": false,
+      "submissionId": "lsrA1VCdII8",
+      "uploadedBy": "7",
+      "id": "OLAbvTvSbT4"
+    },
+    {
+      "studentId": 29,
+      "courseId": 86,
+      "session": "2025/2026",
+      "semester": 2,
+      "level": 300,
+      "score": 35,
+      "published": false,
+      "submissionId": "lsrA1VCdII8",
+      "uploadedBy": "7",
+      "id": "ndSif78nNxA"
+    },
+    {
+      "studentId": 9,
+      "courseId": 30,
+      "session": "2025/2026",
+      "semester": 2,
+      "level": 400,
+      "score": 68,
+      "published": false,
+      "submissionId": "0T61m5Yt6h0",
+      "uploadedBy": "1",
+      "id": "WeDdSgrPdpU"
+    },
+    {
+      "studentId": 10,
+      "courseId": 30,
+      "session": "2025/2026",
+      "semester": 2,
+      "level": 400,
+      "score": 57,
+      "published": false,
+      "submissionId": "0T61m5Yt6h0",
+      "uploadedBy": "1",
+      "id": "TDAHJ7vCI04"
+    },
+    {
+      "studentId": 7,
+      "courseId": 22,
+      "session": "2025/2026",
+      "semester": 2,
+      "level": 300,
+      "score": 89,
+      "published": true,
+      "submissionId": "VIepn8xV4nE",
+      "uploadedBy": "2",
+      "id": "HvTMkikDwqM"
+    },
+    {
+      "studentId": 8,
+      "courseId": 22,
+      "session": "2025/2026",
+      "semester": 2,
+      "level": 300,
+      "score": 67,
+      "published": true,
+      "submissionId": "VIepn8xV4nE",
+      "uploadedBy": "2",
+      "id": "PQOG2yWrKJw"
+    },
+    {
+      "studentId": 9,
+      "courseId": 22,
+      "session": "2025/2026",
+      "semester": 2,
+      "level": 300,
+      "score": 56,
+      "published": true,
+      "submissionId": "VIepn8xV4nE",
+      "uploadedBy": "2",
+      "id": "bDF8Rxd6ttA"
+    },
+    {
+      "studentId": 1,
+      "courseId": 8,
+      "session": "2025/2026",
+      "semester": 2,
+      "level": 100,
+      "score": 67,
+      "published": true,
+      "submissionId": "SUHDRgRJ4Kg",
+      "uploadedBy": "2",
+      "id": "I8-7hxqXsXo"
+    },
+    {
+      "studentId": 3,
+      "courseId": 8,
+      "session": "2025/2026",
+      "semester": 2,
+      "level": 100,
+      "score": 70,
+      "published": true,
+      "submissionId": "SUHDRgRJ4Kg",
+      "uploadedBy": "2",
+      "id": "tHxLpemBtnc"
+    },
+    {
+      "studentId": 2,
+      "courseId": 8,
+      "session": "2025/2026",
+      "semester": 2,
+      "level": 100,
+      "score": 89,
+      "published": true,
+      "submissionId": "SUHDRgRJ4Kg",
+      "uploadedBy": "2",
+      "id": "kaJJIiTwhpA"
+    },
+    {
+      "studentId": 4,
+      "courseId": 15,
+      "session": "2025/2026",
+      "semester": 2,
+      "level": 200,
+      "score": 89,
+      "published": false,
+      "submissionId": "fmiUxTc6gF4",
+      "uploadedBy": "2",
+      "id": "CjnAhKY83Xs"
+    },
+    {
+      "studentId": 5,
+      "courseId": 15,
+      "session": "2025/2026",
+      "semester": 2,
+      "level": 200,
+      "score": 56,
+      "published": false,
+      "submissionId": "fmiUxTc6gF4",
+      "uploadedBy": "2",
+      "id": "RJk3cra2RCE"
+    },
+    {
+      "studentId": 6,
+      "courseId": 15,
+      "session": "2025/2026",
+      "semester": 2,
+      "level": 200,
+      "score": 24,
+      "published": false,
+      "submissionId": "fmiUxTc6gF4",
+      "uploadedBy": "2",
+      "id": "QjFLB-e9D4s"
+    },
+    {
+      "studentId": 7,
+      "courseId": 15,
+      "session": "2025/2026",
+      "semester": 2,
+      "level": 200,
+      "score": 89,
+      "published": false,
+      "submissionId": "fmiUxTc6gF4",
+      "uploadedBy": "2",
+      "id": "gXMLvBHIe4U"
     }
   ],
   "lecturers": [
@@ -35514,12 +35925,12 @@
       "session": "2025/2026",
       "semester": 2,
       "level": 300,
-      "status": "rejected",
-      "submittedAt": "2026-02-10T10:00:00Z",
-      "reviewedBy": 1,
-      "reviewedAt": "2026-02-12T14:00:00Z",
-      "rejectionReason": "Please verify the scores for entries 3 and 7.",
-      "version": 1
+      "status": "approved",
+      "submittedAt": "2026-07-30T09:30:27.000Z",
+      "reviewedBy": "1",
+      "reviewedAt": "2026-07-30T09:31:25.503Z",
+      "rejectionReason": null,
+      "version": 2
     },
     {
       "lecturerId": 3,
@@ -35555,10 +35966,10 @@
       "session": "2025/2026",
       "semester": 2,
       "level": 300,
-      "status": "pending",
+      "status": "approved",
       "submittedAt": "2026-07-29T15:13:54.168Z",
-      "reviewedBy": null,
-      "reviewedAt": null,
+      "reviewedBy": "1",
+      "reviewedAt": "2026-07-30T01:59:26.069Z",
       "rejectionReason": null,
       "version": 1,
       "id": "l92Fg4q47T8"
@@ -35569,11 +35980,11 @@
       "session": "2025/2026",
       "semester": 2,
       "level": 100,
-      "status": "pending",
+      "status": "rejected",
       "submittedAt": "2026-07-29T15:33:03.792Z",
-      "reviewedBy": null,
-      "reviewedAt": null,
-      "rejectionReason": null,
+      "reviewedBy": "1",
+      "reviewedAt": "2026-07-30T01:59:35.530Z",
+      "rejectionReason": "bn",
       "version": 1,
       "id": "6oIN-2Qv4U4"
     },
@@ -35583,10 +35994,10 @@
       "session": "2025/2026",
       "semester": 2,
       "level": 200,
-      "status": "pending",
+      "status": "approved",
       "submittedAt": "2026-07-29T15:33:59.327Z",
-      "reviewedBy": null,
-      "reviewedAt": null,
+      "reviewedBy": "1",
+      "reviewedAt": "2026-07-30T01:58:46.562Z",
       "rejectionReason": null,
       "version": 1,
       "id": "xVLICh4-gWs"
@@ -35604,6 +36015,118 @@
       "rejectionReason": null,
       "version": 1,
       "id": "F3UU05i3HvY"
+    },
+    {
+      "lecturerId": 3,
+      "courseId": 209,
+      "session": "2025/2026",
+      "semester": 2,
+      "level": 400,
+      "status": "rejected",
+      "submittedAt": "2026-07-30T01:57:32.027Z",
+      "reviewedBy": "1",
+      "reviewedAt": "2026-07-30T01:58:38.157Z",
+      "rejectionReason": "bn",
+      "version": 1,
+      "id": "nvBZdodAR0Y"
+    },
+    {
+      "lecturerId": 3,
+      "courseId": 45,
+      "session": "2025/2026",
+      "semester": 2,
+      "level": 200,
+      "status": "approved",
+      "submittedAt": "2026-07-30T02:18:55.273Z",
+      "reviewedBy": "1",
+      "reviewedAt": "2026-07-30T02:19:34.838Z",
+      "rejectionReason": null,
+      "version": 1,
+      "id": "Dhiix1njy64"
+    },
+    {
+      "lecturerId": 1,
+      "courseId": 23,
+      "session": "2025/2026",
+      "semester": 2,
+      "level": 300,
+      "status": "pending",
+      "submittedAt": "2026-07-30T10:00:17.901Z",
+      "reviewedBy": null,
+      "reviewedAt": null,
+      "rejectionReason": null,
+      "version": 2,
+      "id": "hJqjHa84fp0"
+    },
+    {
+      "lecturerId": 7,
+      "courseId": 86,
+      "session": "2025/2026",
+      "semester": 2,
+      "level": 300,
+      "status": "pending",
+      "submittedAt": "2026-07-30T10:03:18.619Z",
+      "reviewedBy": null,
+      "reviewedAt": null,
+      "rejectionReason": null,
+      "version": 1,
+      "id": "lsrA1VCdII8"
+    },
+    {
+      "lecturerId": 1,
+      "courseId": 30,
+      "session": "2025/2026",
+      "semester": 2,
+      "level": 400,
+      "status": "pending",
+      "submittedAt": "2026-07-30T13:31:18.788Z",
+      "reviewedBy": null,
+      "reviewedAt": null,
+      "rejectionReason": null,
+      "version": 1,
+      "id": "0T61m5Yt6h0"
+    },
+    {
+      "lecturerId": 2,
+      "courseId": 22,
+      "session": "2025/2026",
+      "semester": 2,
+      "level": 300,
+      "status": "approved",
+      "submittedAt": "2026-07-30T13:33:39.617Z",
+      "reviewedBy": "1",
+      "reviewedAt": "2026-07-30T13:34:34.576Z",
+      "rejectionReason": null,
+      "version": 1,
+      "id": "VIepn8xV4nE"
+    },
+    {
+      "lecturerId": 2,
+      "courseId": 8,
+      "session": "2025/2026",
+      "semester": 2,
+      "level": 100,
+      "status": "approved",
+      "submittedAt": "2026-07-30T14:57:28.880Z",
+      "reviewedBy": "1",
+      "reviewedAt": "2026-07-30T14:58:04.077Z",
+      "rejectionReason": null,
+      "version": 1,
+      "id": "SUHDRgRJ4Kg"
+    },
+    {
+      "lecturerId": 2,
+      "courseId": 15,
+      "session": "2025/2026",
+      "semester": 2,
+      "level": 200,
+      "status": "pending",
+      "submittedAt": "2026-07-30T14:59:27.156Z",
+      "reviewedBy": null,
+      "reviewedAt": null,
+      "rejectionReason": null,
+      "version": 1,
+      "id": "fmiUxTc6gF4"
     }
   ],
   "auditLog": [
@@ -35887,6 +36410,322 @@
       },
       "note": "Approved and published 2 result(s).",
       "id": "iq53IXs-fkw"
+    },
+    {
+      "entityType": "resultSubmission",
+      "entityId": "nvBZdodAR0Y",
+      "action": "submitted",
+      "actorId": 3,
+      "actorRole": "lecturer",
+      "timestamp": "2026-07-30T01:57:32.052Z",
+      "previousValue": null,
+      "newValue": {
+        "courseId": 209,
+        "session": "2025/2026",
+        "semester": 2,
+        "version": 1
+      },
+      "note": "Submitted results for review (v1).",
+      "id": "7I0GEWyfiXs"
+    },
+    {
+      "entityType": "resultSubmission",
+      "entityId": "nvBZdodAR0Y",
+      "action": "rejected",
+      "actorId": "1",
+      "actorRole": "admin",
+      "timestamp": "2026-07-30T01:58:38.183Z",
+      "previousValue": {
+        "status": "pending"
+      },
+      "newValue": {
+        "status": "rejected"
+      },
+      "note": "bn",
+      "id": "IxoJdrtdh20"
+    },
+    {
+      "entityType": "resultSubmission",
+      "entityId": "xVLICh4-gWs",
+      "action": "approved",
+      "actorId": "1",
+      "actorRole": "admin",
+      "timestamp": "2026-07-30T01:58:46.585Z",
+      "previousValue": {
+        "status": "pending"
+      },
+      "newValue": {
+        "status": "approved",
+        "resultsPublished": 0
+      },
+      "note": "Approved and published 0 result(s).",
+      "id": "NV_354taoUE"
+    },
+    {
+      "entityType": "resultSubmission",
+      "entityId": "l92Fg4q47T8",
+      "action": "approved",
+      "actorId": "1",
+      "actorRole": "admin",
+      "timestamp": "2026-07-30T01:59:26.091Z",
+      "previousValue": {
+        "status": "pending"
+      },
+      "newValue": {
+        "status": "approved",
+        "resultsPublished": 3
+      },
+      "note": "Approved and published 3 result(s).",
+      "id": "Yxd7hwdPiZ0"
+    },
+    {
+      "entityType": "resultSubmission",
+      "entityId": "6oIN-2Qv4U4",
+      "action": "rejected",
+      "actorId": "1",
+      "actorRole": "admin",
+      "timestamp": "2026-07-30T01:59:35.553Z",
+      "previousValue": {
+        "status": "pending"
+      },
+      "newValue": {
+        "status": "rejected"
+      },
+      "note": "bn",
+      "id": "pFNCFIPGG4k"
+    },
+    {
+      "entityType": "resultSubmission",
+      "entityId": "Dhiix1njy64",
+      "action": "submitted",
+      "actorId": 3,
+      "actorRole": "lecturer",
+      "timestamp": "2026-07-30T02:18:55.295Z",
+      "previousValue": null,
+      "newValue": {
+        "courseId": 45,
+        "session": "2025/2026",
+        "semester": 2,
+        "version": 1
+      },
+      "note": "Submitted results for review (v1).",
+      "id": "zrTKL8cm-do"
+    },
+    {
+      "entityType": "resultSubmission",
+      "entityId": "Dhiix1njy64",
+      "action": "approved",
+      "actorId": "1",
+      "actorRole": "admin",
+      "timestamp": "2026-07-30T02:19:34.858Z",
+      "previousValue": {
+        "status": "pending"
+      },
+      "newValue": {
+        "status": "approved",
+        "resultsPublished": 3
+      },
+      "note": "Approved and published 3 result(s).",
+      "id": "bTCoUCgAmdE"
+    },
+    {
+      "entityType": "resultSubmission",
+      "entityId": "18",
+      "action": "resubmitted",
+      "actorId": "1",
+      "actorRole": "lecturer",
+      "timestamp": "2026-07-30T09:30:27.033Z",
+      "previousValue": null,
+      "newValue": {
+        "status": "pending",
+        "version": 2
+      },
+      "note": "Resubmitted batch after rejection (v2).",
+      "id": "Ks2A1J8oKVo"
+    },
+    {
+      "entityType": "resultSubmission",
+      "entityId": "18",
+      "action": "approved",
+      "actorId": "1",
+      "actorRole": "admin",
+      "timestamp": "2026-07-30T09:31:25.538Z",
+      "previousValue": {
+        "status": "pending"
+      },
+      "newValue": {
+        "status": "approved",
+        "resultsPublished": 3
+      },
+      "note": "Approved and published 3 result(s).",
+      "id": "44wTPTaUB1o"
+    },
+    {
+      "entityType": "resultSubmission",
+      "entityId": "hJqjHa84fp0",
+      "action": "submitted",
+      "actorId": 1,
+      "actorRole": "lecturer",
+      "timestamp": "2026-07-30T09:59:06.643Z",
+      "previousValue": null,
+      "newValue": {
+        "courseId": 23,
+        "session": "2025/2026",
+        "semester": 2,
+        "version": 1
+      },
+      "note": "Submitted results for review (v1).",
+      "id": "ds3OGbgbuAY"
+    },
+    {
+      "entityType": "resultSubmission",
+      "entityId": "hJqjHa84fp0",
+      "action": "rejected",
+      "actorId": "1",
+      "actorRole": "admin",
+      "timestamp": "2026-07-30T09:59:38.541Z",
+      "previousValue": {
+        "status": "pending"
+      },
+      "newValue": {
+        "status": "rejected"
+      },
+      "note": "fvv",
+      "id": "wBnnI9chDD0"
+    },
+    {
+      "entityType": "resultSubmission",
+      "entityId": "hJqjHa84fp0",
+      "action": "resubmitted",
+      "actorId": "1",
+      "actorRole": "lecturer",
+      "timestamp": "2026-07-30T10:00:17.937Z",
+      "previousValue": null,
+      "newValue": {
+        "status": "pending",
+        "version": 2
+      },
+      "note": "Resubmitted batch after rejection (v2).",
+      "id": "fBimCQMi2c4"
+    },
+    {
+      "entityType": "resultSubmission",
+      "entityId": "lsrA1VCdII8",
+      "action": "submitted",
+      "actorId": 7,
+      "actorRole": "lecturer",
+      "timestamp": "2026-07-30T10:03:18.640Z",
+      "previousValue": null,
+      "newValue": {
+        "courseId": 86,
+        "session": "2025/2026",
+        "semester": 2,
+        "version": 1
+      },
+      "note": "Submitted results for review (v1).",
+      "id": "XXYKdaDnuDg"
+    },
+    {
+      "entityType": "resultSubmission",
+      "entityId": "0T61m5Yt6h0",
+      "action": "submitted",
+      "actorId": 1,
+      "actorRole": "lecturer",
+      "timestamp": "2026-07-30T13:31:18.861Z",
+      "previousValue": null,
+      "newValue": {
+        "courseId": 30,
+        "session": "2025/2026",
+        "semester": 2,
+        "version": 1
+      },
+      "note": "Submitted results for review (v1).",
+      "id": "mEsTdvHDxhc"
+    },
+    {
+      "entityType": "resultSubmission",
+      "entityId": "VIepn8xV4nE",
+      "action": "submitted",
+      "actorId": 2,
+      "actorRole": "lecturer",
+      "timestamp": "2026-07-30T13:33:39.676Z",
+      "previousValue": null,
+      "newValue": {
+        "courseId": 22,
+        "session": "2025/2026",
+        "semester": 2,
+        "version": 1
+      },
+      "note": "Submitted results for review (v1).",
+      "id": "X6lEHvu8eNc"
+    },
+    {
+      "entityType": "resultSubmission",
+      "entityId": "VIepn8xV4nE",
+      "action": "approved",
+      "actorId": "1",
+      "actorRole": "admin",
+      "timestamp": "2026-07-30T13:34:34.604Z",
+      "previousValue": {
+        "status": "pending"
+      },
+      "newValue": {
+        "status": "approved",
+        "resultsPublished": 3
+      },
+      "note": "Approved and published 3 result(s).",
+      "id": "7AMP651WjRs"
+    },
+    {
+      "entityType": "resultSubmission",
+      "entityId": "SUHDRgRJ4Kg",
+      "action": "submitted",
+      "actorId": 2,
+      "actorRole": "lecturer",
+      "timestamp": "2026-07-30T14:57:28.912Z",
+      "previousValue": null,
+      "newValue": {
+        "courseId": 8,
+        "session": "2025/2026",
+        "semester": 2,
+        "version": 1
+      },
+      "note": "Submitted results for review (v1).",
+      "id": "rLC08DxBvZc"
+    },
+    {
+      "entityType": "resultSubmission",
+      "entityId": "SUHDRgRJ4Kg",
+      "action": "approved",
+      "actorId": "1",
+      "actorRole": "admin",
+      "timestamp": "2026-07-30T14:58:04.120Z",
+      "previousValue": {
+        "status": "pending"
+      },
+      "newValue": {
+        "status": "approved",
+        "resultsPublished": 3
+      },
+      "note": "Approved and published 3 result(s).",
+      "id": "rvEMfYXGqXE"
+    },
+    {
+      "entityType": "resultSubmission",
+      "entityId": "fmiUxTc6gF4",
+      "action": "submitted",
+      "actorId": 2,
+      "actorRole": "lecturer",
+      "timestamp": "2026-07-30T14:59:27.231Z",
+      "previousValue": null,
+      "newValue": {
+        "courseId": 15,
+        "session": "2025/2026",
+        "semester": 2,
+        "version": 1
+      },
+      "note": "Submitted results for review (v1).",
+      "id": "JILYeNN4uI4"
     }
   ],
   "registrationBatches": [

@@ -6,6 +6,7 @@ import {
   getResults, createResult, updateResult,
 } from "../api.js";
 import { scoreToGrade } from "../utils.js";
+import { initMobileSidebar } from "../sidebar.js";
 
 requireLecturerAuth();
 
@@ -81,6 +82,8 @@ async function init() {
 
     if (preselectedId) {
       document.getElementById("courseSelect").value = preselectedId;
+      /* Sync the custom dropdown display to match the pre-selected value */
+      syncCustomSelectDisplay(preselectedId);
     }
 
     document.getElementById("pageLoading").classList.add("d-none");
@@ -137,24 +140,179 @@ async function loadData() {
 }
 
 /* ── Course select dropdown ─────────────────────────────── */
+
+/* ── Custom combobox state ──────────────────────────────── */
+let customSelectOpen = false;
+
 function populateCourseSelect() {
   const currAssignments = assignments.filter(
     a => a.session === calendar.currentSession &&
          Number(a.semester) === Number(calendar.currentSemester)
   );
 
-  const sel = document.getElementById("courseSelect");
+  /* Always keep the hidden native select in sync for JS readers */
+  const nativeSel = document.getElementById("courseSelect");
+  const list      = document.getElementById("courseSelectList");
+  const btn       = document.getElementById("courseSelectBtn");
+  const valueEl   = document.getElementById("courseSelectValue");
+
   if (currAssignments.length === 0) {
-    sel.innerHTML = `<option value="">No courses assigned for this semester</option>`;
+    nativeSel.innerHTML = `<option value="">No courses assigned for this semester</option>`;
+    list.innerHTML = `<li class="course-select-option is-placeholder is-disabled" role="option" aria-selected="false">
+      No courses assigned for this semester
+    </li>`;
+    valueEl.textContent = "No courses assigned for this semester";
+    valueEl.classList.add("is-placeholder");
     document.getElementById("loadCourseBtn").disabled = true;
     return;
   }
 
-  sel.innerHTML = `<option value="">— Choose a course —</option>` +
-    currAssignments.map(a => {
+  /* Build option data */
+  const options = currAssignments
+    .map(a => {
       const c = courses.find(co => String(co.id) === String(a.courseId));
-      return c ? `<option value="${c.id}">${c.courseCode} — ${c.courseTitle}</option>` : "";
-    }).join("");
+      return c ? { value: String(c.id), label: `${c.courseCode} — ${c.courseTitle}` } : null;
+    })
+    .filter(Boolean);
+
+  /* Populate hidden native select (JS reads .value from this) */
+  nativeSel.innerHTML =
+    `<option value="">— Choose a course —</option>` +
+    options.map(o => `<option value="${o.value}">${o.label}</option>`).join("");
+
+  /* Populate custom list */
+  list.innerHTML =
+    `<li class="course-select-option is-placeholder"
+         role="option"
+         data-value=""
+         aria-selected="true"
+         tabindex="-1">— Choose a course —</li>` +
+    options.map(o =>
+      `<li class="course-select-option"
+           role="option"
+           data-value="${o.value}"
+           aria-selected="false"
+           tabindex="-1">${o.label}</li>`
+    ).join("");
+
+  /* Reset display to placeholder */
+  valueEl.textContent = "— Choose a course —";
+  valueEl.classList.add("is-placeholder");
+
+  /* Wire click on each option */
+  list.querySelectorAll(".course-select-option").forEach(item => {
+    item.addEventListener("click", () => {
+      selectCourseOption(item.dataset.value, item.textContent.trim(), item);
+    });
+    /* Keyboard: Enter / Space selects */
+    item.addEventListener("keydown", (e) => {
+      if (e.key === "Enter" || e.key === " ") {
+        e.preventDefault();
+        selectCourseOption(item.dataset.value, item.textContent.trim(), item);
+      }
+      /* Arrow navigation within list */
+      if (e.key === "ArrowDown") { e.preventDefault(); focusNextOption(item, 1); }
+      if (e.key === "ArrowUp")   { e.preventDefault(); focusNextOption(item, -1); }
+      if (e.key === "Escape")    { closeCustomSelect(); btn.focus(); }
+    });
+  });
+
+  /* Wire trigger button */
+  btn.addEventListener("click", (e) => {
+    e.stopPropagation();
+    customSelectOpen ? closeCustomSelect() : openCustomSelect();
+  });
+
+  /* Keyboard on trigger */
+  btn.addEventListener("keydown", (e) => {
+    if (e.key === "ArrowDown" || e.key === "Enter" || e.key === " ") {
+      e.preventDefault();
+      openCustomSelect();
+      list.querySelector("[role='option']")?.focus();
+    }
+    if (e.key === "Escape") closeCustomSelect();
+  });
+}
+
+function selectCourseOption(value, label, itemEl) {
+  const nativeSel = document.getElementById("courseSelect");
+  const valueEl   = document.getElementById("courseSelectValue");
+  const list      = document.getElementById("courseSelectList");
+  const btn       = document.getElementById("courseSelectBtn");
+
+  /* Update native select (JS reads this for loadCourse()) */
+  nativeSel.value = value;
+
+  /* Update display */
+  valueEl.textContent = label;
+  valueEl.classList.toggle("is-placeholder", value === "");
+
+  /* Update aria-selected on all items */
+  list.querySelectorAll(".course-select-option").forEach(i =>
+    i.setAttribute("aria-selected", i === itemEl ? "true" : "false")
+  );
+
+  closeCustomSelect();
+  btn.focus();
+}
+
+function openCustomSelect() {
+  const list = document.getElementById("courseSelectList");
+  const btn  = document.getElementById("courseSelectBtn");
+  const wrap = document.getElementById("courseSelectWrap");
+
+  list.classList.add("is-open");
+  btn.setAttribute("aria-expanded", "true");
+  customSelectOpen = true;
+
+  /* Flip above if not enough space below */
+  const rect = wrap.getBoundingClientRect();
+  const spaceBelow = window.innerHeight - rect.bottom;
+  list.classList.toggle("opens-above", spaceBelow < 240);
+
+  /* Focus the currently selected item or the first */
+  const selected = list.querySelector("[aria-selected='true']") || list.querySelector("[role='option']");
+  selected?.focus();
+}
+
+function closeCustomSelect() {
+  const list = document.getElementById("courseSelectList");
+  const btn  = document.getElementById("courseSelectBtn");
+  if (!list) return;
+  list.classList.remove("is-open");
+  btn.setAttribute("aria-expanded", "false");
+  customSelectOpen = false;
+}
+
+function focusNextOption(current, direction) {
+  const list    = document.getElementById("courseSelectList");
+  const items   = Array.from(list.querySelectorAll("[role='option']:not(.is-disabled)"));
+  const idx     = items.indexOf(current);
+  const next    = items[idx + direction];
+  if (next) next.focus();
+}
+
+/* Close dropdown when clicking anywhere outside */
+document.addEventListener("click", (e) => {
+  if (customSelectOpen && !document.getElementById("courseSelectWrap")?.contains(e.target)) {
+    closeCustomSelect();
+  }
+});
+
+/* Sync the custom dropdown's displayed text to match a given value.
+   Called after pre-selection via URL params. */
+function syncCustomSelectDisplay(value) {
+  const list    = document.getElementById("courseSelectList");
+  const valueEl = document.getElementById("courseSelectValue");
+  if (!list || !valueEl) return;
+  const item = list.querySelector(`[data-value="${CSS.escape(value)}"]`);
+  if (item) {
+    valueEl.textContent = item.textContent.trim();
+    valueEl.classList.remove("is-placeholder");
+    list.querySelectorAll(".course-select-option").forEach(i =>
+      i.setAttribute("aria-selected", i === item ? "true" : "false")
+    );
+  }
 }
 
 /* ── Load course & students ─────────────────────────────── */
@@ -610,20 +768,7 @@ function setupSidebar() {
   document.getElementById("sidebarAvatarInitials").textContent = initials;
   document.getElementById("sidebarUserName").textContent       = lecturer.name || "Lecturer";
   document.getElementById("sidebarUserMeta").textContent       = lecturer.email;
-
-  const toggle  = document.getElementById("sidebarToggleBtn");
-  const sidebar = document.getElementById("appSidebar");
-  const scrim   = document.getElementById("appSidebarScrim");
-  toggle.addEventListener("click", () => {
-    const open = sidebar.classList.toggle("is-open");
-    scrim.classList.toggle("is-open");
-    toggle.setAttribute("aria-expanded", open);
-  });
-  scrim.addEventListener("click", () => {
-    sidebar.classList.remove("is-open");
-    scrim.classList.remove("is-open");
-    toggle.setAttribute("aria-expanded", "false");
-  });
+  initMobileSidebar();
 }
 
 function setupLogout() {

@@ -1,4 +1,4 @@
-<!doctype html>
+﻿<!doctype html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
@@ -34,6 +34,7 @@
         </a>
         <a href="/assets/pages/admin/admin-lecturers.html"    class="app-sidebar-link"><i class="bi bi-person-badge-fill"></i> Lecturers</a>
         <a href="/assets/pages/admin/admin-eligibility.html" class="app-sidebar-link"><i class="bi bi-mortarboard-fill"></i> Eligibility</a>
+        <a href="/assets/pages/admin/admin-profile.html"    class="app-sidebar-link"><i class="bi bi-person-circle"></i> My Profile</a>
       </nav>
 
       <div class="app-sidebar-footer">
@@ -160,8 +161,15 @@
           <div class="dashboard-panels" style="margin-bottom:1.25rem;">
             <!-- Students per department -->
             <div class="panel">
-              <div class="panel-header">
-                <h2 class="panel-title">Students per Department</h2>
+              <div class="panel-header" style="flex-wrap:wrap;gap:0.5rem;">
+                <h2 class="panel-title" style="flex:none;">Students per Department</h2>
+                <div style="margin-left:auto;">
+                  <select id="deptGenderFilter" class="form-select form-select-sm" style="width:auto;min-width:120px;font-size:0.8rem;" aria-label="Filter by gender">
+                    <option value="">All Genders</option>
+                    <option value="Male">Male</option>
+                    <option value="Female">Female</option>
+                  </select>
+                </div>
               </div>
               <div class="panel-body">
                 <div class="chart-wrap"><canvas id="deptChart"></canvas></div>
@@ -233,7 +241,7 @@
             <p class="text-muted mb-4">Are you sure you want to log out of the admin console?</p>
             <div class="d-flex gap-2 justify-content-center">
               <button type="button" class="btn btn-secondary-outline" data-bs-dismiss="modal">Cancel</button>
-              <button type="button" class="btn btn-danger-soft" id="confirmLogoutBtn">Yes, log out</button>
+              <button type="button" class="btn btn-danger-soft" id="confirmLogoutBtn">Yes</button>
             </div>
           </div>
         </div>

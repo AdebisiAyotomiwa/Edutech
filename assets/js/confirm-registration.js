@@ -121,11 +121,23 @@ function initialiseLogout() {
   });
 }
 
-/* ── Registration window state ─────────────────────────── */
+/* ── Registration window state ─────────────────────────────
+   Priority: calendar.registrationOpen (admin toggle, Fix 9)
+   takes precedence over the legacy registrationWindow sub-fields.
+   If registrationOpen is true → "normal" (open).
+   If registrationOpen is false → "closed".
+   The legacy window fields are kept as a fallback for any
+   existing code paths that read them directly.
+   ───────────────────────────────────────────────────────── */
 function getWindowState() {
+  /* New primary signal — set by the admin registration toggle */
+  if (typeof calendar.registrationOpen === "boolean") {
+    return calendar.registrationOpen ? "normal" : "closed";
+  }
+  /* Legacy fallback — read the nested registrationWindow fields */
   const w = calendar.registrationWindow;
-  if (w.normal.isOpen) return "normal";
-  if (w.late.isOpen) return "late";
+  if (w?.normal?.isOpen) return "normal";
+  if (w?.late?.isOpen)   return "late";
   return "closed";
 }
 
@@ -162,9 +174,16 @@ function render() {
     els.confirmBtn.classList.add("d-none");
     if (els.closedNote) {
       els.closedNote.classList.remove("d-none");
-      els.closedNote.innerHTML = confirmed
-        ? `<i class="bi bi-check2-circle me-1"></i>You've already confirmed registration for this semester.`
-        : `<i class="bi bi-lock-fill me-1"></i>Registration is closed.`;
+      if (confirmed) {
+        els.closedNote.innerHTML =
+          `<i class="bi bi-check2-circle me-1"></i>You've already confirmed registration for this semester.`;
+      } else {
+        /* Registration is administratively closed — show informative message */
+        els.closedNote.innerHTML =
+          `<i class="bi bi-lock-fill me-1"></i>Elective registration is currently closed. ` +
+          `Core and carry-over courses have been auto-assigned. ` +
+          `You will be able to select electives when registration opens.`;
+      }
     }
   } else {
     renderEditableElectives();
@@ -178,11 +197,11 @@ function render() {
 function renderWindowBanner(windowState) {
   if (!els.windowBanner) return;
   const labels = {
-    normal: { text: "Registration open", cls: "bg-success-subtle text-success" },
+    normal: { text: "Elective registration is open", cls: "bg-success-subtle text-success" },
     late:   { text: "Late registration open", cls: "bg-warning-subtle text-warning" },
     closed: { text: "Registration closed", cls: "bg-danger-subtle text-danger" },
   };
-  const { text, cls } = labels[windowState];
+  const { text, cls } = labels[windowState] ?? labels.closed;
   els.windowBanner.textContent = text;
   els.windowBanner.className = `badge ${cls}`;
 }

@@ -1,6 +1,7 @@
 import { requireLecturerAuth, getCurrentLecturer, lecturerLogout } from "../lecturerAuth.js";
 import {
   getCourseAssignments, getCourses, getDepartments, getAcademicCalendar,
+  changePassword,
 } from "../api.js";
 
 requireLecturerAuth();
@@ -23,6 +24,7 @@ async function init() {
 
     setupSidebar();
     setupLogout();
+    setupChangePassword();
     await loadData();
 
     document.getElementById("pageLoading").classList.add("d-none");
@@ -57,16 +59,16 @@ function setupSidebar() {
   const sidebar = document.getElementById("appSidebar");
   const scrim   = document.getElementById("appSidebarScrim");
 
-  toggle.addEventListener("click", () => {
-    const open = sidebar.classList.toggle("is-open");
-    scrim.classList.toggle("is-open");
-    toggle.setAttribute("aria-expanded", open);
-  });
-  scrim.addEventListener("click", () => {
-    sidebar.classList.remove("is-open");
-    scrim.classList.remove("is-open");
-    toggle.setAttribute("aria-expanded", "false");
-  });
+  const openSidebar  = () => { sidebar.classList.add("is-open");    scrim.classList.add("is-open");    toggle.setAttribute("aria-expanded", "true");  };
+  const closeSidebar = () => { sidebar.classList.remove("is-open"); scrim.classList.remove("is-open"); toggle.setAttribute("aria-expanded", "false"); };
+
+  toggle.addEventListener("click", () => sidebar.classList.contains("is-open") ? closeSidebar() : openSidebar());
+  scrim.addEventListener("click", closeSidebar);
+
+  /* Auto-close when a nav link is tapped on mobile */
+  sidebar.querySelectorAll(".app-sidebar-link").forEach(link =>
+    link.addEventListener("click", closeSidebar)
+  );
 }
 
 function setupLogout() {
@@ -78,32 +80,96 @@ function setupLogout() {
   });
 }
 
+/* ── Change Password ────────────────────────────────────── */
+function setupChangePassword() {
+  const modal   = new bootstrap.Modal(document.getElementById("changePasswordModal"));
+  const form    = document.getElementById("changePasswordForm");
+  const alertEl = document.getElementById("pwAlert");
+  const saveBtn = document.getElementById("pwSaveBtn");
+  const saveTxt = document.getElementById("pwSaveBtnText");
+  const saveSpn = document.getElementById("pwSaveBtnSpinner");
+
+  document.getElementById("changePasswordBtn").addEventListener("click", () => {
+    form.reset();
+    showAlert("", "");
+    modal.show();
+  });
+
+  /* Show / hide password toggles */
+  document.querySelectorAll("[data-pw-toggle]").forEach(btn => {
+    btn.addEventListener("click", () => {
+      const input = document.getElementById(btn.dataset.pwToggle);
+      const hidden = input.type === "password";
+      input.type = hidden ? "text" : "password";
+      btn.querySelector("i").className = hidden ? "bi bi-eye-slash" : "bi bi-eye";
+    });
+  });
+
+  saveBtn.addEventListener("click", async () => {
+    showAlert("", "");
+    const current = document.getElementById("pwCurrent").value.trim();
+    const next    = document.getElementById("pwNew").value;
+    const confirm = document.getElementById("pwConfirm").value;
+
+    if (!current)         return showAlert("Please enter your current password.", "danger");
+    if (next.length < 6)  return showAlert("New password must be at least 6 characters.", "danger");
+    if (next !== confirm)  return showAlert("New passwords do not match.", "danger");
+    if (next === current)  return showAlert("New password must differ from the current one.", "danger");
+
+    setSaving(true);
+    try {
+      const result = await changePassword({
+        collection: "lecturers",
+        id: lecturer.id,
+        currentPassword: current,
+        newPassword: next,
+      });
+      if (!result.success) {
+        showAlert(result.message || "Current password is incorrect.", "danger");
+      } else {
+        showAlert("Password changed successfully.", "success");
+        form.reset();
+        setTimeout(() => modal.hide(), 1800);
+      }
+    } catch (err) {
+      console.error(err);
+      showAlert("Something went wrong. Please try again.", "danger");
+    } finally {
+      setSaving(false);
+    }
+  });
+
+  function showAlert(msg, type) {
+    if (!msg) { alertEl.className = "alert d-none"; return; }
+    alertEl.className = `alert alert-${type}`;
+    alertEl.textContent = msg;
+  }
+  function setSaving(on) {
+    saveBtn.disabled = on;
+    saveTxt.classList.toggle("d-none", on);
+    saveSpn.classList.toggle("d-none", !on);
+  }
+}
+
 /* ── Profile ────────────────────────────────────────────── */
 function renderProfile() {
-  const dept     = departments.find(d => String(d.id) === String(lecturer.departmentId));
-  const initials = lecturer.name.split(" ").map(p => p[0]).join("").slice(0, 2).toUpperCase();
+  const dept        = departments.find(d => String(d.id) === String(lecturer.departmentId));
+  const initials    = lecturer.name.split(" ").map(p => p[0]).join("").slice(0, 2).toUpperCase();
   const displayName = `${lecturer.title ? lecturer.title + " " : ""}${lecturer.name}`;
 
-  document.getElementById("profileAvatar").textContent  = initials;
-  document.getElementById("profileFullName").textContent = displayName;
-  document.getElementById("profileStaffId").textContent  = lecturer.staffId || "—";
+  /* Header */
+  document.getElementById("profileAvatarInitials").textContent = initials;
+  document.getElementById("profileFullName").textContent       = displayName;
+  document.getElementById("profileStaffId").textContent        = lecturer.staffId || "—";
 
-  const fields = [
-    { label: "Title",      value: lecturer.title    || "—",   wide: false },
-    { label: "Full Name",  value: lecturer.name     || "—",   wide: false },
-    { label: "Staff ID",   value: lecturer.staffId  || "—",   wide: false },
-    { label: "Phone",      value: lecturer.phone    || "—",   wide: false },
-    { label: "Department", value: dept?.name        || "—",   wide: false },
-    { label: "Faculty",    value: dept?.faculty     || "—",   wide: false },
-    { label: "Role",       value: "Lecturer",                 wide: false },
-    { label: "Email",      value: lecturer.email    || "—",   wide: true  },
-  ];
-
-  document.getElementById("profileFields").innerHTML = fields.map(f => `
-    <div class="${f.wide ? "col-12" : "col-6 col-md-4"}">
-      <div class="text-muted small fw-semibold" style="font-size:.71rem;text-transform:uppercase;letter-spacing:.04em;">${f.label}</div>
-      <div class="fw-medium" style="font-size:.9rem;color:var(--ink-900);word-break:break-all;overflow-wrap:anywhere;">${f.value}</div>
-    </div>`).join("");
+  /* Detail fields */
+  document.getElementById("profileTitle").textContent         = lecturer.title      || "—";
+  document.getElementById("profileName").textContent          = lecturer.name       || "—";
+  document.getElementById("profileStaffIdField").textContent  = lecturer.staffId    || "—";
+  document.getElementById("profilePhone").textContent         = lecturer.phone      || "—";
+  document.getElementById("profileDepartment").textContent    = dept?.name          || "—";
+  document.getElementById("profileFaculty").textContent       = dept?.faculty       || "—";
+  document.getElementById("profileEmail").textContent         = lecturer.email      || "—";
 }
 
 /* ── Course assignments ─────────────────────────────────── */

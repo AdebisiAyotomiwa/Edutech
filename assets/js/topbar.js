@@ -9,6 +9,7 @@
  */
 
 import { logout } from "./auth.js";
+import { initMobileSidebar } from "./sidebar.js";
 
 function resolveImagePath(raw) {
   if (!raw || !raw.trim()) return "";
@@ -89,20 +90,5 @@ export function initTopbar(student) {
   }
 
   /* ── Sidebar mobile toggle ──────────────────────────────── */
-  const sidebarToggleBtn  = document.getElementById("sidebarToggleBtn");
-  const appSidebar        = document.getElementById("appSidebar");
-  const appSidebarScrim   = document.getElementById("appSidebarScrim");
-
-  if (sidebarToggleBtn && appSidebar) {
-    sidebarToggleBtn.addEventListener("click", () => {
-      const open = appSidebar.classList.toggle("is-open");
-      appSidebarScrim?.classList.toggle("is-open");
-      sidebarToggleBtn.setAttribute("aria-expanded", open);
-    });
-    appSidebarScrim?.addEventListener("click", () => {
-      appSidebar.classList.remove("is-open");
-      appSidebarScrim.classList.remove("is-open");
-      sidebarToggleBtn.setAttribute("aria-expanded", "false");
-    });
-  }
+  initMobileSidebar();
 }

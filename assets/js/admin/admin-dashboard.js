@@ -5,6 +5,7 @@ import {
   getResultSubmissions,
 } from "../api.js";
 import { scoreToGrade } from "../utils.js";
+import { initMobileSidebar } from "../sidebar.js";
 
 requireAdminAuth();
 
@@ -31,10 +32,11 @@ async function init() {
     document.getElementById("dashboardContent").classList.remove("d-none");
 
     renderStatCards();
-    renderDeptChart();
+    renderDeptChart("");
     buildGradeFilters();
     renderGradeChart();
     renderPendingApprovals();
+    bindDeptChartFilter();
   } catch (err) {
     console.error(err);
     document.getElementById("dashboardLoading").innerHTML =
@@ -74,19 +76,11 @@ function setupSidebar() {
     topbarBadge.style.display = "";
   }
 
-  const toggle = document.getElementById("sidebarToggleBtn");
-  const sidebar = document.getElementById("appSidebar");
-  const scrim   = document.getElementById("appSidebarScrim");
-  toggle.addEventListener("click", () => {
-    const open = sidebar.classList.toggle("is-open");
-    scrim.classList.toggle("is-open");
-    toggle.setAttribute("aria-expanded", open);
-  });
-  scrim.addEventListener("click", () => {
-    sidebar.classList.remove("is-open");
-    scrim.classList.remove("is-open");
-    toggle.setAttribute("aria-expanded", "false");
-  });
+  /* initMobileSidebar() wires the toggle, scrim, close button,
+     auto-close on nav links, and Escape key in one place.
+     Do NOT add a second toggle.addEventListener here — that
+     causes the button to open-then-immediately-close (no-op). */
+  initMobileSidebar();
 }
 
 function setupLogout() {
@@ -128,13 +122,22 @@ function renderStatCards() {
 }
 
 /* ── Students per dept bar chart ────────────────────────── */
-function renderDeptChart() {
+function renderDeptChart(genderFilter) {
   const canvas = document.getElementById("deptChart");
   if (!canvas || typeof Chart === "undefined") return;
 
+  // Destroy previous instance if re-rendering
+  const existing = Chart.getChart(canvas);
+  if (existing) existing.destroy();
+
+  // Apply optional gender filter
+  const filteredStudents = genderFilter
+    ? students.filter(s => s.gender === genderFilter)
+    : students;
+
   const labels = departments.map(d => d.name);
   const data   = departments.map(d =>
-    students.filter(s => String(s.departmentId) === String(d.id)).length
+    filteredStudents.filter(s => String(s.departmentId) === String(d.id)).length
   );
   const colors = [
     "#0B3D2E","#145C43","#1F7A5C","#2E9D76","#3DC492",
@@ -163,6 +166,13 @@ function renderDeptChart() {
       },
     },
   });
+}
+
+/* Wire up the gender filter dropdown for the dept chart */
+function bindDeptChartFilter() {
+  const sel = document.getElementById("deptGenderFilter");
+  if (!sel) return;
+  sel.addEventListener("change", () => renderDeptChart(sel.value));
 }
 
 /* ── Grade distribution chart (filterable) ──────────────── */

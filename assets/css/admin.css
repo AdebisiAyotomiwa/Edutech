@@ -450,7 +450,68 @@
   border-radius: 0 0 var(--radius-md) var(--radius-md);
 }
 
-/* ── Per-group horizontal scroll container (Result History) ── */
+/* =========================================================
+   FIX 6a — STICKY "COURSE CODE" IN RESULT HISTORY
+   The per-student accordion in admin-results.html uses
+   .hist-table-scroll wrappers that already scroll horizontally.
+   The first column (Course Code) needs position:sticky so it
+   stays visible while scrolling wide tables on narrow screens.
+   ========================================================= */
+.hist-table-scroll .admin-table thead th:first-child,
+.hist-table-scroll .admin-table tbody td:first-child {
+  position: sticky;
+  left: 0;
+  z-index: 2;
+  background: #fff;
+  /* Subtle separator between sticky col and scrolling content */
+  box-shadow: 2px 0 4px rgba(0, 0, 0, 0.06);
+}
+.hist-table-scroll .admin-table thead th:first-child {
+  background: var(--paper-100);
+}
+.hist-table-scroll .admin-table tbody tr:hover td:first-child {
+  background: var(--paper-50);
+}
+
+/* =========================================================
+   FIX 6b — HORIZONTAL SCROLL IN REGISTRATION HISTORY
+   EXPANDABLE ROWS
+   The registration history .hist-student-body contains plain
+   table groups. We wrap them in .reg-hist-scroll (added by JS)
+   to get horizontal scrolling without fighting the
+   overflow:hidden on .hist-student-body (needed for border-radius).
+   ========================================================= */
+.reg-hist-scroll {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: thin;
+  scrollbar-color: var(--line-200) transparent;
+  /* Prevent the table from collapsing narrower than its content */
+  max-width: 100%;
+}
+
+.reg-hist-scroll::-webkit-scrollbar {
+  height: 4px;
+}
+.reg-hist-scroll::-webkit-scrollbar-track {
+  background: transparent;
+}
+.reg-hist-scroll::-webkit-scrollbar-thumb {
+  background: var(--line-200);
+  border-radius: 3px;
+}
+
+/* Ensure the table inside the scroll shell doesn't wrap */
+.reg-hist-scroll table {
+  min-width: 420px;
+}
+
+/* On desktop tables are never narrow enough to need this */
+@media (min-width: 768px) {
+  .reg-hist-scroll table {
+    min-width: unset;
+  }
+}
 .hist-table-scroll {
   position: relative;
   /* Let the table be as wide as it needs; clip and scroll within */
@@ -698,4 +759,40 @@
 @media (max-width: 575.98px) {
   .admin-table { font-size: 0.76rem; }
   .admin-table .admin-row-actions .btn { padding: 0.25rem 0.4rem; font-size: 0.72rem; }
+}
+
+/* =========================================================
+   FIX 8 — "ADD" BUTTON IN COURSE ASSIGNMENT ACCORDION
+   Replaces the wide btn-brand "Add" label button with a
+   compact circular icon-only button that sits cleanly inside
+   the accordion header without competing with the chevron.
+   ========================================================= */
+.btn-add-assignment {
+  width: 28px;
+  height: 28px;
+  padding: 0;
+  border-radius: 50%;
+  border: 1.5px solid var(--brand-500);
+  background: var(--brand-100);
+  color: var(--brand-700);
+  font-size: 0.8rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  transition: background 0.15s ease, border-color 0.15s ease, transform 0.12s ease;
+  cursor: pointer;
+}
+.btn-add-assignment:hover {
+  background: var(--brand-900);
+  border-color: var(--brand-900);
+  color: #fff;
+  transform: scale(1.1);
+}
+.btn-add-assignment:active {
+  transform: scale(0.95);
+}
+.btn-add-assignment:focus-visible {
+  outline: 3px solid var(--gold-500);
+  outline-offset: 2px;
 }

@@ -4,6 +4,7 @@ import {
   getCourseAssignments, createCourseAssignment, deleteCourseAssignment,
   getCourses, getDepartments, getResultSubmissions, getAcademicCalendar,
 } from "../api.js";
+import { initMobileSidebar } from "../sidebar.js";
 
 requireAdminAuth();
 
@@ -96,16 +97,7 @@ function setupSidebar() {
   const badge = document.getElementById("sidebarPendingBadge");
   if (badge && pendingCount > 0) { badge.textContent = pendingCount; badge.style.display = ""; }
 
-  sidebarToggleBtn.addEventListener("click", () => {
-    const open = appSidebar.classList.toggle("is-open");
-    appSidebarScrim.classList.toggle("is-open");
-    sidebarToggleBtn.setAttribute("aria-expanded", open);
-  });
-  appSidebarScrim.addEventListener("click", () => {
-    appSidebar.classList.remove("is-open");
-    appSidebarScrim.classList.remove("is-open");
-    sidebarToggleBtn.setAttribute("aria-expanded", "false");
-  });
+  initMobileSidebar();
 }
 
 function setupLogout() {
@@ -499,8 +491,8 @@ function renderAssignments() {
           </span>
         </span>
         <span class="hist-student-meta">
-          <button class="btn btn-brand btn-sm me-2" data-add-asn="${lec.id}" onclick="event.stopPropagation()">
-            <i class="bi bi-plus-lg"></i> Add
+          <button class="btn btn-add-assignment btn-sm me-2" data-add-asn="${lec.id}" onclick="event.stopPropagation()" title="Add course assignment" aria-label="Add course assignment">
+            <i class="bi bi-plus-lg"></i>
           </button>
           <span class="badge bg-secondary">${lecAssignments.length}</span>
           <i class="bi bi-chevron-down hist-chevron ms-2"></i>

@@ -676,3 +676,46 @@ export async function rejectSubmission(submissionId, adminId, rejectionReason) {
 
   return updated;
 }
+
+/* =========================================================
+   CHANGE PASSWORD — self-service for all three roles
+   ---------------------------------------------------------
+   Each role stores its password in a different collection.
+   json-server writes the PATCH straight back to db.json so
+   the change is immediately persistent for every user.
+
+   SECURITY NOTE: We first fetch the full record to verify
+   the current password before writing the new one.  This
+   avoids a situation where any caller can blindly overwrite
+   a password without proving identity.
+   ========================================================= */
+
+/**
+ * Change a user's password after verifying the current one.
+ *
+ * @param {object} opts
+ * @param {'students'|'lecturers'|'admins'} opts.collection
+ * @param {string|number}  opts.id          - record id
+ * @param {string}         opts.currentPassword
+ * @param {string}         opts.newPassword
+ * @returns {{ success: boolean, message?: string }}
+ */
+export async function changePassword({ collection, id, currentPassword, newPassword }) {
+  // 1. Fetch the live record — do NOT trust the session copy because
+  //    the admin may have already reset the password server-side.
+  const record = await request(`/${collection}/${id}`);
+
+  // 2. Verify the supplied current password.
+  if (record.password !== currentPassword) {
+    return { success: false, message: "Current password is incorrect." };
+  }
+
+  // 3. Write the new password via PATCH — json-server persists to db.json.
+  await request(`/${collection}/${id}`, {
+    method: "PATCH",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ password: newPassword }),
+  });
+
+  return { success: true };
+}

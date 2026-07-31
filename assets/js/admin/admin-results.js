@@ -6,6 +6,7 @@ import {
   getResultSubmissions,
 } from "../api.js";
 import { scoreToGrade } from "../utils.js";
+import { initMobileSidebar } from "../sidebar.js";
 
 requireAdminAuth();
 
@@ -96,16 +97,7 @@ function setupSidebar() {
   const badge = document.getElementById("sidebarPendingBadge");
   if (badge && pendingCount > 0) { badge.textContent = pendingCount; badge.style.display = ""; }
 
-  sidebarToggleBtn.addEventListener("click", () => {
-    const open = appSidebar.classList.toggle("is-open");
-    appSidebarScrim.classList.toggle("is-open");
-    sidebarToggleBtn.setAttribute("aria-expanded", open);
-  });
-  appSidebarScrim.addEventListener("click", () => {
-    appSidebar.classList.remove("is-open");
-    appSidebarScrim.classList.remove("is-open");
-    sidebarToggleBtn.setAttribute("aria-expanded", "false");
-  });
+  initMobileSidebar();
 }
 
 function setupLogout() {
@@ -269,8 +261,6 @@ function onHistDeptChange() {
 }
 
 function loadHistory() {
-  document.getElementById("histFilterPrompt").classList.add("d-none");
-  document.getElementById("histResultsArea").classList.remove("d-none");
   histPage = 1;
   buildHistStudents();
   renderHistAccordion();
@@ -705,6 +695,24 @@ function renderCurrStudents() {
   );
 
   renderCurrPagination(totalPages);
+}
+
+function renderCurrPagination(totalPages) {
+  const list = document.getElementById("currPaginationList");
+  if (!list) return;
+  if (totalPages <= 1) { list.innerHTML = ""; return; }
+  let html = `<li class="page-item${currPage === 1 ? " disabled" : ""}"><button class="page-link" data-page="${currPage - 1}">&lsaquo;</button></li>`;
+  for (let i = 1; i <= totalPages; i++) {
+    if (totalPages > 7 && Math.abs(i - currPage) > 2 && i !== 1 && i !== totalPages) {
+      if (i === 2 || i === totalPages - 1) html += `<li class="page-item disabled"><span class="page-link">…</span></li>`;
+      continue;
+    }
+    html += `<li class="page-item${i === currPage ? " active" : ""}"><button class="page-link" data-page="${i}">${i}</button></li>`;
+  }
+  html += `<li class="page-item${currPage === totalPages ? " disabled" : ""}"><button class="page-link" data-page="${currPage + 1}">&rsaquo;</button></li>`;
+  list.innerHTML = html;
+  list.querySelectorAll("[data-page]").forEach(btn =>
+    btn.addEventListener("click", () => { currPage = Number(btn.dataset.page); renderCurrStudents(); }));
 }
 
 /* ── Score entry by course (no submission) ──────────────── */

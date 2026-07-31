@@ -1,11 +1,12 @@
 import { requireAdminAuth, getCurrentAdmin, adminLogout } from "../adminAuth.js";
 import {
   getStudents, getDepartments, getFaculties, getCourses,
-  getRegistrations, getAcademicCalendar,
+  getRegistrations, getAcademicCalendar, updateAcademicCalendar,
   createRegistration, deleteRegistration,
   getResultSubmissions,
 } from "../api.js";
 import { previewRegistrationBatch, generateRegistrationBatch } from "../registrationEngine.js";
+import { initMobileSidebar } from "../sidebar.js";
 
 requireAdminAuth();
 
@@ -58,6 +59,8 @@ async function init() {
     bindHistoryTab();
     /* Auto-load all students for current semester */
     renderCurrStudents();
+    /* Registration open/close toggle */
+    initRegToggle();
   } catch (err) {
     console.error(err);
     pageState.innerHTML = `<div class="alert alert-danger mb-0">Failed to load registrations.</div>`;
@@ -89,16 +92,7 @@ function setupSidebar() {
   const badge = document.getElementById("sidebarPendingBadge");
   if (badge && pendingCount > 0) { badge.textContent = pendingCount; badge.style.display = ""; }
 
-  sidebarToggleBtn.addEventListener("click", () => {
-    const open = appSidebar.classList.toggle("is-open");
-    appSidebarScrim.classList.toggle("is-open");
-    sidebarToggleBtn.setAttribute("aria-expanded", open);
-  });
-  appSidebarScrim.addEventListener("click", () => {
-    appSidebar.classList.remove("is-open");
-    appSidebarScrim.classList.remove("is-open");
-    sidebarToggleBtn.setAttribute("aria-expanded", "false");
-  });
+  initMobileSidebar();
 }
 function setupLogout() {
   const modal = new bootstrap.Modal(document.getElementById("logoutConfirmModal"));
@@ -163,6 +157,60 @@ function populateFacultySelects() {
 
   /* Render metrics for current semester */
   renderRegMetrics();
+}
+
+/* ── Registration open/close toggle ─────────────────────── */
+/**
+ * Reads calendar.registrationOpen to set the switch state,
+ * then PATCHes /academicCalendar when the admin flips it.
+ * json-server writes the change straight back to db.json,
+ * making it persistent across page reloads for all users.
+ */
+function initRegToggle() {
+  const toggle     = document.getElementById("regToggleSwitch");
+  const statusEl   = document.getElementById("regToggleStatus");
+  const savingEl   = document.getElementById("regToggleSaving");
+  if (!toggle) return;
+
+  /* Set initial state from the already-loaded calendar */
+  const isOpen = !!calendar.registrationOpen;
+  toggle.checked = isOpen;
+  updateToggleLabel(isOpen, statusEl);
+
+  toggle.addEventListener("change", async () => {
+    const newState = toggle.checked;
+    toggle.disabled = true;
+    savingEl.style.display = "";
+
+    try {
+      const updated = await updateAcademicCalendar({ registrationOpen: newState });
+      /* Keep in-memory calendar in sync */
+      calendar.registrationOpen = newState;
+      updateToggleLabel(newState, statusEl);
+    } catch (err) {
+      console.error("[RegToggle] Failed to save:", err);
+      /* Revert the switch on failure */
+      toggle.checked = !newState;
+      updateToggleLabel(!newState, statusEl);
+      alert("Failed to save registration setting. Please try again.");
+    } finally {
+      toggle.disabled = false;
+      savingEl.style.display = "none";
+    }
+  });
+}
+
+function updateToggleLabel(isOpen, statusEl) {
+  if (!statusEl) return;
+  if (isOpen) {
+    statusEl.textContent = "Open";
+    statusEl.style.color = "var(--success)";
+    statusEl.style.fontWeight = "700";
+  } else {
+    statusEl.textContent = "Closed";
+    statusEl.style.color = "var(--danger)";
+    statusEl.style.fontWeight = "700";
+  }
 }
 
 function renderRegMetrics() {
@@ -702,10 +750,12 @@ function renderHistAccordion() {
       }).join("");
       return `<div class="mb-2">
         <div class="text-muted small fw-semibold mb-1">${sess} — Semester ${sem}</div>
-        <table class="table table-sm admin-table mb-0">
-          <thead><tr><th>Code</th><th>Title</th><th>Credits</th><th>Type</th></tr></thead>
-          <tbody>${rows}</tbody>
-        </table>
+        <div class="reg-hist-scroll">
+          <table class="table table-sm admin-table mb-0">
+            <thead><tr><th>Code</th><th>Title</th><th>Credits</th><th>Type</th></tr></thead>
+            <tbody>${rows}</tbody>
+          </table>
+        </div>
       </div>`;
     }).join("");
 

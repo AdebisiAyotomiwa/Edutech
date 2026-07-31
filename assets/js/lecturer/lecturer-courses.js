@@ -3,6 +3,7 @@ import {
   getCourseAssignments, getCourses, getAcademicCalendar,
   getRegistrations, getResultSubmissions,
 } from "../api.js";
+import { initMobileSidebar } from "../sidebar.js";
 
 requireLecturerAuth();
 
@@ -140,19 +141,7 @@ function setupSidebar() {
   document.getElementById("sidebarUserName").textContent       = lecturer.name || "Lecturer";
   document.getElementById("sidebarUserMeta").textContent       = lecturer.email;
 
-  const toggle  = document.getElementById("sidebarToggleBtn");
-  const sidebar = document.getElementById("appSidebar");
-  const scrim   = document.getElementById("appSidebarScrim");
-  toggle.addEventListener("click", () => {
-    const open = sidebar.classList.toggle("is-open");
-    scrim.classList.toggle("is-open");
-    toggle.setAttribute("aria-expanded", open);
-  });
-  scrim.addEventListener("click", () => {
-    sidebar.classList.remove("is-open");
-    scrim.classList.remove("is-open");
-    toggle.setAttribute("aria-expanded", "false");
-  });
+  initMobileSidebar();
 }
 
 function setupLogout() {

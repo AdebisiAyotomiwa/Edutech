@@ -174,6 +174,28 @@ function renderRegisteredTab() {
   currentSemesterLabel.textContent =
     `${currentSession}, ${SEMESTER_LABELS[currentSemester] ?? `Semester ${currentSemester}`} · ${student.level} Level`;
 
+  /* ── Registration status banner (Fix 10) ────────────────
+     Show a contextual pill below the semester label so
+     students always know whether elective registration is open. */
+  const regOpenBanner = document.getElementById("regStatusBanner");
+  if (regOpenBanner) {
+    const isOpen = !!academicCalendar.registrationOpen;
+    if (isOpen) {
+      regOpenBanner.innerHTML = `<span class="badge bg-success-subtle text-success me-2">
+        <i class="bi bi-unlock-fill me-1"></i>Elective registration is open
+      </span>
+      <a href="/assets/pages/confirm-registration.html" class="btn btn-brand btn-sm">
+        <i class="bi bi-clipboard2-check-fill me-1"></i>Register Electives
+      </a>`;
+      regOpenBanner.classList.remove("d-none");
+    } else {
+      regOpenBanner.innerHTML = `<span class="badge bg-danger-subtle text-danger">
+        <i class="bi bi-lock-fill me-1"></i>Elective registration is closed — core &amp; carry-over courses are auto-assigned
+      </span>`;
+      regOpenBanner.classList.remove("d-none");
+    }
+  }
+
   const currentRegs = allRegistrations.filter(
     r => r.session === currentSession && Number(r.semester) === Number(currentSemester)
   );

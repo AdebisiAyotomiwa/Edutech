@@ -3,6 +3,7 @@ import {
   getCourseAssignments, getResultSubmissions,
   getCourses, getAcademicCalendar,
 } from "../api.js";
+import { initMobileSidebar } from "../sidebar.js";
 
 requireLecturerAuth();
 
@@ -72,12 +73,21 @@ async function init() {
                       (submissions + assignments)
    ───────────────────────────────────────────────────────── */
 async function loadData() {
-  [assignments, submissions, courses, calendar] = await Promise.all([
+  /* Fetch calendar first so we can use it as a scope for submissions */
+  [assignments, courses, calendar] = await Promise.all([
     getCourseAssignments({ lecturerId: Number(lecturer.id) }),
-    getResultSubmissions({ lecturerId: Number(lecturer.id) }),
     getCourses(),
     getAcademicCalendar(),
   ]);
+
+  /* Scope submissions strictly to the current session + semester.
+     This guarantees that stat cards and the recent-submissions list
+     never surface records from 2024/2025 or any previous period.  */
+  submissions = await getResultSubmissions({
+    lecturerId: Number(lecturer.id),
+    session:    calendar.currentSession,
+    semester:   Number(calendar.currentSemester),
+  });
 }
 
 /**
@@ -95,7 +105,11 @@ async function refreshData() {
   try {
     [assignments, submissions] = await Promise.all([
       getCourseAssignments({ lecturerId: Number(lecturer.id) }),
-      getResultSubmissions({ lecturerId: Number(lecturer.id) }),
+      getResultSubmissions({
+        lecturerId: Number(lecturer.id),
+        session:    calendar.currentSession,
+        semester:   Number(calendar.currentSemester),
+      }),
     ]);
 
     renderStatCards();
@@ -215,19 +229,7 @@ function setupSidebar() {
   document.getElementById("sidebarUserName").textContent       = lecturer.name || "Lecturer";
   document.getElementById("sidebarUserMeta").textContent       = lecturer.email;
 
-  const toggle  = document.getElementById("sidebarToggleBtn");
-  const sidebar = document.getElementById("appSidebar");
-  const scrim   = document.getElementById("appSidebarScrim");
-  toggle.addEventListener("click", () => {
-    const open = sidebar.classList.toggle("is-open");
-    scrim.classList.toggle("is-open");
-    toggle.setAttribute("aria-expanded", open);
-  });
-  scrim.addEventListener("click", () => {
-    sidebar.classList.remove("is-open");
-    scrim.classList.remove("is-open");
-    toggle.setAttribute("aria-expanded", "false");
-  });
+  initMobileSidebar();
 }
 
 function setupLogout() {

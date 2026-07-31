@@ -1,5 +1,5 @@
 import { requireAuth, getCurrentStudent, logout } from "./auth.js";
-import { getDepartmentById } from "./api.js";
+import { getDepartmentById, changePassword } from "./api.js";
 import { initTopbar } from "./topbar.js";
 
 /* Normalise a profile image path to an absolute URL so it resolves
@@ -60,6 +60,7 @@ async function initProfilePage() {
 
     initialiseSidebar();
     initialiseLogout();
+    initialiseChangePassword();
 
     department = await getDepartmentById(student.departmentId);
 
@@ -88,6 +89,7 @@ function initialiseSidebar() {
     sidebarAvatarImg.classList.remove("d-none"); sidebarAvatarInitials.style.display = "none";
   } else { sidebarAvatarInitials.style.display = "flex"; sidebarAvatarInitials.textContent = initials; }
   initTopbar(student);
+  // initMobileSidebar() is called inside initTopbar() via topbar.js
 }
 
 function initialiseLogout() {
@@ -96,6 +98,83 @@ function initialiseLogout() {
   document.getElementById("confirmLogoutBtn").addEventListener("click", () => {
     logout(); window.location.href = "/index.html";
   });
+}
+
+/* ========================================================
+   Change Password
+======================================================== */
+function initialiseChangePassword() {
+  const modal    = new bootstrap.Modal(document.getElementById("changePasswordModal"));
+  const form     = document.getElementById("changePasswordForm");
+  const alertEl  = document.getElementById("pwAlert");
+  const saveBtn  = document.getElementById("pwSaveBtn");
+  const saveTxt  = document.getElementById("pwSaveBtnText");
+  const saveSpn  = document.getElementById("pwSaveBtnSpinner");
+
+  /* Open modal */
+  document.getElementById("changePasswordBtn").addEventListener("click", () => {
+    form.reset();
+    showPwAlert("", "");
+    modal.show();
+  });
+
+  /* Password show/hide toggles */
+  document.querySelectorAll("[data-pw-toggle]").forEach(btn => {
+    btn.addEventListener("click", () => {
+      const input = document.getElementById(btn.dataset.pwToggle);
+      const isHidden = input.type === "password";
+      input.type = isHidden ? "text" : "password";
+      btn.querySelector("i").className = isHidden ? "bi bi-eye-slash" : "bi bi-eye";
+    });
+  });
+
+  /* Save */
+  saveBtn.addEventListener("click", async () => {
+    showPwAlert("", "");
+    const current = document.getElementById("pwCurrent").value.trim();
+    const next    = document.getElementById("pwNew").value;
+    const confirm = document.getElementById("pwConfirm").value;
+
+    /* Client-side validation */
+    if (!current)              return showPwAlert("Please enter your current password.", "danger");
+    if (next.length < 6)       return showPwAlert("New password must be at least 6 characters.", "danger");
+    if (next !== confirm)      return showPwAlert("New passwords do not match.", "danger");
+    if (next === current)      return showPwAlert("New password must differ from the current one.", "danger");
+
+    setSaving(true);
+    try {
+      const result = await changePassword({
+        collection: "students",
+        id: student.id,
+        currentPassword: current,
+        newPassword: next,
+      });
+
+      if (!result.success) {
+        showPwAlert(result.message || "Incorrect current password.", "danger");
+      } else {
+        showPwAlert("Password changed successfully.", "success");
+        form.reset();
+        setTimeout(() => modal.hide(), 1800);
+      }
+    } catch (err) {
+      console.error(err);
+      showPwAlert("Something went wrong. Please try again.", "danger");
+    } finally {
+      setSaving(false);
+    }
+  });
+
+  function showPwAlert(msg, type) {
+    if (!msg) { alertEl.className = "alert d-none"; return; }
+    alertEl.className = `alert alert-${type}`;
+    alertEl.textContent = msg;
+  }
+  function setSaving(on) {
+    saveBtn.disabled = on;
+    saveTxt.classList.toggle("d-none", on);
+    saveSpn.classList.toggle("d-none", !on);
+  }
 }
 
 /* ========================================================
